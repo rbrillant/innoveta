@@ -206,40 +206,6 @@ function initDb() {
       ('.dev', 15.00), ('.me', 20.00), ('.xyz', 10.00),
       ('.online', 12.00), ('.store', 20.00), ('.tech', 15.00);
 
-    -- Seed 30 templates across 21 categories
-    INSERT OR IGNORE INTO templates (id, name, category, description, image, price) VALUES
-      ('tpl-01', 'Pitch Deck Pro', 'Presentation', 'Clean pitch deck template with slide layouts for startups and business proposals.', 'https://picsum.photos/seed/pitch-deck/400/300', 49),
-      ('tpl-09', 'Keynote Master', 'Presentation', 'Professional keynote presentation template with animated transitions.', 'https://picsum.photos/seed/keynote/400/300', 59),
-      ('tpl-07', 'Event Poster Set', 'Poster', 'Bold event poster templates for concerts, festivals, and conferences.', 'https://picsum.photos/seed/event-poster/400/300', 34),
-      ('tpl-08', 'Movie Poster Pack', 'Poster', 'Cinematic poster templates with dramatic typography and layout options.', 'https://picsum.photos/seed/movie-poster/400/300', 44),
-      ('tpl-16', 'Modern Resume Kit', 'Resume', 'ATS-friendly resume templates with clean layouts and cover letter matching.', 'https://picsum.photos/seed/resume-kit/400/300', 24),
-      ('tpl-06', 'Email Newsletter Suite', 'Email', 'Responsive email templates for newsletters, promotions, and announcements.', 'https://picsum.photos/seed/email-suite/400/300', 44),
-      ('tpl-18', 'Drip Campaign Pack', 'Email', 'Automated email sequence templates for onboarding and marketing campaigns.', 'https://picsum.photos/seed/drip-campaign/400/300', 34),
-      ('tpl-02', 'Wedding Invitation Set', 'Invitation', 'Elegant wedding invitation templates with RSVP cards and save-the-dates.', 'https://picsum.photos/seed/wedding-invite/400/300', 39),
-      ('tpl-22', 'Vertical Video Bundle', 'Mobile Video', 'TikTok and Reels video templates optimized for mobile viewing.', 'https://picsum.photos/seed/vertical-video/400/300', 49),
-      ('tpl-23', 'Mobile Ad Creator', 'Mobile Video', 'In-feed mobile ad templates with engaging motion graphics.', 'https://picsum.photos/seed/mobile-ad/400/300', 44),
-      ('tpl-05', 'Facebook Ad Collection', 'Facebook Post', 'Facebook feed and carousel ad templates designed for conversions.', 'https://picsum.photos/seed/facebook-ads/400/300', 39),
-      ('tpl-03', 'Business Card Pro', 'Business Card', 'Modern business card designs with spot UV and foil finish mockups.', 'https://picsum.photos/seed/business-card/400/300', 29),
-      ('tpl-19', 'Collage Maker Pack', 'Photo Collage', 'Creative photo collage templates for memories, portfolios, and moodboards.', 'https://picsum.photos/seed/photo-collage/400/300', 34),
-      ('tpl-12', 'Whiteboard Animation Kit', 'Whiteboard', 'Hand-drawn whiteboard animation templates for explainer videos.', 'https://picsum.photos/seed/whiteboard/400/300', 54),
-      ('tpl-29', 'Spreadsheet Design Set', 'Sheet', 'Beautiful spreadsheet templates for budgeting, planning, and project tracking.', 'https://picsum.photos/seed/spreadsheet/400/300', 19),
-      ('tpl-24', 'Instagram Post Bundle', 'Instagram Post', 'Square post templates for Instagram feed with trendy layouts and colors.', 'https://picsum.photos/seed/ig-posts/400/300', 34),
-      ('tpl-28', 'Story Highlight Pack', 'Instagram Story', 'Instagram story templates with animated stickers and typography.', 'https://picsum.photos/seed/ig-stories/400/300', 29),
-      ('tpl-26', 'Cinematic Landscape Pack', 'Landscape Video', 'Widescreen video templates for YouTube, Vimeo, and broadcast.', 'https://picsum.photos/seed/landscape-video/400/300', 59),
-      ('tpl-10', 'Code Snippet UI Kit', 'Code', 'Developer portfolio and code documentation website templates.', 'https://picsum.photos/seed/code-kit/400/300', 44),
-      ('tpl-14', 'API Documentation Theme', 'Code', 'Technical documentation template with interactive code samples.', 'https://picsum.photos/seed/api-docs/400/300', 54),
-      ('tpl-17', 'Flyer Design Bundle', 'Flyer', 'Multi-purpose flyer templates for businesses, events, and promotions.', 'https://picsum.photos/seed/flyer-bundle/400/300', 24),
-      ('tpl-13', 'Logo Design Toolkit', 'Logo', 'Versatile logo templates with brand mark and wordmark combinations.', 'https://picsum.photos/seed/logo-toolkit/400/300', 39),
-      ('tpl-15', 'Minimal Logo Set', 'Logo', 'Clean minimalist logo templates for modern brands and startups.', 'https://picsum.photos/seed/minimal-logo/400/300', 34),
-      ('tpl-11', 'Brochure Template Pack', 'Brochure', 'Professional bi-fold and tri-fold brochure templates for business.', 'https://picsum.photos/seed/brochure-pack/400/300', 29),
-      ('tpl-20', 'Restaurant Menu Set', 'Menu', 'Elegant menu templates for restaurants, cafes, and bars.', 'https://picsum.photos/seed/restaurant-menu/400/300', 24),
-      ('tpl-21', 'Document Template Hub', 'Doc', 'Professional document templates for reports, proposals, and letters.', 'https://picsum.photos/seed/document-hub/400/300', 29),
-      ('tpl-04', 'Website UI Kit', 'Websites', 'Complete website UI kit with hero sections, features, and pricing tables.', 'https://picsum.photos/seed/website-ui/400/300', 69),
-      ('tpl-25', 'Landing Page Bundle', 'Websites', 'Conversion-optimized landing page templates for marketing campaigns.', 'https://picsum.photos/seed/landing-bundle/400/300', 64),
-      ('tpl-30', 'Portfolio Website Pro', 'Websites', 'Creative portfolio website template for designers and photographers.', 'https://picsum.photos/seed/portfolio-site/400/300', 79),
-      ('tpl-27', 'E-Commerce Store Theme', 'Websites', 'Online store template with product grids, cart, and checkout pages.', 'https://picsum.photos/seed/ecommerce-theme/400/300', 89),
-      ('tpl-31', 'Techflux Landing Page', 'Websites', 'Product and service landing page in black and blue techflux style with Home, Services, FAQs, and Contact sections.', '/images/techflux/Home.png', 69);
-
     -- Seed courses (3 courses, 20 lessons each)
     INSERT OR IGNORE INTO courses (id, title, description, price, image, category) VALUES
       ('course-01', 'Pitch Deck Masterclass', 'Learn to create compelling presentations that win clients and investors.', 49, 'https://picsum.photos/seed/pitch-course/800/400', 'Presentation'),
