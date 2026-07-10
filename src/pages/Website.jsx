@@ -15,7 +15,7 @@ export default function Website() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <main className="flex-1 flex items-center justify-center py-20"><p className="text-blue-600/70 dark:text-gray-300 text-lg">Loading...</p></main>;
+  if (loading) return <main className="flex-1 flex items-center justify-center py-20"><p className="text-black/70 dark:text-gray-300 text-lg">Loading...</p></main>;
   if (error) return <main className="flex-1 flex items-center justify-center py-20"><p className="text-rose dark:text-purple-300 text-lg">{error}</p></main>;
 
   return (
@@ -24,9 +24,9 @@ export default function Website() {
         {page.image && (
           <img src={page.image} alt={page.title} className="w-full h-64 sm:h-80 object-cover rounded-3xl mb-8" />
         )}
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-blue-900 dark:text-gray-100 mb-6">{page.title}</h1>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black dark:text-gray-100 mb-6">{page.title}</h1>
         <div
-          className="text-blue-600/70 dark:text-gray-300 text-base sm:text-lg leading-relaxed space-y-4 prose-headings:text-blue-900 dark:prose-headings:text-gray-100"
+          className="text-black/70 dark:text-gray-300 text-base sm:text-lg leading-relaxed space-y-4 prose-headings:text-black dark:prose-headings:text-gray-100"
           dangerouslySetInnerHTML={{ __html: page.content }}
         />
       </div>

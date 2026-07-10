@@ -1,61 +1,136 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import TemplateCard from '../components/TemplateCard';
 import { fetchTemplates } from '../data';
 
-const CATEGORIES = ['All', 'Websites', 'Online Courses', 'IT Integration', 'Consulting'];
+const CATEGORIES = [
+  'Presentation', 'Poster', 'Resume', 'Email', 'Invitation', 'Mobile Video',
+  'Facebook Post', 'Business Card', 'Photo Collage', 'Whiteboard', 'Sheet',
+  'Instagram Post', 'Instagram Story', 'Landscape Video', 'Code', 'Flyer',
+  'Logo', 'Brochure', 'Menu', 'Doc', 'Websites',
+];
 
 export default function Templates() {
+  const { category } = useParams();
+  const navigate = useNavigate();
+  const active = category ? CATEGORIES.find((c) => c.toLowerCase().replace(/\s+/g, '-') === category.toLowerCase()) || 'All' : 'All';
   const [templates, setTemplates] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0 });
 
   useEffect(() => {
     fetchTemplates().then(setTemplates);
   }, []);
 
-  const filtered = activeCategory === 'All' ? templates : templates.filter((t) => t.category === activeCategory);
+  useLayoutEffect(() => {
+    const el = sidebarRef.current;
+    if (!el) return;
+    const activeBtn = el.querySelector('[data-active="true"]');
+    if (activeBtn) {
+      const parentRect = el.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+      setIndicatorStyle({ top: btnRect.top - parentRect.top, height: btnRect.height });
+    }
+  }, [active]);
+
+  function handleCategoryClick(cat) {
+    if (cat === 'All') {
+      navigate('/templates');
+    } else {
+      navigate(`/templates/${cat.toLowerCase().replace(/\s+/g, '-')}`);
+    }
+    setSidebarOpen(false);
+  }
+
+  const filtered = active === 'All' ? templates : templates.filter((t) => t.category === active);
+
+  const sidebarContent = (
+    <div ref={sidebarRef} className="relative max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-none">
+      <div
+        className="absolute left-0 right-0 rounded-xl pointer-events-none nav-active"
+        style={{
+          top: indicatorStyle.top,
+          height: indicatorStyle.height,
+          transition: 'top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        }}
+      />
+      <div className="relative space-y-1">
+        <button
+          onClick={() => handleCategoryClick('All')}
+          data-active={active === 'All' || undefined}
+          className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer relative z-10 ${
+            active === 'All' ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+          }`}
+        >
+          All Templates
+        </button>
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => handleCategoryClick(cat)}
+            data-active={active === cat || undefined}
+            className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer relative z-10 ${
+              active === cat ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <main className="flex-1">
-      <div className="max-w-6xl mx-auto px-5 py-16">
-        <div className="text-center mb-10">
-          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-gray-700">
-            ✦ Portfolio
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-warm-dark dark:text-gray-100">All Templates</h2>
-          <p className="text-warm-gray dark:text-gray-300 mt-2 max-w-lg mx-auto">
-            Every template is designed with love and attention to detail.
-            Pick one that speaks to you.
-          </p>
-        </div>
-
-        {/* Category filter */}
-        <div className="flex justify-center gap-2 mb-8">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`text-xs font-medium px-4 py-1.5 rounded-full transition-colors cursor-pointer ${
-                activeCategory === cat
-                  ? 'bg-teal text-white shadow-sm'
-                  : 'bg-white/70 dark:bg-gray-900/70 text-blue-600/70 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 border border-blue-200/50 dark:border-gray-700'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-warm-gray dark:text-gray-300 text-lg">No templates in this category yet.</p>
+      <div className="flex">
+        <aside className="shrink-0 w-[220.5px] hidden md:block border-r border-blue-100 dark:border-gray-800 min-h-[calc(100vh-57px)]">
+          <div className="sticky top-20 px-4 py-6">
+            {sidebarContent}
           </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((t) => (
-              <TemplateCard key={t.id} template={t} />
-            ))}
+        </aside>
+
+        {/* Mobile filter toggle */}
+        <div className="md:hidden fixed bottom-6 right-6 z-50">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="w-14 h-14 rounded-full bg-gradient-to-br from-teal to-teal-dark text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center cursor-pointer"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-40">
+            <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
+            <div className="absolute left-0 top-0 bottom-0 w-64 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-xl p-5 pt-6 overflow-y-auto">
+              <div className="flex items-center justify-between mb-5">
+                <span className="text-sm font-semibold text-black dark:text-gray-100">Categories</span>
+                <button onClick={() => setSidebarOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer">
+                  <svg className="w-4 h-4 text-black/60 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+              {sidebarContent}
+            </div>
           </div>
         )}
+
+        <div className="flex-1 min-w-0 max-w-6xl mx-auto px-5 py-8">
+          {filtered.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-black/60 dark:text-gray-400 text-lg">No templates in this category yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {filtered.map((t) => (
+                <TemplateCard key={t.id} template={t} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

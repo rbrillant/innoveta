@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { supabase } from '../supabase';
 import { fetchEnrollments } from '../data';
 import { useTheme } from './ThemeProvider';
@@ -8,12 +8,11 @@ import Logo from './Logo';
 const BASE_LINKS = [
   { to: '/home', label: 'Home' },
   { to: '/templates', label: 'Template' },
-  { to: '/website', label: 'Website' },
   { to: '/domain-hosting', label: 'Domain & Hosting' },
   { to: '/online-courses', label: 'Online Courses' },
   { to: '/it-integration', label: 'IT Integration' },
   { to: '/consulting', label: 'Consulting' },
-  { to: '/book', label: 'Book' },
+  { to: '/book', label: 'Book Now' },
 ];
 
 export default function CategoryBar() {
@@ -28,7 +27,24 @@ export default function CategoryBar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const btnRef = useRef(null);
   const searchRef = useRef(null);
+  const navRef = useRef(null);
+  const linkRefs = useRef({});
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const navLinks = hasEnrollments ? [...BASE_LINKS, { to: '/my-courses', label: 'My Courses' }] : BASE_LINKS;
+
+  useLayoutEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const active = el.querySelector('[data-active="true"]');
+    if (active) {
+      const parentRect = el.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      setIndicatorStyle({
+        left: activeRect.left - parentRect.left + el.scrollLeft,
+        width: activeRect.width,
+      });
+    }
+  }, [pathname, hasEnrollments]);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -39,13 +55,14 @@ export default function CategoryBar() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then((result) => {
+      const s = result?.data?.session;
       setSession(s);
       if (s?.user?.id) {
         fetchEnrollments(s.user.id).then((enrs) => setHasEnrollments(enrs.length > 0));
       }
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+    const sub = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       if (s?.user?.id) {
         fetchEnrollments(s.user.id).then((enrs) => setHasEnrollments(enrs.length > 0));
@@ -53,7 +70,7 @@ export default function CategoryBar() {
         setHasEnrollments(false);
       }
     });
-    return () => subscription.unsubscribe();
+    return () => sub?.data?.subscription?.unsubscribe?.();
   }, []);
 
   useEffect(() => {
@@ -86,10 +103,41 @@ export default function CategoryBar() {
 
   return (
     <>
-      <div className="sticky top-0 z-50 glass-card border-b border-glass-border">
-        <div className="max-w-6xl mx-auto px-3 sm:px-5">
+      <div className="fixed top-0 inset-x-0 z-50 glass-card border-b border-glass-border">
+        <div className="px-3 sm:px-5">
           <div className="flex items-center gap-2 py-2.5">
-            <Logo className="text-base sm:text-lg shrink-0" />
+            <div className="w-48 shrink-0 hidden md:flex items-center">
+              <Logo className="text-base sm:text-lg" />
+            </div>
+            <div className="flex md:hidden items-center">
+              <Logo className="text-base sm:text-lg" />
+            </div>
+            <div className="hidden md:block w-px h-8 bg-blue-200/40 dark:bg-gray-700/40 mr-6" />
+            <div ref={navRef} className="relative flex max-md:hidden items-center gap-1 overflow-x-auto scrollbar-none">
+              <div
+                className="absolute top-0 bottom-0 rounded-full pointer-events-none nav-active"
+                style={{
+                  left: indicatorStyle.left,
+                  width: indicatorStyle.width,
+                  transition: 'left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}
+              />
+              {navLinks.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  data-active={pathname === l.to || undefined}
+                  className={`relative z-10 text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors ${
+                    pathname === l.to
+                      ? 'text-black dark:text-gray-100'
+                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+            {pathname !== '/home' && (
             <div ref={searchRef} className={`flex max-md:hidden items-center border border-glass-border rounded-full transition-all duration-200 ${searchOpen ? 'w-[180px]' : 'w-8'}`}>
               <form onSubmit={handleSearch} className="flex items-center flex-1 min-w-0">
                 <input
@@ -104,33 +152,18 @@ export default function CategoryBar() {
               <button
                 type="button"
                 onClick={() => { if (searchOpen && search.trim()) { handleSearch({ preventDefault: () => {} }); } else { setSearchOpen((o) => !o); } }}
-                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full text-blue-600/70 hover:text-blue-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer mr-0.5"
+                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer mr-0.5"
                 title="Search"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </button>
             </div>
-
-            <div className="flex max-md:hidden items-center gap-1 overflow-x-auto scrollbar-none">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
-                    pathname === l.to
-                      ? 'bg-teal text-white'
-                      : 'text-blue-600/70 hover:text-blue-900 hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
-                  }`}
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </div>
+            )}
 
             <div className="ml-auto flex items-center gap-1" ref={btnRef}>
               <button
                 onClick={toggleTheme}
-                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-blue-600/70 hover:text-blue-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
                 title={dark ? 'Light mode' : 'Dark mode'}
               >
                 {dark ? (
@@ -141,22 +174,34 @@ export default function CategoryBar() {
               </button>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex max-sm:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-blue-600/70 hover:text-blue-900 hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60 transition-colors cursor-pointer whitespace-nowrap"
+                className="flex max-sm:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60 transition-colors cursor-pointer whitespace-nowrap"
               >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                Profile
+                {session ? (
+                  <span className="w-6 h-6 rounded-full bg-gradient-to-br from-teal to-teal-dark text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {(session.user?.user_metadata?.name || session.user?.email || '?').charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                )}
+                {session?.user?.email || 'Profile'}
               </button>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex sm:hidden w-8 h-8 items-center justify-center rounded-full text-blue-600/70 hover:text-blue-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                className="flex sm:hidden w-8 h-8 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
                 title="Profile"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                {session ? (
+                  <span className="w-6 h-6 rounded-full bg-gradient-to-br from-teal to-teal-dark text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {(session.user?.user_metadata?.name || session.user?.email || '?').charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex md:hidden w-9 h-9 items-center justify-center rounded-full text-blue-600/70 hover:text-blue-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer active:scale-95"
+                className="flex md:hidden w-9 h-9 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer active:scale-95"
                 aria-label="Menu"
               >
                 {menuOpen ? (
@@ -177,13 +222,14 @@ export default function CategoryBar() {
                   onClick={() => setMenuOpen(false)}
                   className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
                     pathname === l.to
-                      ? 'bg-teal text-white'
-                      : 'text-blue-600/70 hover:text-blue-900 hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
+                      ? 'nav-active text-black dark:text-gray-100'
+                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
                   }`}
                 >
                   {l.label}
                 </Link>
               ))}
+              {pathname !== '/home' && (
               <form onSubmit={handleSearch} className="w-full mt-2 relative">
                 <input
                   type="text"
@@ -193,6 +239,7 @@ export default function CategoryBar() {
                   className="w-full px-3 py-1.5 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 placeholder:text-blue-300 dark:placeholder:text-gray-500 dark:text-gray-200"
                 />
               </form>
+              )}
             </div>
           )}
         </div>
@@ -203,12 +250,15 @@ export default function CategoryBar() {
           <div className="bg-white rounded-2xl p-2 shadow-lg border border-blue-200 w-48 dark:bg-gray-800 dark:border-gray-700">
             {session ? (
               <>
-                <div className="px-3 py-2 text-sm text-blue-900 font-medium truncate border-b border-blue-100 mb-1 dark:text-gray-200 dark:border-gray-700">
-                  {session.user.email}
+                <div className="px-3 py-2 text-sm text-black font-medium truncate border-b border-blue-100 mb-1 dark:text-gray-200 dark:border-gray-700">
+                  {session.user?.user_metadata?.name || session.user?.email || 'User'}
                 </div>
+                {session.user?.email && (
+                  <div className="px-3 py-1 text-xs text-black/70 dark:text-gray-500 truncate">{session.user.email}</div>
+                )}
                 <button
                   onClick={handleSignOut}
-                  className="w-full text-left px-3 py-2 text-sm text-blue-500 hover:bg-blue-50 rounded-xl transition-colors cursor-pointer dark:text-gray-400 dark:hover:bg-gray-700"
+                  className="w-full text-left px-3 py-2 text-sm text-rose hover:bg-rose/5 rounded-xl transition-colors cursor-pointer dark:text-red-400 dark:hover:bg-red-900/20"
                 >
                   Sign out
                 </button>
@@ -218,14 +268,14 @@ export default function CategoryBar() {
                 <Link
                   to="/auth?mode=signin"
                   onClick={() => setProfileOpen(false)}
-                  className="block px-3 py-2 text-sm text-blue-900 hover:bg-blue-50 rounded-xl transition-colors dark:text-gray-200 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 text-sm text-black hover:bg-blue-50 rounded-xl transition-colors dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/auth?mode=signup"
                   onClick={() => setProfileOpen(false)}
-                  className="block px-3 py-2 text-sm text-blue-700 font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-blue-400 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 text-sm text-black font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-black/60 dark:hover:bg-gray-700"
                 >
                   Create Account
                 </Link>

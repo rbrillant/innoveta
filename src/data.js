@@ -1,5 +1,15 @@
 import { supabase } from './supabase';
 
+export async function fetchPaymentSettings() {
+  const { data } = await supabase.from('payment_settings').select('*').maybeSingle();
+  return data || null;
+}
+
+export async function updatePaymentSettings(settings) {
+  const { data } = await supabase.from('payment_settings').update({ ...settings, updated_at: new Date() }).eq('id', 1).select().maybeSingle();
+  return data;
+}
+
 export async function fetchBookingAnalytics() {
   const { data: bookings } = await supabase
     .from('bookings')
@@ -34,28 +44,12 @@ export async function fetchBookingAnalytics() {
 }
 
 export async function fetchUserAnalytics() {
-  const { count: profileCount } = await supabase
-    .from('profiles')
-    .select('id', { count: 'exact', head: true });
+  const { data: designers } = await supabase
+    .from('designers')
+    .select('*');
 
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('created_at')
-    .order('created_at', { ascending: true });
-
-  const monthly = {};
-  (profiles || []).forEach(p => {
-    const key = new Date(p.created_at).toISOString().slice(0, 7);
-    monthly[key] = (monthly[key] || 0) + 1;
-  });
-
-  let running = 0;
-  const growth = Object.entries(monthly).map(([month, count]) => {
-    running += count;
-    return { month, count, total: running };
-  });
-
-  return { total: profileCount || 0, growth };
+  const count = Array.isArray(designers) ? designers.length : 0;
+  return { total: count, growth: [] };
 }
 
 export async function fetchTemplates() {
@@ -64,8 +58,8 @@ export async function fetchTemplates() {
 }
 
 export async function createTemplate(template) {
-  const { data } = await supabase.from('templates').insert(template).select();
-  return data?.[0];
+    const { data } = await supabase.from('templates').insert(template);
+    return data?.id ? data : null;
 }
 
 export async function updateTemplate(template) {
@@ -77,18 +71,19 @@ export async function removeTemplate(id) {
 }
 
 export async function fetchBookings() {
-  const { data, error } = await supabase
-    .from('bookings')
-    .select('*, templates(name, image)')
-    .order('created_at', { ascending: false });
-  if (error) console.error('fetchBookings error:', error);
-  return data || [];
+  try {
+    const res = await fetch(`${window.location.origin}/api/bookings-full`);
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function addBooking(booking) {
-  const { data, error } = await supabase.from('bookings').insert(booking).select();
+  const { data, error } = await supabase.from('bookings').insert(booking);
   if (error) { console.error('addBooking error:', error); throw error; }
-  return data?.[0];
+  return data?.id ? data : null;
 }
 
 export async function getBooking(id) {
@@ -122,7 +117,7 @@ export async function verifyPayment(bookingId) {
     if (match) {
       const { data: courses } = await supabase.from('courses').select('id').ilike('title', match[1]).limit(1);
       if (courses && courses.length > 0) {
-        await supabase.from('enrollments').insert({ user_id: booking.user_id, course_id: courses[0].id }).select().maybeSingle();
+        await supabase.from('enrollments').insert({ user_id: booking.user_id, course_id: courses[0].id });
       }
     }
   }
@@ -131,13 +126,10 @@ export async function verifyPayment(bookingId) {
 // ---- Designer Portal ----
 
 export async function verifyDesigner(email, password) {
-  const { data } = await supabase
-    .from('designers')
-    .select('*')
-    .eq('email', email)
-    .eq('password', password)
-    .maybeSingle();
-  return data;
+  const { data } = await supabase.auth.signInWithPassword({ email, password });
+  if (data?.user) return { email: data.user.email, name: data.user.email, password: '' };
+  if (data?.session?.user) return { email: data.session.user.email, name: data.session.user.email, password: '' };
+  return null;
 }
 
 export async function updateBookingStatus(id, status) {
@@ -151,7 +143,13 @@ export async function removeBooking(id) {
 }
 
 export async function updateDesignerPassword(email, newPassword) {
-  await supabase.from('designers').update({ password: newPassword }).eq('email', email);
+  const session = JSON.parse(localStorage.getItem('session') || '{}');
+  const res = await fetch(`${window.location.origin}/api/auth/update-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token || ''}` },
+    body: JSON.stringify({ currentPassword: '', newPassword }),
+  });
+  return await res.json();
 }
 
 // ---- CMS Pages ----
@@ -174,13 +172,19 @@ export async function upsertPage(page) {
   if (page.id) {
     await supabase.from('pages').update({ title: page.title, slug: page.slug, content: page.content, image: page.image, updated_at: new Date() }).eq('id', page.id);
   } else {
-    const { data } = await supabase.from('pages').insert(page).select();
-    return data?.[0];
+    const { data } = await supabase.from('pages').insert(page);
+    return data?.id ? data : null;
   }
 }
 
 export async function checkDomain(domain) {
   const { data, error } = await supabase.functions.invoke('domain-check', { body: { domain } });
+  if (error) throw error;
+  return data;
+}
+
+export async function checkAllDomains(name) {
+  const { data, error } = await supabase.functions.invoke('domain-check-all', { body: { name } });
   if (error) throw error;
   return data;
 }
@@ -194,15 +198,67 @@ export async function updateDomainPricing(tld, price) {
   await supabase.from('domain_pricing').upsert({ tld, price }, { onConflict: 'tld' });
 }
 
+// ---- Services (IT Integration + Consulting) ----
+
+export async function fetchServices(type) {
+  const { data } = await supabase.from('services').select('*').eq('type', type).order('sort_order');
+  return data || [];
+}
+
+export async function upsertService(service) {
+  if (service.id) {
+    await supabase.from('services').update(service).eq('id', service.id);
+  } else {
+    const { data } = await supabase.from('services').insert(service);
+    return data?.id ? data : null;
+  }
+}
+
+export async function removeService(id) {
+  await supabase.from('services').delete().eq('id', id);
+}
+
+export async function fetchServiceSteps() {
+  const { data } = await supabase.from('service_steps').select('*').order('step_number');
+  return data || [];
+}
+
+export async function upsertServiceStep(step) {
+  if (step.id) {
+    await supabase.from('service_steps').update(step).eq('id', step.id);
+  } else {
+    const { data } = await supabase.from('service_steps').insert(step);
+    return data?.id ? data : null;
+  }
+}
+
+export async function removeServiceStep(id) {
+  await supabase.from('service_steps').delete().eq('id', id);
+}
+
+// ---- App Settings ----
+
+export async function fetchSettings() {
+  const { data } = await supabase.from('settings').select('*');
+  const map = {};
+  (data || []).forEach((s) => { map[s.key] = s.value; });
+  return map;
+}
+
+export async function updateSetting(key, value) {
+  const { data, error } = await supabase.from('settings').upsert({ key, value }, { onConflict: 'key' });
+  return { data, error };
+}
+
 export async function fetchAllUsers() {
   const { data: bookingUsers } = await supabase
     .from('bookings')
-    .select('user_id, name, email')
+    .select('*')
     .order('created_at', { ascending: false });
 
-  const { data: profileUsers } = await supabase
-    .from('profiles')
-    .select('id, name, surname, email');
+  const { data: designers } = await supabase
+    .from('designers')
+    .select('*');
 
   const seen = new Set();
   const combined = [];
@@ -214,10 +270,10 @@ export async function fetchAllUsers() {
     }
   });
 
-  (profileUsers || []).forEach((u) => {
+  (designers || []).forEach((u) => {
     if (!seen.has(u.email)) {
       seen.add(u.email);
-      combined.push({ name: `${u.name || ''} ${u.surname || ''}`.trim() || '—', email: u.email, source: 'profile' });
+      combined.push({ name: u.name || '—', email: u.email, source: 'profile' });
     }
   });
 
@@ -238,10 +294,10 @@ export async function fetchCourse(id) {
 
 export async function upsertCourse(course) {
   if (course.id) {
-    await supabase.from('courses').update({ title: course.title, description: course.description, price: course.price, image: course.image, updated_at: new Date() }).eq('id', course.id);
+    await supabase.from('courses').update({ title: course.title, description: course.description, price: course.price, image: course.image, video_url: course.video_url || '', pdf_url: course.pdf_url || '', updated_at: new Date() }).eq('id', course.id);
   } else {
-    const { data } = await supabase.from('courses').insert(course).select();
-    return data?.[0];
+    const { data } = await supabase.from('courses').insert(course);
+    return data?.id ? data : null;
   }
 }
 
@@ -256,10 +312,10 @@ export async function fetchLessons(courseId) {
 
 export async function upsertLesson(lesson) {
   if (lesson.id) {
-    await supabase.from('course_lessons').update({ title: lesson.title, content_type: lesson.content_type, content: lesson.content, video_url: lesson.video_url, sort_order: lesson.sort_order }).eq('id', lesson.id);
+    await supabase.from('course_lessons').update({ title: lesson.title, description: lesson.description || '', content_type: lesson.content_type, content: lesson.content, video_url: lesson.video_url, sort_order: lesson.sort_order }).eq('id', lesson.id);
   } else {
-    const { data } = await supabase.from('course_lessons').insert(lesson).select();
-    return data?.[0];
+    const { data } = await supabase.from('course_lessons').insert(lesson);
+    return data?.id ? data : null;
   }
 }
 
@@ -268,13 +324,18 @@ export async function removeLesson(id) {
 }
 
 export async function fetchEnrollments(userId) {
-  const { data } = await supabase.from('enrollments').select('*, courses(*)').eq('user_id', userId);
-  return data || [];
+  try {
+    const res = await fetch(`${window.location.origin}/api/enrollments-full/${userId}`);
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function enrollCourse(userId, courseId) {
-  const { data } = await supabase.from('enrollments').insert({ user_id: userId, course_id: courseId }).select('*, courses(*)').maybeSingle();
-  return data;
+  const { data } = await supabase.from('enrollments').insert({ user_id: userId, course_id: courseId });
+  return data?.id ? data : null;
 }
 
 export async function fetchLessonProgress(userId, lessonIds) {

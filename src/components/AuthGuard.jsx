@@ -8,14 +8,16 @@ export default function AuthGuard({ children }) {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then((result) => {
+      const session = result?.data?.session;
       if (!session) {
-        navigate(`/auth?redirect=${encodeURIComponent(location.pathname)}`, { replace: true });
+        const full = location.pathname + location.search;
+        navigate(`/auth?redirect=${encodeURIComponent(full)}`, { replace: true });
       } else {
         setChecking(false);
       }
     });
-  }, [navigate, location.pathname]);
+  }, [navigate, location.pathname, location.search]);
 
   if (checking) return null;
 

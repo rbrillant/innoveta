@@ -14,9 +14,10 @@ CREATE TABLE profiles (
 CREATE TABLE templates (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category = 'Websites'),
+  category TEXT NOT NULL,
   description TEXT NOT NULL,
   image TEXT,
+  video TEXT,
   price NUMERIC(10,2) DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -38,10 +39,10 @@ CREATE TABLE bookings (
 
 -- 4. Seed templates
 INSERT INTO templates (name, category, description, price, image) VALUES
-  ('Portfolio Pro', 'Websites', 'A sleek one-page portfolio with smooth scroll and dark mode support.', 49, '/images/portfolio-pro.jpg'),
-  ('ShopKit', 'Websites', 'Minimal e-commerce template with cart and checkout flows.', 79, '/images/shopkit.jpg'),
-  ('DashView', 'Websites', 'Admin dashboard template with charts, tables, and dark sidebar.', 59, '/images/dash-view.jpg'),
-  ('Bloom Restaurant', 'Websites', 'Elegant restaurant website template with menu sections and reservation form.', 34, '/images/bloom.jpg');
+  ('Portfolio Pro', 'Visual Identity Graphic Design', 'A sleek one-page portfolio with smooth scroll and dark mode support.', 49, '/images/portfolio-pro.jpg'),
+  ('ShopKit', 'User Interface (UI) Design', 'Minimal e-commerce template with cart and checkout flows.', 79, '/images/shopkit.jpg'),
+  ('DashView', 'User Interface (UI) Design', 'Admin dashboard template with charts, tables, and dark sidebar.', 59, '/images/dash-view.jpg'),
+  ('Bloom Restaurant', 'Website Design', 'Elegant restaurant website template with menu sections and reservation form.', 34, '/images/bloom.jpg');
 
 -- 5. Row Level Security
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -106,7 +107,7 @@ CREATE POLICY "Allow all insert designer_contacts" ON designer_contacts FOR INSE
 CREATE POLICY "Allow all delete designer_contacts" ON designer_contacts FOR DELETE USING (true);
 
 -- Seed default designer (password: create123)
-INSERT INTO designers (email, password, name) VALUES ('admin@innoveta.com', 'create123', 'Designer');
+INSERT INTO designers (email, password, name) VALUES ('admin@innoventancy.com', 'create123', 'Designer');
 
 -- ============================================================
 -- 7. CMS Pages (Website, Domain & Hosting, Online Courses)
@@ -185,6 +186,8 @@ CREATE TABLE IF NOT EXISTS courses (
   description TEXT NOT NULL DEFAULT '',
   price NUMERIC(10,2) DEFAULT 0,
   image TEXT,
+  video_url TEXT DEFAULT '',
+  pdf_url TEXT DEFAULT '',
   category TEXT NOT NULL DEFAULT 'Online Courses',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -194,6 +197,7 @@ CREATE TABLE IF NOT EXISTS course_lessons (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
+  description TEXT DEFAULT '',
   content_type TEXT NOT NULL CHECK (content_type IN ('text', 'video', 'notes')),
   content TEXT NOT NULL DEFAULT '',
   video_url TEXT,
@@ -261,3 +265,93 @@ INSERT INTO course_lessons (course_id, title, content_type, content, video_url, 
 SELECT c.id, 'Introduction to UI/UX', 'text', '<p>Welcome to UI/UX Masterclass! This course teaches you to design interfaces that are both beautiful and intuitive.</p><p>UI focuses on visual elements — buttons, icons, spacing, colors. UX focuses on the overall feel and flow of the product.</p>', NULL, 1
 FROM courses c WHERE c.title = 'UI/UX Masterclass'
 ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- 11. Services (IT Integration + Consulting)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS services (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  type TEXT NOT NULL CHECK (type IN ('it-integration', 'consulting')),
+  icon TEXT NOT NULL DEFAULT '',
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  price NUMERIC(10,2) DEFAULT 0,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE services ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "Public read services" ON services FOR SELECT USING (true);
+CREATE POLICY IF NOT EXISTS "Admin all services" ON services FOR ALL USING (true);
+
+INSERT INTO services (type, icon, title, description, price, sort_order) VALUES
+  ('it-integration', '🔗', 'API Integration', 'Connect your apps with REST, GraphQL, and webhook APIs. Secure, documented, and monitored.', 499, 1),
+  ('it-integration', '💳', 'Payment Gateways', 'Integrate Stripe, PayPal, Flutterwave, M-Pesa, and more. PCI-compliant with webhook support.', 499, 2),
+  ('it-integration', '📊', 'CRM Setup', 'Deploy and customize Salesforce, HubSpot, or Zoho. Sync contacts, deals, and workflows.', 1299, 3),
+  ('it-integration', '📧', 'Email Systems', 'SMTP setup, transactional email (SendGrid, Postmark), and automated marketing sequences.', 499, 4),
+  ('it-integration', '☁️', 'Cloud Migration', 'Move infrastructure to AWS, GCP, or Azure. Containerization, CI/CD, and cost optimization.', 1299, 5),
+  ('it-integration', '🛠️', 'Custom Integration', 'Bespoke middleware, event-driven pipelines, and system-to-system automation.', 0, 6),
+  ('consulting', '🔍', 'Tech Audit', 'Comprehensive review of your existing tech stack, code quality, infrastructure, and security posture.', 0, 1),
+  ('consulting', '🏛️', 'Architecture Review', 'Evaluate system design, scalability, and maintainability. Get a clear roadmap for improvements.', 0, 2),
+  ('consulting', '🧭', 'Stack Strategy', 'Choose the right technologies for your next project. We compare build vs. buy, cost, and trade-offs.', 0, 3),
+  ('consulting', '⚡', 'Performance Optimization', 'Identify bottlenecks and implement targeted performance improvements.', 0, 4),
+  ('consulting', '🔒', 'Security Assessment', 'Vulnerability scanning, penetration testing, and security best practices.', 0, 5),
+  ('consulting', '🚀', 'Digital Transformation', 'End-to-end guidance for moving your business processes online with modern tools.', 0, 6)
+ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- 12. Service Steps (Consulting process)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS service_steps (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  step_number INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE service_steps ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "Public read service_steps" ON service_steps FOR SELECT USING (true);
+CREATE POLICY IF NOT EXISTS "Admin all service_steps" ON service_steps FOR ALL USING (true);
+
+INSERT INTO service_steps (step_number, title, description) VALUES
+  (1, 'Discovery', 'We learn about your business, goals, and current challenges through structured interviews and documentation review.'),
+  (2, 'Analysis', 'Our team performs deep technical analysis, identifying gaps, risks, and opportunities in your current setup.'),
+  (3, 'Recommendations', 'You receive a prioritized action plan with clear timelines, cost estimates, and expected outcomes.'),
+  (4, 'Implementation', 'We work alongside your team — or handle the execution directly — to deliver measurable results.')
+ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- 13. App Settings (auto-reply email, company name, etc.)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT ''
+);
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read settings" ON settings FOR SELECT USING (true);
+CREATE POLICY "Admin all settings" ON settings FOR ALL USING (true);
+
+INSERT INTO settings (key, value) VALUES
+  ('company_name', 'Innoventancy Design Studio')
+ON CONFLICT (key) DO NOTHING;
+
+-- Payment settings (single-row table for bank + mobile money details)
+CREATE TABLE IF NOT EXISTS payment_settings (
+  id integer primary key default 1,
+  bank_name text not null default '',
+  account_name text not null default '',
+  account_number text not null default '',
+  currency text not null default 'RWF',
+  momo_network text not null default '',
+  momo_number text not null default '',
+  momo_name text not null default '',
+  updated_at timestamptz default now(),
+  constraint single_row check (id = 1)
+);
+ALTER TABLE payment_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read payment_settings" ON payment_settings FOR SELECT USING (true);
+CREATE POLICY "Admin update payment_settings" ON payment_settings FOR ALL USING (true);
+INSERT INTO payment_settings (id, bank_name, account_name, account_number, currency, momo_network, momo_number, momo_name)
+VALUES (1, 'Bank of Kigali', 'Innoventancy Design Studio', '0001-2345678-01', 'RWF', 'MTN Rwanda', '+250 788 000 000', 'Innoventancy Design Studio')
+ON CONFLICT (id) DO NOTHING;

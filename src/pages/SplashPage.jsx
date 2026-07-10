@@ -84,11 +84,11 @@ export default function SplashPage() {
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-blue-900 dark:text-gray-100 leading-tight animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-                <span className="text-blue-900 dark:text-gray-100">Inno</span><span className="text-teal">veta</span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-black dark:text-gray-100 leading-tight animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+                Innoventancy
               </h1>
 
-              <p className="text-blue-600/70 dark:text-gray-400 mt-2 max-w-md text-xs sm:text-sm animate-fade-up" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
+              <p className="text-black/70 dark:text-gray-400 mt-2 max-w-md text-xs sm:text-sm animate-fade-up" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
                 Premium design templates — websites, flyers, CVs, menus, banners and more.
               </p>
 
@@ -122,15 +122,15 @@ export default function SplashPage() {
             }}
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-blue-400/60 text-xs sm:text-sm font-light tracking-[0.3em] animate-word-fade" style={{ animationDelay: '0s', animationDuration: '2s' }}>We</span>
+              <span className="text-black/60 text-xs sm:text-sm font-light tracking-[0.3em] animate-word-fade" style={{ animationDelay: '0s', animationDuration: '2s' }}>We</span>
               <span className="text-teal font-bold text-3xl sm:text-5xl lg:text-6xl animate-word-slide" style={{ animationDelay: '0.5s', animationDuration: '2s' }}>Create</span>
             </div>
-            <span className="absolute top-1/3 left-2 text-blue-500/50 text-[11px] sm:text-sm font-light tracking-wider animate-word-rise" style={{ animationDelay: '0.7s', animationDuration: '2.5s' }}>Innovate</span>
-            <span className="absolute top-1/3 right-2 text-blue-400/50 text-[11px] sm:text-sm font-light animate-word-fade" style={{ animationDelay: '0.9s', animationDuration: '2.3s' }}>Dream</span>
-            <span className="absolute bottom-14 right-3 text-blue-500/50 text-sm sm:text-base font-light tracking-wider animate-word-scale" style={{ animationDelay: '1.1s', animationDuration: '2s' }}>Design</span>
+            <span className="absolute top-1/3 left-2 text-black/70/50 text-[11px] sm:text-sm font-light tracking-wider animate-word-rise" style={{ animationDelay: '0.7s', animationDuration: '2.5s' }}>Innovate</span>
+            <span className="absolute top-1/3 right-2 text-black/60/50 text-[11px] sm:text-sm font-light animate-word-fade" style={{ animationDelay: '0.9s', animationDuration: '2.3s' }}>Dream</span>
+            <span className="absolute bottom-14 right-3 text-black/70/50 text-sm sm:text-base font-light tracking-wider animate-word-scale" style={{ animationDelay: '1.1s', animationDuration: '2s' }}>Design</span>
             <span className="absolute bottom-14 left-3 text-teal-dark/50 text-[11px] sm:text-sm font-light italic animate-word-rise" style={{ animationDelay: '1.3s', animationDuration: '2.4s' }}>Shape</span>
             <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-teal-dark/50 text-sm sm:text-base font-light italic animate-word-fade" style={{ animationDelay: '1.5s', animationDuration: '2s' }}>Inspire</span>
-            <span className="absolute bottom-2 right-3 text-blue-400/50 text-[11px] sm:text-sm font-light animate-word-slide" style={{ animationDelay: '1.7s', animationDuration: '2.6s' }}>Craft</span>
+            <span className="absolute bottom-2 right-3 text-black/60/50 text-[11px] sm:text-sm font-light animate-word-slide" style={{ animationDelay: '1.7s', animationDuration: '2.6s' }}>Craft</span>
             <span className="absolute top-1/2 right-2 text-blue-300/40 text-[9px] sm:text-[11px] font-light tracking-wider animate-word-scale" style={{ animationDelay: '0.2s', animationDuration: '3s' }}>Vision</span>
             <span className="absolute top-1/2 left-2 text-blue-300/40 text-[9px] sm:text-[11px] font-light animate-word-fade" style={{ animationDelay: '0.6s', animationDuration: '2.8s' }}>Art</span>
           </div>
@@ -160,12 +160,12 @@ export default function SplashPage() {
               className="glass-card rounded-2xl px-3 py-2 flex-1 flex flex-col justify-center animate-fade-up"
               style={{ animationDelay: `${0.9 + i * 0.15}s`, animationFillMode: 'both' }}
             >
-              <div className="w-6 h-6 rounded-md bg-teal/15 dark:bg-amber-900/20 flex items-center justify-center text-teal-dark dark:text-teal-light font-bold text-xs mb-1.5">
+              <div className="w-6 h-6 rounded-md bg-teal/15 dark:bg-teal-dark/20 flex items-center justify-center text-teal-dark dark:text-teal-light font-bold text-xs mb-1.5">
                 {i + 1}
               </div>
-              <span className="text-xs font-bold text-blue-900 dark:text-gray-100">{item.label}</span>
-              <p className="text-[11px] text-blue-500/60 dark:text-gray-400 mt-0.5">{item.sub}</p>
-              <p className="text-[11px] text-blue-400/50 dark:text-gray-500 mt-1 leading-relaxed">{item.desc}</p>
+              <span className="text-xs font-bold text-black dark:text-gray-100">{item.label}</span>
+              <p className="text-[11px] text-black/60 dark:text-gray-400 mt-0.5">{item.sub}</p>
+              <p className="text-[11px] text-black/60/50 dark:text-gray-500 mt-1 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

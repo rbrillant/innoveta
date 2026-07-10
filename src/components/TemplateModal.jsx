@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 export default function TemplateModal({ editing, onClose, onSave }) {
   const formRef = useRef(null);
   const [preview, setPreview] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [fileName, setFileName] = useState('');
+  const [videoFileName, setVideoFileName] = useState('');
   const isEdit = editing && editing.id;
 
   useEffect(() => {
@@ -12,9 +14,8 @@ export default function TemplateModal({ editing, onClose, onSave }) {
       formRef.current.category.value = editing.category;
       formRef.current.price.value = editing.price;
       formRef.current.description.value = editing.description;
-      if (editing.image) {
-        setPreview(editing.image);
-      }
+      if (editing.image) setPreview(editing.image);
+      if (editing.video) setVideoPreview(editing.video);
     }
   }, [editing, isEdit]);
 
@@ -27,6 +28,16 @@ export default function TemplateModal({ editing, onClose, onSave }) {
     reader.readAsDataURL(file);
   }
 
+  function handleVideoChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 100 * 1024 * 1024) { alert('Video must be under 100MB'); return; }
+    setVideoFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (ev) => setVideoPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
@@ -36,15 +47,16 @@ export default function TemplateModal({ editing, onClose, onSave }) {
       price: Number(fd.get('price')),
       description: fd.get('description'),
       image: preview || '',
+      video: videoPreview || '',
     };
     if (isEdit) template.id = editing.id;
     onSave(template);
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 sm:p-8 border border-card-border"
+        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8 border border-card-border m-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
@@ -64,10 +76,27 @@ export default function TemplateModal({ editing, onClose, onSave }) {
             <label className="block text-sm font-medium text-warm-gray mb-1">Category</label>
             <select name="category" required className="w-full px-3.5 py-2.5 border border-card-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal cursor-pointer bg-white">
               <option value="">Select category</option>
+              <option value="Presentation">Presentation</option>
+              <option value="Poster">Poster</option>
+              <option value="Resume">Resume</option>
+              <option value="Email">Email</option>
+              <option value="Invitation">Invitation</option>
+              <option value="Mobile Video">Mobile Video</option>
+              <option value="Facebook Post">Facebook Post</option>
+              <option value="Business Card">Business Card</option>
+              <option value="Photo Collage">Photo Collage</option>
+              <option value="Whiteboard">Whiteboard</option>
+              <option value="Sheet">Sheet</option>
+              <option value="Instagram Post">Instagram Post</option>
+              <option value="Instagram Story">Instagram Story</option>
+              <option value="Landscape Video">Landscape Video</option>
+              <option value="Code">Code</option>
+              <option value="Flyer">Flyer</option>
+              <option value="Logo">Logo</option>
+              <option value="Brochure">Brochure</option>
+              <option value="Menu">Menu</option>
+              <option value="Doc">Doc</option>
               <option value="Websites">Websites</option>
-              <option value="Online Courses">Online Courses</option>
-              <option value="IT Integration">IT Integration</option>
-              <option value="Consulting">Consulting</option>
             </select>
           </div>
 
@@ -100,6 +129,25 @@ export default function TemplateModal({ editing, onClose, onSave }) {
               <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
             </label>
             {fileName && <p className="text-xs text-warm-light mt-1">{fileName}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-warm-gray mb-1">Template Video (optional)</label>
+            <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-card-border rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 h-36 relative overflow-hidden">
+              {videoPreview ? (
+                <>
+                  <video src={videoPreview} className="absolute inset-0 w-full h-full object-cover" muted />
+                  <div className="absolute bottom-2 right-2 bg-white/80 text-xs text-warm-gray px-2.5 py-1 rounded-full shadow-sm">Change</div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-1.5 text-warm-light">
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  <span className="text-xs">Click to upload video (max 100MB)</span>
+                </div>
+              )}
+              <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+            </label>
+            {videoFileName && <p className="text-xs text-warm-light mt-1">{videoFileName}</p>}
           </div>
 
           <div className="flex gap-3 pt-2">
