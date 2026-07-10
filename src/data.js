@@ -70,6 +70,24 @@ export async function removeTemplate(id) {
   await supabase.from('templates').delete().eq('id', id);
 }
 
+export async function fetchTemplateImages(templateId) {
+  const { data } = await supabase.from('template_images').select('*').eq('template_id', templateId).order('sort_order');
+  return data || [];
+}
+
+export async function addTemplateImage(image) {
+  const { data } = await supabase.from('template_images').insert(image);
+  return data?.id ? data : null;
+}
+
+export async function removeTemplateImage(id) {
+  await supabase.from('template_images').delete().eq('id', id);
+}
+
+export async function updateTemplateImage(id, updates) {
+  await supabase.from('template_images').update(updates).eq('id', id);
+}
+
 export async function fetchBookings() {
   try {
     const res = await fetch(`${window.location.origin}/api/bookings-full`);

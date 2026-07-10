@@ -12,7 +12,6 @@ const BASE_LINKS = [
   { to: '/online-courses', label: 'Online Courses' },
   { to: '/it-integration', label: 'IT Integration' },
   { to: '/consulting', label: 'Consulting' },
-  { to: '/book', label: 'Book Now' },
 ];
 
 export default function CategoryBar() {

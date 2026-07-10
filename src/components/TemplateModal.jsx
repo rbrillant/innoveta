@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { fetchTemplateImages, addTemplateImage, removeTemplateImage, updateTemplateImage } from '../data';
 
 export default function TemplateModal({ editing, onClose, onSave }) {
   const formRef = useRef(null);
@@ -6,6 +7,8 @@ export default function TemplateModal({ editing, onClose, onSave }) {
   const [videoPreview, setVideoPreview] = useState(null);
   const [fileName, setFileName] = useState('');
   const [videoFileName, setVideoFileName] = useState('');
+  const [pages, setPages] = useState([]);
+  const [pagesLoading, setPagesLoading] = useState(false);
   const isEdit = editing && editing.id;
 
   useEffect(() => {
@@ -16,8 +19,17 @@ export default function TemplateModal({ editing, onClose, onSave }) {
       formRef.current.description.value = editing.description;
       if (editing.image) setPreview(editing.image);
       if (editing.video) setVideoPreview(editing.video);
+      loadPages();
     }
   }, [editing, isEdit]);
+
+  async function loadPages() {
+    if (!editing?.id) return;
+    setPagesLoading(true);
+    const imgs = await fetchTemplateImages(editing.id);
+    setPages(imgs);
+    setPagesLoading(false);
+  }
 
   function handleFileChange(e) {
     const file = e.target.files[0];
@@ -38,6 +50,38 @@ export default function TemplateModal({ editing, onClose, onSave }) {
     reader.readAsDataURL(file);
   }
 
+  async function handleAddPage(file) {
+    if (!editing?.id) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      await addTemplateImage({
+        template_id: editing.id,
+        image_url: ev.target.result,
+        sort_order: pages.length,
+      });
+      await loadPages();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleRemovePage(id) {
+    await removeTemplateImage(id);
+    await loadPages();
+  }
+
+  async function handleMovePage(id, dir) {
+    const idx = pages.findIndex((p) => p.id === id);
+    if (idx === -1) return;
+    const newPages = [...pages];
+    const target = idx + dir;
+    if (target < 0 || target >= newPages.length) return;
+    [newPages[idx], newPages[target]] = [newPages[target], newPages[idx]];
+    for (let i = 0; i < newPages.length; i++) {
+      await updateTemplateImage(newPages[i].id, { sort_order: i });
+    }
+    await loadPages();
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
@@ -56,7 +100,7 @@ export default function TemplateModal({ editing, onClose, onSave }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8 border border-card-border m-4"
+        className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 border border-card-border m-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
@@ -111,14 +155,12 @@ export default function TemplateModal({ editing, onClose, onSave }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-warm-gray mb-1">Template Image</label>
+            <label className="block text-sm font-medium text-warm-gray mb-1">Cover Image</label>
             <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-card-border rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 h-36 relative overflow-hidden">
               {preview ? (
                 <>
                   <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute bottom-2 right-2 bg-white/80 text-xs text-warm-gray px-2.5 py-1 rounded-full shadow-sm">
-                    Change
-                  </div>
+                  <div className="absolute bottom-2 right-2 bg-white/80 text-xs text-warm-gray px-2.5 py-1 rounded-full shadow-sm">Change</div>
                 </>
               ) : (
                 <div className="flex flex-col items-center gap-1.5 text-warm-light">
@@ -149,6 +191,37 @@ export default function TemplateModal({ editing, onClose, onSave }) {
             </label>
             {videoFileName && <p className="text-xs text-warm-light mt-1">{videoFileName}</p>}
           </div>
+
+          {/* Multi-page images */}
+          {isEdit && (
+            <div>
+              <label className="block text-sm font-medium text-warm-gray mb-2">Template Pages <span className="text-xs text-warm-light font-normal">(for multi-page templates like websites, brochures, etc.)</span></label>
+              <div className="space-y-2 mb-3">
+                {pagesLoading ? (
+                  <p className="text-xs text-warm-light">Loading pages...</p>
+                ) : pages.length === 0 ? (
+                  <p className="text-xs text-warm-light">No additional pages yet.</p>
+                ) : (
+                  pages.map((p, i) => (
+                    <div key={p.id} className="flex items-center gap-3 border border-card-border rounded-xl p-2">
+                      <img src={p.image_url} alt={p.caption || `Page ${i + 1}`} className="w-14 h-10 rounded-lg object-cover shrink-0" />
+                      <span className="text-xs text-warm-gray flex-1 truncate">{p.caption || `Page ${i + 1}`}</span>
+                      <div className="flex items-center gap-1">
+                        <button type="button" onClick={() => handleMovePage(p.id, -1)} disabled={i === 0} className="w-6 h-6 flex items-center justify-center rounded text-xs border border-card-border hover:bg-gray-50 disabled:opacity-30 cursor-pointer" title="Move up">&uarr;</button>
+                        <button type="button" onClick={() => handleMovePage(p.id, 1)} disabled={i === pages.length - 1} className="w-6 h-6 flex items-center justify-center rounded text-xs border border-card-border hover:bg-gray-50 disabled:opacity-30 cursor-pointer" title="Move down">&darr;</button>
+                        <button type="button" onClick={() => handleRemovePage(p.id)} className="w-6 h-6 flex items-center justify-center rounded text-xs text-rose hover:bg-rose/10 cursor-pointer" title="Remove">&times;</button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              <label className="flex items-center justify-center w-full border-2 border-dashed border-card-border rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 py-3 gap-2 text-sm text-warm-light">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+                Add Page
+                <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAddPage(f); e.target.value = ''; }} className="hidden" />
+              </label>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 text-sm font-medium text-warm-gray border border-card-border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">Cancel</button>

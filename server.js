@@ -62,6 +62,16 @@ function initDb() {
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS template_images (
+      id TEXT PRIMARY KEY,
+      template_id TEXT NOT NULL,
+      image_url TEXT NOT NULL,
+      sort_order INTEGER DEFAULT 0,
+      caption TEXT DEFAULT '',
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (template_id) REFERENCES templates(id) ON DELETE CASCADE
+    );
+
     CREATE TABLE IF NOT EXISTS bookings (
       id TEXT PRIMARY KEY,
       user_id TEXT,
@@ -620,7 +630,7 @@ app.post('/api/parse-pdf', upload.single('pdf'), async (req, res) => {
 // GET /api/:table - list with optional filters
 app.get('/api/:table', (req, res) => {
   const { table } = req.params;
-  const allowed = ['templates','bookings','services','service_steps','courses','course_lessons',
+  const allowed = ['templates','template_images','bookings','services','service_steps','courses','course_lessons',
     'enrollments','lesson_progress','settings','payment_settings','domain_pricing','designers','pages'];
   if (!allowed.includes(table)) return res.status(404).json({ error: 'Table not found' });
 
@@ -668,6 +678,10 @@ app.get('/api/:table', (req, res) => {
     sql += ` AND lesson_id = ?`;
     params.push(req.query.lesson_id);
   }
+  if (req.query.template_id) {
+    sql += ` AND template_id = ?`;
+    params.push(req.query.template_id);
+  }
 
   // ilike support for title
   if (req.query.title) {
@@ -680,6 +694,8 @@ app.get('/api/:table', (req, res) => {
     const dir = req.query.order.startsWith('-') ? 'DESC' : 'ASC';
     const col = req.query.order.replace(/^-/, '');
     sql += ` ORDER BY "${col}" ${dir}`;
+  } else if (table === 'template_images') {
+    sql += ' ORDER BY sort_order ASC';
   } else if (table !== 'settings' && table !== 'domain_pricing' && table !== 'payment_settings') {
     sql += ' ORDER BY created_at DESC';
   }
