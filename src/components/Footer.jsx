@@ -21,9 +21,9 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex items-center gap-3 text-[11px] text-black/70 dark:text-gray-400">
-            <a href="mailto:hello@innoventancy.com" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">hello@innoventancy.com</a>
+            <a href="mailto:hello@innovetancy.com" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">hello@innovetancy.com</a>
             <span className="text-blue-300 dark:text-gray-600">|</span>
-            <span>&copy; 2026 Innoventancy</span>
+            <span>&copy; 2026 Innovetancy</span>
           </div>
         </div>
       </div>

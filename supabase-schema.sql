@@ -107,7 +107,7 @@ CREATE POLICY "Allow all insert designer_contacts" ON designer_contacts FOR INSE
 CREATE POLICY "Allow all delete designer_contacts" ON designer_contacts FOR DELETE USING (true);
 
 -- Seed default designer (password: create123)
-INSERT INTO designers (email, password, name) VALUES ('admin@innoventancy.com', 'create123', 'Designer');
+INSERT INTO designers (email, password, name) VALUES ('admin@innovetancy.com', 'create123', 'Designer');
 
 -- ============================================================
 -- 7. CMS Pages (Website, Domain & Hosting, Online Courses)
@@ -333,7 +333,7 @@ CREATE POLICY "Public read settings" ON settings FOR SELECT USING (true);
 CREATE POLICY "Admin all settings" ON settings FOR ALL USING (true);
 
 INSERT INTO settings (key, value) VALUES
-  ('company_name', 'Innoventancy Design Studio')
+  ('company_name', 'Innovetancy Design Studio')
 ON CONFLICT (key) DO NOTHING;
 
 -- Payment settings (single-row table for bank + mobile money details)
@@ -353,5 +353,5 @@ ALTER TABLE payment_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read payment_settings" ON payment_settings FOR SELECT USING (true);
 CREATE POLICY "Admin update payment_settings" ON payment_settings FOR ALL USING (true);
 INSERT INTO payment_settings (id, bank_name, account_name, account_number, currency, momo_network, momo_number, momo_name)
-VALUES (1, 'Bank of Kigali', 'Innoventancy Design Studio', '0001-2345678-01', 'RWF', 'MTN Rwanda', '+250 788 000 000', 'Innoventancy Design Studio')
+VALUES (1, 'Bank of Kigali', 'Innovetancy Design Studio', '0001-2345678-01', 'RWF', 'MTN Rwanda', '+250 788 000 000', 'Innovetancy Design Studio')
 ON CONFLICT (id) DO NOTHING;

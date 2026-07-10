@@ -140,7 +140,7 @@ export default function AuthPage() {
           <div className="glass-card rounded-3xl p-8 sm:p-10">
             <div className="text-center mb-8">
               <span className="inline-block text-3xl mb-3">🎨</span>
-              <h2 className="text-2xl font-bold text-black dark:text-gray-100">Innoventancy</h2>
+              <h2 className="text-2xl font-bold text-black dark:text-gray-100">Innovetancy</h2>
               <p className="text-sm text-black dark:text-gray-400 mt-1">{mode === 'signin' ? 'Sign in to continue' : 'Create your account'}</p>
             </div>
 

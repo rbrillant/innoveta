@@ -85,7 +85,7 @@ export default function SplashPage() {
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-black dark:text-gray-100 leading-tight animate-fade-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-                Innoventancy
+                Innovetancy
               </h1>
 
               <p className="text-black/70 dark:text-gray-400 mt-2 max-w-md text-xs sm:text-sm animate-fade-up" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>

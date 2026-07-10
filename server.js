@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'innoventancy-local-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'innovetancy-local-secret-change-in-production';
 const DB_DIR = path.join(__dirname, 'data');
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 
@@ -180,11 +180,11 @@ function initDb() {
 
     -- Seed default designer
     INSERT OR IGNORE INTO designers (email, password, name) VALUES
-      ('admin@innoventancy.com', '$2a$10$placeholder', 'Designer');
+      ('admin@innovetancy.com', '$2a$10$placeholder', 'Designer');
 
     -- Seed settings
     INSERT OR IGNORE INTO settings (key, value) VALUES
-      ('company_name', 'Innoventancy Design Studio');
+      ('company_name', 'Innovetancy Design Studio');
 
     -- Seed payment settings
     INSERT OR IGNORE INTO payment_settings (id) VALUES (1);
@@ -321,7 +321,7 @@ function initDb() {
 
   // Hash default password
   const hash = bcrypt.hashSync('create123', 10);
-  db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, 'admin@innoventancy.com');
+  db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, 'admin@innovetancy.com');
 }
 
 initDb();
@@ -357,7 +357,7 @@ function getTransporter() {
 function sendEmail({ to, subject, html }) {
   const t = getTransporter();
   if (!t) return console.log('[email] SMTP not configured, skipping email to', to);
-  return t.sendMail({ from: process.env.SMTP_FROM || '"Innoventancy" <noreply@innoventancy.com>', to, subject, html }).catch(e => console.log('[email] send failed:', e.message));
+  return t.sendMail({ from: process.env.SMTP_FROM || '"Innovetancy" <noreply@innovetancy.com>', to, subject, html }).catch(e => console.log('[email] send failed:', e.message));
 }
 
 // Auth middleware
@@ -449,7 +449,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
     db.prepare('INSERT INTO password_reset_tokens (email, token, expires_at) VALUES (?, ?, ?)').run(email, token, expires);
     const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
-    sendEmail({ to: email, subject: 'Password Reset - Innoventancy', html: `<p>Click to reset your password:</p><a href="${resetUrl}">${resetUrl}</a><p>Link expires in 1 hour.</p>` });
+    sendEmail({ to: email, subject: 'Password Reset - Innovetancy', html: `<p>Click to reset your password:</p><a href="${resetUrl}">${resetUrl}</a><p>Link expires in 1 hour.</p>` });
     res.json({ data: { message: 'If the email exists, a reset link has been sent.' } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -733,13 +733,13 @@ app.post('/api/:table', (req, res) => {
     if (table === 'bookings' && data.email) {
       sendEmail({
         to: data.email,
-        subject: 'Booking Confirmed - Innoventancy',
-        html: `<h2>Thank you for your booking!</h2><p>We've received your request and will get back to you shortly.</p><p><b>Details:</b><br>Name: ${data.name || ''}<br>Email: ${data.email}<br>Type: ${data.type || ''}<br>Message: ${data.message || ''}</p><p>Best regards,<br>The Innoventancy Team</p>`
+        subject: 'Booking Confirmed - Innovetancy',
+        html: `<h2>Thank you for your booking!</h2><p>We've received your request and will get back to you shortly.</p><p><b>Details:</b><br>Name: ${data.name || ''}<br>Email: ${data.email}<br>Type: ${data.type || ''}<br>Message: ${data.message || ''}</p><p>Best regards,<br>The Innovetancy Team</p>`
       });
       // Notify admin
       sendEmail({
-        to: 'admin@innoventancy.com',
-        subject: 'New Booking Received - Innoventancy',
+        to: 'admin@innovetancy.com',
+        subject: 'New Booking Received - Innovetancy',
         html: `<h2>New Booking</h2><p><b>Name:</b> ${data.name}<br><b>Email:</b> ${data.email}<br><b>Phone:</b> ${data.phone || ''}<br><b>Type:</b> ${data.type}<br><b>Message:</b> ${data.message}<br><b>Amount:</b> $${data.payment_amount || 0}</p>`
       });
     }
@@ -784,5 +784,5 @@ app.get('/{*path}', (req, res) => {
 // ─── Start ────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Admin login: admin@innoventancy.com / create123`);
+  console.log(`Admin login: admin@innovetancy.com / create123`);
 });

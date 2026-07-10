@@ -245,7 +245,7 @@ export default function Studio() {
             <form onSubmit={handleLogin} className="glass-card rounded-2xl p-6 sm:p-8 space-y-4">
               <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Email</label>
-              <input name="email" type="email" required placeholder="admin@innoventancy.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+              <input name="email" type="email" required placeholder="admin@innovetancy.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Password</label>

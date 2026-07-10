@@ -99,7 +99,7 @@ export default function PaymentPage() {
             <h3 className="font-semibold text-black dark:text-gray-100 mb-3 flex items-center gap-2">🏦 Bank Transfer</h3>
             <div className="bg-white/50 dark:bg-gray-900/50 rounded-xl p-4 text-sm space-y-1.5">
               <p><span className="text-black/60 dark:text-gray-500">Bank:</span> {settings?.bank_name || 'Bank of Kigali'}</p>
-              <p><span className="text-black/60 dark:text-gray-500">Account Name:</span> {settings?.account_name || 'Innoventancy Design Studio'}</p>
+              <p><span className="text-black/60 dark:text-gray-500">Account Name:</span> {settings?.account_name || 'Innovetancy Design Studio'}</p>
               <p><span className="text-black/60 dark:text-gray-500">Account No:</span> <span className="font-mono font-bold text-black dark:text-gray-100">{settings?.account_number || '0001-2345678-01'}</span></p>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function PaymentPage() {
             <div className="text-sm text-black/70 dark:text-gray-300 space-y-1.5">
               <p><span className="text-black/60 dark:text-gray-500">Network:</span> {settings?.momo_network || 'MTN Rwanda'}</p>
               <p><span className="text-black/60 dark:text-gray-500">Number:</span> <span className="font-mono font-bold text-black dark:text-gray-100">{settings?.momo_number || '+250 788 000 000'}</span></p>
-              <p><span className="text-black/60 dark:text-gray-500">Name:</span> {settings?.momo_name || 'Innoventancy Design Studio'}</p>
+              <p><span className="text-black/60 dark:text-gray-500">Name:</span> {settings?.momo_name || 'Innovetancy Design Studio'}</p>
             </div>
           </div>
         </div>
