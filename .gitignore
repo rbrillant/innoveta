@@ -4,3 +4,4 @@ dist-admin/
 .DS_Store
 *.log
 supabase/.temp/
+data/
