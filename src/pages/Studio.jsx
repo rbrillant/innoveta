@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import mammoth from 'mammoth';
-import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBookings, verifyDesigner, updateBookingStatus, removeBooking, updateDesignerPassword, fetchAllUsers, fetchBookingAnalytics, fetchUserAnalytics, fetchDomainPricing, updateDomainPricing, verifyPayment, fetchCourses, upsertCourse, removeCourse, fetchLessons, upsertLesson, removeLesson, fetchPaymentSettings, updatePaymentSettings, fetchServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep } from '../data';
+import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBookings, verifyDesigner, updateBookingStatus, removeBooking, updateDesignerPassword, fetchAllUsers, fetchBookingAnalytics, fetchUserAnalytics, fetchDomainPricing, updateDomainPricing, verifyPayment, fetchCourses, upsertCourse, removeCourse, fetchLessons, upsertLesson, removeLesson, fetchPaymentSettings, updatePaymentSettings, fetchServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, fetchAllEnrollments } from '../data';
 import TemplateModal from '../components/TemplateModal';
 import Logo from '../components/Logo';
 import { useTheme } from '../components/ThemeProvider';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, CartesianGrid } from 'recharts';
 
-const TABS = ['Dashboard', 'Templates', 'IT Integration', 'Consulting', 'Bookings', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
+const TABS = ['Dashboard', 'Templates', 'IT Integration', 'Consulting', 'Bookings', 'Enrollments', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
 
 export default function Studio() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -14,6 +14,7 @@ export default function Studio() {
   const [tab, setTab] = useState('Dashboard');
   const [templates, setTemplates] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [enrollments, setEnrollments] = useState([]);
   const [users, setUsers] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [userGrowth, setUserGrowth] = useState(null);
@@ -21,7 +22,7 @@ export default function Studio() {
   const [paymentSettings, setPaymentSettings] = useState(null);
   const [paymentForm, setPaymentForm] = useState({ bank_name: '', account_name: '', account_number: '', currency: 'RWF', momo_network: '', momo_number: '', momo_name: '' });
 
-  const [loading, setLoading] = useState({ templates: false, bookings: false, users: false, analytics: false });
+  const [loading, setLoading] = useState({ templates: false, bookings: false, enrollments: false, users: false, analytics: false });
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [error, setError] = useState('');
@@ -144,6 +145,10 @@ export default function Studio() {
     setLoadingKey('users', true);
     setUsers(await fetchAllUsers());
     setLoadingKey('users', false);
+
+    setLoadingKey('enrollments', true);
+    setEnrollments(await fetchAllEnrollments());
+    setLoadingKey('enrollments', false);
 
     setLoadingKey('analytics', true);
     setAnalytics(await fetchBookingAnalytics());
@@ -592,6 +597,45 @@ export default function Studio() {
                       {!b.message?.startsWith('COURSE_ENROLL') && (
                         <p className="text-sm text-black/70 dark:text-gray-300 bg-white/50 rounded-xl p-3">{b.message}</p>
                       )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === 'Enrollments' && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-black dark:text-gray-100">Enrollments</h2>
+                  <p className="text-sm text-black/60 dark:text-gray-400">{enrollments.length} total</p>
+                </div>
+              </div>
+              {loading.enrollments ? (
+                <div className="text-center py-16 text-black/60 dark:text-gray-500 glass-card rounded-2xl"><p className="text-lg">Loading...</p></div>
+              ) : enrollments.length === 0 ? (
+                <div className="text-center py-16 text-black/60 dark:text-gray-500 glass-card rounded-2xl"><p className="text-lg">No enrollments yet.</p></div>
+              ) : (
+                <div className="space-y-3">
+                  {enrollments.map((enr) => (
+                    <div key={enr.id} className="glass-card rounded-2xl p-4 sm:p-5">
+                      <div className="flex items-center gap-3 mb-2">
+                        {enr.course_image && (
+                          <img src={enr.course_image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-black dark:text-gray-100">{enr.student_name || enr.student_email}{enr.student_surname ? ` ${enr.student_surname}` : ''}</p>
+                            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Enrolled</span>
+                          </div>
+                          <p className="text-sm text-black/60 dark:text-gray-400">{enr.student_email}{enr.student_phone ? ` · ${enr.student_phone}` : ''}</p>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 dark:bg-gray-900/50 rounded-xl p-3">
+                        <p className="text-sm text-black/70 dark:text-gray-300"><span className="font-medium">Course:</span> {enr.course_title || 'Unknown'}{enr.course_price > 0 ? ` — $${enr.course_price}` : ' — Free'}</p>
+                        <p className="text-xs text-black/60 dark:text-gray-500 mt-1">Enrolled {new Date(enr.enrolled_at).toLocaleDateString()}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

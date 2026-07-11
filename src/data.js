@@ -345,6 +345,16 @@ export async function fetchEnrollments(userId) {
   }
 }
 
+export async function fetchAllEnrollments() {
+  try {
+    const res = await fetch(`${window.location.origin}/api/enrollments-all`);
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function enrollCourse(userId, courseId) {
   const { data } = await supabase.from('enrollments').insert({ user_id: userId, course_id: courseId });
   return data?.id ? data : null;

@@ -308,7 +308,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 const upload = multer({ dest: path.join(UPLOAD_DIR, 'temp') });
 
 // Rate limiting
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { error: 'Too many attempts, try again later' } });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, message: { error: 'Too many attempts, try again later' } });
 const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 120 });
 
 app.use('/api/auth', authLimiter);
@@ -552,6 +552,19 @@ app.post('/api/bookings/:id/verify', authenticate, (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+// All enrollments with student and course details
+app.get('/api/enrollments-all', (req, res) => {
+  const rows = db.prepare(`
+    SELECT e.*, p.name as student_name, p.surname as student_surname, p.email as student_email, p.phone as student_phone,
+           c.title as course_title, c.price as course_price, c.image as course_image
+    FROM enrollments e
+    LEFT JOIN profiles p ON e.user_id = p.id
+    LEFT JOIN courses c ON e.course_id = c.id
+    ORDER BY e.enrolled_at DESC
+  `).all();
+  res.json({ data: rows });
 });
 
 // Lesson progress bulk
