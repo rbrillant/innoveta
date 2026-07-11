@@ -17,7 +17,6 @@ export default function Footer() {
               <Link to="/consulting" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Consulting</Link>
               <Link to="/book" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Book</Link>
               <Link to="/my-courses" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">My Courses</Link>
-              <Link to="/admin" className="text-[10px] text-blue-300 dark:text-gray-500 hover:text-teal-dark dark:hover:text-teal-light transition-colors uppercase tracking-wider">Admin</Link>
             </div>
           </div>
           <div className="flex items-center gap-3 text-[11px] text-black/70 dark:text-gray-400">
