@@ -99,121 +99,109 @@ export default function PaymentPage() {
   }
 
   return (
-    <main className="flex-1">
-      <div className="max-w-4xl mx-auto px-5 py-16">
-        <div className="text-center mb-10">
-          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-gray-700">
-            &#128179; Complete Your Payment
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-gray-100">Payment Required</h2>
-          <p className="text-black/70 dark:text-gray-300 mt-2 max-w-lg mx-auto">
-            {booking?.type === 'Domain' ? `Pay to register your domain` : 'Submit payment to confirm your booking.'}
-          </p>
-        </div>
-
-        {/* Booking Summary */}
-        <div className="glass-card rounded-2xl p-5 mb-8">
-          <h3 className="font-semibold text-black dark:text-gray-100 mb-3">Booking Summary</h3>
-          <div className="text-sm text-black/70 dark:text-gray-300 space-y-1">
-            <p><span className="text-black/60 dark:text-gray-500">Name:</span> {booking?.name}</p>
-            <p><span className="text-black/60 dark:text-gray-500">Email:</span> {booking?.email}</p>
-            <p><span className="text-black/60 dark:text-gray-500">Type:</span> {booking?.type}</p>
-            {booking?.payment_amount > 0 && <p><span className="text-black/60 dark:text-gray-500">Amount:</span> <span className="text-lg font-bold text-teal-dark dark:text-teal-light">${booking.payment_amount}</span></p>}
-            {booking?.message && <p className="whitespace-pre-wrap"><span className="text-black/60 dark:text-gray-500">Details:</span> {booking.message}</p>}
-            <p><span className="text-black/60 dark:text-gray-500">Status:</span> <span className="text-sky-600 dark:text-sky-400 font-medium">Awaiting Payment</span></p>
-          </div>
-        </div>
-
-        {/* Payment Methods */}
-        <h3 className="text-lg font-bold text-black dark:text-gray-100 mb-4">Choose a payment method</h3>
-
-        <div className="grid gap-4 mb-8">
-          {/* Mobile Money */}
-          <div className="glass-card rounded-2xl overflow-hidden border border-yellow-200/50 dark:border-yellow-900/30">
-            <div className="bg-gradient-to-r from-yellow-50 to-yellow-100/50 dark:from-yellow-900/10 dark:to-yellow-900/5 px-5 py-4 border-b border-yellow-200/30 dark:border-yellow-900/20">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">MTN</div>
-                <div>
-                  <h4 className="font-semibold text-black dark:text-gray-100 text-sm">MTN Mobile Money</h4>
-                  <p className="text-xs text-black/60 dark:text-gray-400">Pay with MTN MoMo</p>
-                </div>
-              </div>
+    <main className="flex-1 h-[calc(100vh-57px)] overflow-hidden">
+      <div className="h-full flex flex-col lg:flex-row">
+        {/* Left: Payment Methods */}
+        <div className="lg:w-3/5 h-full overflow-y-auto px-5 py-6 lg:py-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 px-3 py-1 rounded-full border border-white/40 dark:border-gray-700">
+                &#128179; Payment
+              </span>
+              {booking?.payment_amount > 0 && (
+                <span className="text-lg font-bold text-teal-dark dark:text-teal-light">${booking.payment_amount}</span>
+              )}
             </div>
-            <div className="px-5 py-4 space-y-3">
-              <div className="bg-yellow-50/50 dark:bg-yellow-900/5 rounded-xl p-4 text-center border border-dashed border-yellow-300/50 dark:border-yellow-700/30">
-                <p className="text-xs text-black/60 dark:text-gray-500 mb-1.5">Dial this code to pay:</p>
-                <p className="text-xl sm:text-2xl font-bold font-mono text-black dark:text-gray-100 tracking-wider">*182*8*1*000000#</p>
-              </div>
-              <div className="text-sm text-black/70 dark:text-gray-300 space-y-1">
-                <p><span className="text-black/60 dark:text-gray-500">Number:</span> <span className="font-mono font-bold text-black dark:text-gray-100">{settings?.momo_number || '+250 788 000 000'}</span></p>
-                <p><span className="text-black/60 dark:text-gray-500">Name:</span> {settings?.momo_name || settings?.account_name || 'Innovetancy Design Studio'}</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Bank Transfer */}
-          <div className="glass-card rounded-2xl overflow-hidden border border-blue-200/50 dark:border-blue-900/30">
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-900/5 px-5 py-4 border-b border-blue-200/30 dark:border-blue-900/20">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">&#127974;</div>
-                <div>
-                  <h4 className="font-semibold text-black dark:text-gray-100 text-sm">Bank Transfer</h4>
-                  <p className="text-xs text-black/60 dark:text-gray-400">Transfer to any of our accounts</p>
-                </div>
-              </div>
-            </div>
-            <div className="px-5 py-4">
-              <div className="grid sm:grid-cols-2 gap-3">
-                {banks.map((bank) => (
-                  <div key={bank.code} className="rounded-xl border border-blue-100 dark:border-gray-700 p-3.5 bg-white/50 dark:bg-gray-900/30 hover:border-blue-200 dark:hover:border-gray-600 transition-colors">
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-sm"
-                        style={{ backgroundColor: bank.color }}
-                      >
-                        {bank.short}
-                      </div>
-                      <span className="text-sm font-medium text-black dark:text-gray-100">{bank.name}</span>
-                    </div>
-                    <p className="text-xs text-black/50 dark:text-gray-500 mb-0.5">Account Number</p>
-                    <p className="text-sm font-mono font-bold text-black dark:text-gray-100 tracking-wide">{bank.account}</p>
+            {/* MTN MoMo */}
+            <div className="glass-card rounded-2xl overflow-hidden border border-yellow-200/50 dark:border-yellow-900/30 mb-3">
+              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100/50 dark:from-yellow-900/10 dark:to-yellow-900/5 px-4 py-3 border-b border-yellow-200/30 dark:border-yellow-900/20">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-yellow-400 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm">MTN</div>
+                  <div>
+                    <h4 className="font-semibold text-black dark:text-gray-100 text-sm">MTN Mobile Money</h4>
                   </div>
-                ))}
+                </div>
               </div>
-              <div className="mt-3 text-xs text-black/50 dark:text-gray-500 text-center">
-                Account Name: <span className="font-medium text-black/70 dark:text-gray-400">{settings?.account_name || 'Innovetancy Design Studio'}</span>
+              <div className="px-4 py-3 flex items-center gap-4">
+                <div className="bg-yellow-50/50 dark:bg-yellow-900/5 rounded-xl px-4 py-3 text-center border border-dashed border-yellow-300/50 dark:border-yellow-700/30 shrink-0">
+                  <p className="text-[10px] text-black/50 dark:text-gray-500 mb-0.5">Dial:</p>
+                  <p className="text-lg font-bold font-mono text-black dark:text-gray-100 tracking-wider">*182*8*1*000000#</p>
+                </div>
+                <div className="text-xs text-black/70 dark:text-gray-300 leading-snug">
+                  <p><span className="text-black/50 dark:text-gray-500">Number:</span> <span className="font-mono font-medium">{settings?.momo_number || '+250 788 000 000'}</span></p>
+                  <p><span className="text-black/50 dark:text-gray-500">Name:</span> {settings?.momo_name || settings?.account_name || 'Innovetancy Design Studio'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bank Transfer */}
+            <div className="glass-card rounded-2xl overflow-hidden border border-blue-200/50 dark:border-blue-900/30">
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-900/5 px-4 py-3 border-b border-blue-200/30 dark:border-blue-900/20">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm">&#127974;</div>
+                  <h4 className="font-semibold text-black dark:text-gray-100 text-sm">Bank Transfer</h4>
+                </div>
+              </div>
+              <div className="px-4 py-3">
+                <div className="grid grid-cols-2 gap-2">
+                  {banks.map((bank) => (
+                    <div key={bank.code} className="rounded-xl border border-blue-100 dark:border-gray-700 p-2.5 bg-white/50 dark:bg-gray-900/30">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-[9px] font-bold shrink-0 shadow-sm" style={{ backgroundColor: bank.color }}>{bank.short}</div>
+                        <span className="text-xs font-medium text-black dark:text-gray-100 truncate">{bank.name}</span>
+                      </div>
+                      <p className="text-[10px] text-black/50 dark:text-gray-500">Account</p>
+                      <p className="text-xs font-mono font-bold text-black dark:text-gray-100 tracking-wide truncate">{bank.account}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-2 text-[10px] text-black/50 dark:text-gray-500 text-center">Name: {settings?.account_name || 'Innovetancy Design Studio'}</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Proof Upload */}
-        <div className="glass-card rounded-2xl p-6">
-          <h3 className="font-semibold text-black dark:text-gray-100 mb-1">Submit Payment Proof</h3>
-          <p className="text-sm text-black/60 dark:text-gray-400 mb-5">Upload a screenshot or receipt after you've made the payment.</p>
-          <form onSubmit={handleProofSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Payment Method</label>
-              <select name="method" required className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
-                <option value="">Select method</option>
-                <option value="mtn">MTN Mobile Money</option>
-                <option value="bank">Bank Transfer</option>
-              </select>
+        {/* Right: Summary + Proof Upload */}
+        <div className="lg:w-2/5 h-full overflow-y-auto border-t lg:border-t-0 lg:border-l border-blue-100 dark:border-gray-800 px-5 py-6 lg:py-8 bg-white/40 dark:bg-gray-950/40">
+          <div className="max-w-lg mx-auto">
+            {/* Summary */}
+            <div className="glass-card rounded-2xl p-4 mb-4">
+              <h3 className="text-sm font-semibold text-black dark:text-gray-100 mb-2">Summary</h3>
+              <div className="text-xs text-black/70 dark:text-gray-300 space-y-0.5">
+                <p><span className="text-black/50 dark:text-gray-500">Name:</span> {booking?.name}</p>
+                <p><span className="text-black/50 dark:text-gray-500">Email:</span> {booking?.email}</p>
+                <p><span className="text-black/50 dark:text-gray-500">Type:</span> {booking?.type}</p>
+                {booking?.payment_amount > 0 && <p><span className="text-black/50 dark:text-gray-500">Amount:</span> <span className="font-bold text-teal-dark">${booking.payment_amount}</span></p>}
+                <p><span className="text-black/50 dark:text-gray-500">Status:</span> <span className="text-sky-600 dark:text-sky-400 font-medium">Awaiting Payment</span></p>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Transaction Reference</label>
-              <input name="reference" required placeholder="e.g. MTN transaction ID or bank ref" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+
+            {/* Proof Upload */}
+            <div className="glass-card rounded-2xl p-4">
+              <h3 className="text-sm font-semibold text-black dark:text-gray-100 mb-1">Submit Proof</h3>
+              <p className="text-xs text-black/50 dark:text-gray-400 mb-3">Upload receipt after paying.</p>
+              <form onSubmit={handleProofSubmit} className="space-y-3">
+                <div>
+                  <select name="method" required className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
+                    <option value="">Payment method</option>
+                    <option value="mtn">MTN Mobile Money</option>
+                    <option value="bank">Bank Transfer</option>
+                  </select>
+                </div>
+                <div>
+                  <input name="reference" required placeholder="Transaction reference" className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                </div>
+                <div>
+                  <input name="proof" type="file" accept="image/*,.pdf" required className="w-full text-xs text-black dark:text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal/10 file:text-teal-dark dark:file:text-teal-light hover:file:bg-teal/20 file:cursor-pointer cursor-pointer" />
+                </div>
+                {proofError && <p className="text-xs text-rose dark:text-purple-300 bg-rose/10 dark:bg-purple-900/20 rounded-xl px-3 py-1.5">{proofError}</p>}
+                <button type="submit" disabled={uploading} className="w-full py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-xs font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2">
+                  {uploading && <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{uploading ? 'Uploading...' : 'Submit Payment Proof'}
+                </button>
+              </form>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Upload Receipt / Screenshot</label>
-              <input name="proof" type="file" accept="image/*,.pdf" required className="w-full text-sm text-black dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-teal/10 file:text-teal-dark dark:file:text-teal-light hover:file:bg-teal/20 file:cursor-pointer cursor-pointer" />
-              <p className="text-xs text-black/60 dark:text-gray-500 mt-1">Max 5MB. JPG, PNG, or PDF.</p>
-            </div>
-            {proofError && <p className="text-sm text-rose dark:text-purple-300 bg-rose/10 dark:bg-purple-900/20 rounded-xl px-4 py-2">{proofError}</p>}
-            <button type="submit" disabled={uploading} className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2">
-              {uploading && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{uploading ? 'Uploading...' : 'Submit Payment Proof'}
-            </button>
-          </form>
+          </div>
         </div>
       </div>
     </main>
