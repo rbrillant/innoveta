@@ -70,8 +70,12 @@ export default function Book() {
     if (templateId) booking.template_id = templateId;
 
     try {
-      await addBooking(booking);
-      navigate('/book/done');
+      const result = await addBooking(booking);
+      if (result?.id) {
+        navigate(`/payment/${result.id}`);
+      } else {
+        navigate('/book/done');
+      }
     } catch (err) {
       setSubmitError(err.message || 'Failed to submit booking. Check console for details.');
       setSending(false);

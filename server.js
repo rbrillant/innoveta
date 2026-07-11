@@ -758,6 +758,49 @@ app.delete('/api/:table/:id', (req, res) => {
 // Serve uploaded files
 app.use('/uploads', express.static(UPLOAD_DIR));
 
+// ─── Database Viewer ──────────────────────────────────────
+const ALLOWED_TABLES = ['templates','template_images','bookings','services','service_steps','courses','course_lessons',
+  'enrollments','lesson_progress','settings','payment_settings','domain_pricing','designers','pages','profiles',
+  'password_reset_tokens'];
+
+app.get('/admin/db', (req, res) => {
+  const tables = ALLOWED_TABLES.filter(t => {
+    try { return !!db.prepare(`SELECT count(*) as c FROM "${t}"`).get(); } catch { return false; }
+  });
+  const t = req.query.table || tables[0];
+  let rows = [];
+  let cols = [];
+  if (t) {
+    const info = db.prepare(`SELECT * FROM "${t}" LIMIT 0`).columns();
+    cols = info.map(c => c.name);
+    rows = db.prepare(`SELECT * FROM "${t}" LIMIT 100`).all();
+  }
+  res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DB Viewer</title><style>
+    body{font-family:system-ui,sans-serif;background:#f5f5f5;margin:0;padding:20px;color:#111}
+    h1{font-size:20px;margin:0 0 20px}
+    .tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px}
+    .tabs a{text-decoration:none;padding:6px 14px;border-radius:8px;font-size:13px;background:#fff;color:#555;border:1px solid #ddd}
+    .tabs a.on{background:#14b8a6;color:#fff;border-color:#14b8a6}
+    table{border-collapse:collapse;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    th{background:#f0f0f0;font-size:12px;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #ddd}
+    td{font-size:12px;padding:8px 10px;border-bottom:1px solid #eee;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    tr:hover td{background:#fafafa}
+    code{font-size:11px;background:#f0f0f0;padding:1px 5px;border-radius:3px}
+    .count{font-size:12px;color:#888;margin-bottom:10px}
+  </style></head><body>
+  <h1>&#128451; Database Viewer</h1>
+  <div class="tabs">${tables.map(tb => `<a href="?table=${tb}" class="${tb === t ? 'on' : ''}">${tb}</a>`).join('')}</div>
+  ${t ? `<div class="count">${rows.length} rows</div><table><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${
+    rows.map(r => `<tr>${cols.map(c => {
+      const v = r[c];
+      if (v == null) return '<td><span style="color:#bbb">null</span></td>';
+      const s = String(v);
+      return '<td>' + (s.length > 80 ? '<code>' + s.slice(0,80).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '...</code>' : s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</td>';
+    }).join('')}</tr>`).join('')
+  }</tbody></table>` : '<p>No tables found.</p>'}
+  </body></html>`);
+});
+
 // ─── Serve Frontend ───────────────────────────────────────
 app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
