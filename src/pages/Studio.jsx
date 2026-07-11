@@ -350,10 +350,10 @@ export default function Studio() {
       <div className="sticky top-0 z-50 glass-card border-b border-blue-100 dark:border-gray-800 relative !overflow-visible">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-3 py-2">
+            <div className="shrink-0 mr-2">
+              <Logo showStudio />
+            </div>
             <div className="flex items-center gap-3 overflow-x-auto flex-1">
-              <div className="shrink-0 mr-2">
-                <Logo showStudio />
-              </div>
               {TABS.map((t) => (
                 <button
                   key={t}
