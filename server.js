@@ -528,9 +528,18 @@ app.post('/api/bookings/:id/verify', authenticate, (req, res) => {
     db.prepare('UPDATE bookings SET payment_status = ? WHERE id = ?').run('verified', req.params.id);
 
     if (booking.type === 'Online Courses' && booking.user_id) {
+      let courseId = null;
       const parts = (booking.message || '').split('|');
       if (parts[0] === 'COURSE_ENROLL' && parts[1]) {
-        const courseId = parts[1];
+        courseId = parts[1];
+      } else {
+        const match = booking.message.match(/Course enrollment: (.+?) \(\$[\d.]+\)/);
+        if (match) {
+          const row = db.prepare('SELECT id FROM courses WHERE title = ? OR title LIKE ?').get(match[1], `%${match[1]}%`);
+          if (row) courseId = row.id;
+        }
+      }
+      if (courseId) {
         const existing = db.prepare('SELECT id FROM enrollments WHERE user_id = ? AND course_id = ?').get(booking.user_id, courseId);
         if (!existing) {
           const id = crypto.randomUUID();

@@ -573,7 +573,7 @@ export default function Studio() {
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {b.payment_status === 'proof_submitted' && (
-                            <button onClick={async () => { await verifyPayment(b.id); refreshData(); }} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors cursor-pointer">Confirm Enrollment</button>
+                            <button onClick={async () => { try { await verifyPayment(b.id); refreshData(); } catch (e) { alert('Failed to verify: ' + e.message); } }} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors cursor-pointer">Confirm Enrollment</button>
                           )}
                           {['pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
                             <button
