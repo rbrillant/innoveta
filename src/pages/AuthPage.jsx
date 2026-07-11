@@ -8,6 +8,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState(searchParams.get('mode') || 'signin');
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
+  const [passwordVal, setPasswordVal] = useState('');
   const redirectTo = searchParams.get('redirect') || '/templates';
   const canvasRef = useRef();
 
@@ -121,6 +122,15 @@ export default function AuthPage() {
       const dob = fd.get('dob')?.trim();
       if (!surname || !name || !phone) { setSending(false); setError('Fill in all fields.'); return; }
 
+      // Password strength validation
+      const reqs = [];
+      if (password.length < 8) reqs.push('at least 8 characters');
+      if (!/[A-Z]/.test(password)) reqs.push('an uppercase letter');
+      if (!/[a-z]/.test(password)) reqs.push('a lowercase letter');
+      if (!/[0-9]/.test(password)) reqs.push('a number');
+      if (!/[^A-Za-z0-9]/.test(password)) reqs.push('a special character');
+      if (reqs.length) { setSending(false); setError('Password needs ' + reqs.join(', ')); return; }
+
       const { data, error: signUpErr } = await supabase.auth.signUp({ email, password, options: { data: { surname, name, phone, dob } } });
       if (signUpErr) { setSending(false); setError(typeof signUpErr === 'string' ? signUpErr : signUpErr.message || 'Sign up failed'); return; }
       if (!data?.user) { setSending(false); setError('Sign up failed. Try again.'); return; }
@@ -176,8 +186,37 @@ export default function AuthPage() {
               )}
               <div>
                 <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Password</label>
-                <input name="password" type="password" required placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                <input name="password" type="password" required placeholder="••••••••" value={passwordVal} onChange={(e) => setPasswordVal(e.target.value)} className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                 {mode === 'signin' && <Link to="/reset-password" className="block text-xs text-teal dark:text-teal-light hover:underline mt-1.5 text-right">Forgot password?</Link>}
+                {mode === 'signup' && passwordVal && (
+                  <div className="mt-2 space-y-1">
+                    <div className="flex gap-1 h-1.5">
+                      {[1,2,3,4].map((level) => {
+                        const met = [
+                          passwordVal.length >= 8,
+                          /[A-Z]/.test(passwordVal),
+                          /[0-9]/.test(passwordVal) && /[^A-Za-z0-9]/.test(passwordVal),
+                          /[a-z]/.test(passwordVal) && /[A-Z]/.test(passwordVal) && /[0-9]/.test(passwordVal) && /[^A-Za-z0-9]/.test(passwordVal),
+                        ].filter(Boolean).length;
+                        return <div key={level} className={`flex-1 rounded-full transition-colors ${met >= level ? 'bg-teal' : 'bg-blue-200/50 dark:bg-white/10'}`} />;
+                      })}
+                    </div>
+                    <div className="text-[11px] space-y-0.5">
+                      {[
+                        { label: 'At least 8 characters', check: passwordVal.length >= 8 },
+                        { label: 'One uppercase letter', check: /[A-Z]/.test(passwordVal) },
+                        { label: 'One lowercase letter', check: /[a-z]/.test(passwordVal) },
+                        { label: 'One number', check: /[0-9]/.test(passwordVal) },
+                        { label: 'One special character', check: /[^A-Za-z0-9]/.test(passwordVal) },
+                      ].map((r) => (
+                        <p key={r.label} className={`flex items-center gap-1.5 ${r.check ? 'text-teal-dark dark:text-teal-light' : 'text-black/50 dark:text-gray-500'}`}>
+                          <span className="text-xs">{r.check ? '✓' : '○'}</span>
+                          {r.label}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               {error && <p className="text-sm text-red-400">{error}</p>}
               <button type="submit" disabled={sending} className="w-full px-6 py-3.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2">
