@@ -825,8 +825,17 @@ app.delete('/api/:table/:id', (req, res) => {
   res.json({ data: null, error: null });
 });
 
-// Serve uploaded files
-app.use('/uploads', express.static(UPLOAD_DIR));
+// Serve uploaded files with caching
+app.use('/uploads', express.static(UPLOAD_DIR, {
+  maxAge: '7d',
+  immutable: true,
+}));
+
+// Cache static assets
+app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
+  maxAge: '1y',
+  immutable: true,
+}));
 
 // ─── Database Viewer ──────────────────────────────────────
 const ALLOWED_TABLES = ['templates','template_images','bookings','services','service_steps','courses','course_lessons',

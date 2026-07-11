@@ -430,7 +430,7 @@ export default function Studio() {
                         <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-blue-50 dark:border-white/5 last:border-0">
                           <div className="flex items-center gap-2">
                             {b.templates?.image && (
-                              <img src={b.templates.image} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" />
+                              <img src={b.templates.image} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
                             )}
                             <div>
                               <p className="text-sm font-medium text-black">{b.name}</p>
@@ -503,7 +503,7 @@ export default function Studio() {
                     {filteredTemplates.map((t) => (
                       <div key={t.id} className="glass-card rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
                         <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 flex items-center justify-center text-white font-bold text-sm" style={{ background: t.image ? 'transparent' : '#d4a017' }}>
-                          {t.image ? <img src={t.image} alt={t.name} className="w-full h-full object-cover" /> : t.name.slice(0, 2).toUpperCase()}
+                          {t.image ? <img src={t.image} alt={t.name} className="w-full h-full object-cover" loading="lazy" decoding="async" /> : t.name.slice(0, 2).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
@@ -556,7 +556,7 @@ export default function Studio() {
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                         <div className="flex items-center gap-3 flex-1">
                           {b.templates?.image && (
-                            <img src={b.templates.image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                            <img src={b.templates.image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0" loading="lazy" decoding="async" />
                           )}
                           <div>
                             <div className="flex items-center gap-2">
@@ -629,7 +629,7 @@ export default function Studio() {
                     <div key={enr.id} className="glass-card rounded-2xl p-4 sm:p-5">
                       <div className="flex items-start gap-3 mb-3">
                         {enr.course_image && (
-                          <img src={enr.course_image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0 mt-0.5" />
+                          <img src={enr.course_image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0 mt-0.5" loading="lazy" decoding="async" />
                         )}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
@@ -877,7 +877,7 @@ export default function Studio() {
                       <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-200 dark:border-white/10 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-black/70 h-28 relative overflow-hidden">
                         {courseForm.image ? (
                           <>
-                            <img src={courseForm.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                            <img src={courseForm.image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                             <div className="absolute bottom-2 right-2 bg-white/80 dark:bg-black/80 text-xs text-black/70 dark:text-gray-400 px-2.5 py-1 rounded-full shadow-sm">Change</div>
                           </>
                         ) : (
@@ -1042,7 +1042,7 @@ export default function Studio() {
                     courses.map((c) => (
                       <div key={c.id} className="glass-card rounded-2xl p-5">
                         <div className="flex items-start gap-4">
-                          {c.image && <img src={c.image} alt="" className="w-20 h-16 rounded-xl object-cover shrink-0" />}
+                          {c.image && <img src={c.image} alt="" className="w-20 h-16 rounded-xl object-cover shrink-0" loading="lazy" decoding="async" />}
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-black dark:text-gray-100">{c.title}</h3>
                             <p className="text-xs text-black/60 dark:text-gray-500">${c.price} — {c.category}</p>
@@ -1217,7 +1217,7 @@ function StudioServicesTab({ type, title, fetchServices, upsertService, removeSe
           services.map((s) => (
             <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4">
               {s.image ? (
-                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
               ) : (
                 <span className="text-2xl shrink-0">{s.icon}</span>
               )}
@@ -1342,7 +1342,7 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
           services.map((s) => (
             <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4">
               {s.image ? (
-                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
               ) : (
                 <span className="text-2xl shrink-0">{s.icon}</span>
               )}

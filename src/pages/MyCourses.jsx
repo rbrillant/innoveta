@@ -62,7 +62,7 @@ export default function MyCourses() {
                 <div className="glass-card rounded-2xl p-5 hover:shadow-md transition-shadow">
                   <Link to={`/course/${enr.course_id}`} className="flex items-center gap-4">
                     {enr.courses?.image && (
-                      <img src={enr.courses.image} alt="" className="w-16 h-16 rounded-xl object-cover shrink-0" />
+                      <img src={enr.courses.image} alt="" className="w-16 h-16 rounded-xl object-cover shrink-0" loading="lazy" decoding="async" />
                     )}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-black dark:text-gray-100">{enr.courses?.title || 'Unknown Course'}</h3>

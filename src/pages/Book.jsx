@@ -112,7 +112,7 @@ export default function Book() {
               </div>
             ) : template ? (
               <div className="glass-card rounded-xl p-4 flex items-center gap-4 bg-white/60 dark:bg-black/60">
-                {template.image && <img src={template.image} alt={template.name} className="w-16 h-16 rounded-xl object-cover shrink-0" />}
+                {template.image && <img src={template.image} alt={template.name} className="w-16 h-16 rounded-xl object-cover shrink-0" loading="lazy" decoding="async" />}
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-black dark:text-gray-100">{template.name}</p>
                   <p className="text-xs text-black/60 dark:text-gray-400">{template.category}{template.price > 0 ? ` — $${template.price}` : ' — Free'}</p>

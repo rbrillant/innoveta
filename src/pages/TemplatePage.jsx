@@ -82,7 +82,7 @@ export default function TemplatePage() {
             <div className="glass-card rounded-3xl overflow-hidden">
               <div className="relative bg-blue-50 dark:bg-black/80/50 flex items-center justify-center" style={{ minHeight: '400px', maxHeight: '70vh' }}>
                 {current && (
-                  <img src={current.image_url} alt={current.caption || template.name} className="w-full h-full object-contain" style={{ maxHeight: '70vh' }} />
+                  <img src={current.image_url} alt={current.caption || template.name} className="w-full h-full object-contain" style={{ maxHeight: '70vh' }} loading="lazy" decoding="async" />
                 )}
               </div>
               {allImages.length > 1 && (
@@ -103,7 +103,7 @@ export default function TemplatePage() {
                           i === currentPage ? 'border-teal shadow-sm' : 'border-transparent opacity-60 hover:opacity-100'
                         }`}
                       >
-                        <img src={img.image_url} alt={`Page ${i + 1}`} className="w-full h-full object-cover" />
+                        <img src={img.image_url} alt={`Page ${i + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                       </button>
                     ))}
                   </div>

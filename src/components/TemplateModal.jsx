@@ -159,7 +159,7 @@ export default function TemplateModal({ editing, onClose, onSave }) {
             <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-card-border rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 h-36 relative overflow-hidden">
               {preview ? (
                 <>
-                  <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                   <div className="absolute bottom-2 right-2 bg-white/80 text-xs text-warm-gray px-2.5 py-1 rounded-full shadow-sm">Change</div>
                 </>
               ) : (
@@ -204,7 +204,7 @@ export default function TemplateModal({ editing, onClose, onSave }) {
                 ) : (
                   pages.map((p, i) => (
                     <div key={p.id} className="flex items-center gap-3 border border-card-border rounded-xl p-2">
-                      <img src={p.image_url} alt={p.caption || `Page ${i + 1}`} className="w-14 h-10 rounded-lg object-cover shrink-0" />
+                      <img src={p.image_url} alt={p.caption || `Page ${i + 1}`} className="w-14 h-10 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
                       <span className="text-xs text-warm-gray flex-1 truncate">{p.caption || `Page ${i + 1}`}</span>
                       <div className="flex items-center gap-1">
                         <button type="button" onClick={() => handleMovePage(p.id, -1)} disabled={i === 0} className="w-6 h-6 flex items-center justify-center rounded text-xs border border-card-border hover:bg-gray-50 disabled:opacity-30 cursor-pointer" title="Move up">&uarr;</button>

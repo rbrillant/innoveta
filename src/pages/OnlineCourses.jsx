@@ -30,7 +30,7 @@ export default function OnlineCourses() {
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-5 py-16">
         {page?.image && (
-          <img src={page.image} alt={page.title} className="w-full h-64 sm:h-80 object-cover rounded-3xl mb-8" />
+          <img src={page.image} alt={page.title} className="w-full h-64 sm:h-80 object-cover rounded-3xl mb-8" loading="lazy" decoding="async" />
         )}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black dark:text-gray-100 mb-6">{page?.title || 'Online Courses'}</h1>
         {page?.content && (
@@ -48,7 +48,7 @@ export default function OnlineCourses() {
               return (
                 <Link key={course.id} to={`/course/${course.id}`} className="glass-card rounded-2xl overflow-hidden hover:shadow-lg transition-shadow group">
                   {course.image && (
-                    <img src={course.image} alt={course.title} className="w-full h-40 object-cover group-hover:scale-[1.02] transition-transform" />
+                    <img src={course.image} alt={course.title} className="w-full h-40 object-cover group-hover:scale-[1.02] transition-transform" loading="lazy" decoding="async" />
                   )}
                     <div className="p-5">
                     <div className="flex items-center gap-2 mb-2">

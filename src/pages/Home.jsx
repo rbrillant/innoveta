@@ -71,20 +71,23 @@ export default function Home() {
           <span className="text-teal">Templates</span>
         </h1>
 
-        <form onSubmit={handleSearch} className="max-w-xl mx-auto mb-16">
-          <div className="glass-card rounded-full p-1.5 pl-6 flex items-center shadow-lg shadow-teal/5">
+        <form onSubmit={handleSearch} className="max-w-xl mx-auto mb-16 px-0 sm:px-4">
+          <div className="glass-card rounded-full p-1 sm:p-1.5 pl-4 sm:pl-6 flex items-center shadow-lg shadow-teal/5">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search templates, courses, services..."
-              className="flex-1 py-3 bg-transparent text-base focus:outline-none placeholder:text-blue-300 dark:placeholder:text-gray-500 dark:text-gray-200"
+              className="flex-1 py-2 sm:py-3 bg-transparent text-sm sm:text-base focus:outline-none placeholder:text-blue-300 dark:placeholder:text-gray-500 dark:text-gray-200 min-w-0"
             />
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-full hover:from-teal-dark hover:to-teal hover:shadow-lg hover:shadow-teal/25 transition-all shadow-sm cursor-pointer shrink-0"
+              className="px-3 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-xs sm:text-sm font-semibold rounded-full hover:from-teal-dark hover:to-teal hover:shadow-lg hover:shadow-teal/25 transition-all shadow-sm cursor-pointer shrink-0"
             >
-              Search
+              <span className="sm:hidden">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              </span>
+              <span className="hidden sm:inline">Search</span>
             </button>
           </div>
         </form>
@@ -114,7 +117,7 @@ export default function Home() {
                     style={{ background: `linear-gradient(135deg, ${bg}15, ${bg}08)` }}
                   >
                     <div className="flex items-center gap-3 h-full">
-                      {cat.img ? <img src={cat.img} alt={cat.name} className="w-12 h-12 object-cover rounded-lg transition-transform duration-300 group-hover:scale-110" /> : <span className="text-2xl">{cat.icon}</span>}
+                      {cat.img ? <img src={cat.img} alt={cat.name} className="w-12 h-12 object-cover rounded-lg transition-transform duration-300 group-hover:scale-110" loading="lazy" decoding="async" /> : <span className="text-2xl">{cat.icon}</span>}
                       <span className="text-sm font-semibold text-black dark:text-gray-100 leading-snug">{cat.name}</span>
                     </div>
                   </Link>

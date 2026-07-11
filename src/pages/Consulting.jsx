@@ -22,7 +22,7 @@ export default function Consulting() {
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-5 py-16">
         {page?.image && (
-          <img src={page.image} alt={page.title} className="w-full h-64 sm:h-80 object-cover rounded-3xl mb-8" />
+          <img src={page.image} alt={page.title} className="w-full h-64 sm:h-80 object-cover rounded-3xl mb-8" loading="lazy" decoding="async" />
         )}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black dark:text-gray-100 mb-6">{page?.title || 'Consulting'}</h1>
         {page?.content && (
@@ -45,7 +45,7 @@ export default function Consulting() {
               {services.map((s) => (
                 <div key={s.id} className="glass-card rounded-2xl p-6 hover:shadow-lg transition-shadow">
                   {s.image ? (
-                    <img src={s.image} alt={s.title} className="w-12 h-12 rounded-lg object-cover mb-3" />
+                    <img src={s.image} alt={s.title} className="w-12 h-12 rounded-lg object-cover mb-3" loading="lazy" decoding="async" />
                   ) : (
                     <span className="text-3xl block mb-3">{s.icon}</span>
                   )}

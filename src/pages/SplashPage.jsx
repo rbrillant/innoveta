@@ -135,8 +135,7 @@ export default function SplashPage() {
             <span className="absolute top-1/2 left-2 text-blue-300/40 text-[9px] sm:text-[11px] font-light animate-word-fade" style={{ animationDelay: '0.6s', animationDuration: '2.8s' }}>Art</span>
           </div>
 
-          <img
-            src="/images/splash-art.png"
+          <img src="/images/splash-art.png"
             alt=""
             className="absolute bottom-0 w-auto object-contain pointer-events-none z-20"
             style={{
@@ -144,7 +143,7 @@ export default function SplashPage() {
               maxHeight: 'min(45vh, 320px)',
               maxWidth: 'min(40vw, 280px)',
               height: 'auto',
-            }}
+            }} loading="lazy" decoding="async"
           />
         </div>
 

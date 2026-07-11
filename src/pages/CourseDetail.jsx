@@ -121,7 +121,7 @@ export default function CourseDetail() {
 
         {/* Header */}
         {!course.video_url && course.image && enrolled && (
-          <img src={course.image} alt={course.title} className="w-full h-56 sm:h-72 object-cover rounded-3xl mb-8" />
+          <img src={course.image} alt={course.title} className="w-full h-56 sm:h-72 object-cover rounded-3xl mb-8" loading="lazy" decoding="async" />
         )}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
           <div>
