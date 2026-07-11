@@ -46,6 +46,7 @@ function initDb() {
       name TEXT DEFAULT '',
       surname TEXT DEFAULT '',
       phone TEXT DEFAULT '',
+      dob TEXT DEFAULT '',
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -294,6 +295,9 @@ function initDb() {
       ('svc-it-12', 'it-integration', '🛡️', 'Managed Integration Services', 'Outsource your integration needs to experts for ongoing support and maintenance.', 12);
   `);
 
+  // Add dob column for existing databases
+  try { db.prepare("ALTER TABLE profiles ADD COLUMN dob TEXT DEFAULT ''").run(); } catch {}
+
   // Hash default password
   const hash = bcrypt.hashSync('create123', 10);
   db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, 'admin@innovetancy.com');
@@ -332,14 +336,14 @@ function authenticate(req, res, next) {
 // ─── Auth Routes ──────────────────────────────────────────
 app.post('/api/auth/signup', async (req, res) => {
   try {
-    const { email, password, name, surname, phone } = req.body;
+    const { email, password, name, surname, phone, dob } = req.body;
     const existing = db.prepare('SELECT email FROM designers WHERE email = ?').get(email);
     if (existing) return res.status(400).json({ error: 'User already exists' });
 
     const hash = await bcrypt.hash(password, 10);
     const id = crypto.randomUUID();
     db.prepare('INSERT INTO designers (email, password, name, surname, phone) VALUES (?, ?, ?, ?, ?)').run(email, hash, name || '', surname || '', phone || '');
-    db.prepare('INSERT INTO profiles (id, email, name, surname, phone) VALUES (?, ?, ?, ?, ?)').run(id, email, name || '', surname || '', phone || '');
+    db.prepare('INSERT INTO profiles (id, email, name, surname, phone, dob) VALUES (?, ?, ?, ?, ?, ?)').run(id, email, name || '', surname || '', phone || '', dob || '');
     const token = jwt.sign({ email, name: name || '' }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ data: { user: { id, email, user_metadata: {} }, session: { access_token: token, user: { id, email } } } });
   } catch (e) {
@@ -557,7 +561,7 @@ app.post('/api/bookings/:id/verify', authenticate, (req, res) => {
 // All enrollments with student and course details
 app.get('/api/enrollments-all', (req, res) => {
   const rows = db.prepare(`
-    SELECT e.*, p.name as student_name, p.surname as student_surname, p.email as student_email, p.phone as student_phone,
+    SELECT e.*, p.name as student_name, p.surname as student_surname, p.email as student_email, p.phone as student_phone, p.dob as student_dob,
            c.title as course_title, c.price as course_price, c.image as course_image
     FROM enrollments e
     LEFT JOIN profiles p ON e.user_id = p.id

@@ -627,21 +627,25 @@ export default function Studio() {
                 <div className="space-y-3">
                   {enrollments.map((enr) => (
                     <div key={enr.id} className="glass-card rounded-2xl p-4 sm:p-5">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-start gap-3 mb-3">
                         {enr.course_image && (
-                          <img src={enr.course_image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                          <img src={enr.course_image} alt="" className="w-10 h-10 rounded-xl object-cover shrink-0 mt-0.5" />
                         )}
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 mb-1">
                             <p className="font-semibold text-black dark:text-gray-100">{enr.student_name || enr.student_email}{enr.student_surname ? ` ${enr.student_surname}` : ''}</p>
                             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Enrolled</span>
                           </div>
-                          <p className="text-sm text-black/60 dark:text-gray-400">{enr.student_email}{enr.student_phone ? ` · ${enr.student_phone}` : ''}</p>
+                          <p className="text-sm text-black/60 dark:text-gray-400">{enr.student_email}</p>
+                          <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-1 text-xs text-black/50 dark:text-gray-500">
+                            {enr.student_phone && <span>Phone: {enr.student_phone}</span>}
+                            {enr.student_dob && <span>DOB: {enr.student_dob}</span>}
+                            <span>Enrolled: {new Date(enr.enrolled_at).toLocaleDateString()}</span>
+                          </div>
                         </div>
                       </div>
                       <div className="bg-white/50 dark:bg-gray-900/50 rounded-xl p-3">
                         <p className="text-sm text-black/70 dark:text-gray-300"><span className="font-medium">Course:</span> {enr.course_title || 'Unknown'}{enr.course_price > 0 ? ` — $${enr.course_price}` : ' — Free'}</p>
-                        <p className="text-xs text-black/60 dark:text-gray-500 mt-1">Enrolled {new Date(enr.enrolled_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                   ))}

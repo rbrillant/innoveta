@@ -118,9 +118,10 @@ export default function AuthPage() {
       const surname = fd.get('surname')?.trim();
       const name = fd.get('name')?.trim();
       const phone = fd.get('phone')?.trim();
+      const dob = fd.get('dob')?.trim();
       if (!surname || !name || !phone) { setSending(false); setError('Fill in all fields.'); return; }
 
-      const { data, error: signUpErr } = await supabase.auth.signUp({ email, password, options: { data: { surname, name, phone } } });
+      const { data, error: signUpErr } = await supabase.auth.signUp({ email, password, options: { data: { surname, name, phone, dob } } });
       if (signUpErr) { setSending(false); setError(typeof signUpErr === 'string' ? signUpErr : signUpErr.message || 'Sign up failed'); return; }
       if (!data?.user) { setSending(false); setError('Sign up failed. Try again.'); return; }
       navigate(redirectTo, { replace: true });
@@ -165,6 +166,12 @@ export default function AuthPage() {
                 <div>
                   <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Phone number</label>
                   <input name="phone" required placeholder="+27 123 456 789" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                </div>
+              )}
+              {mode === 'signup' && (
+                <div>
+                  <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Date of birth</label>
+                  <input name="dob" type="date" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                 </div>
               )}
               <div>
