@@ -131,7 +131,7 @@ export default function CourseDetail() {
               <span className="text-xs font-medium text-teal-dark dark:text-teal-light bg-teal/15 dark:bg-teal-dark/20 px-3 py-1 rounded-full">{course.category}</span>
               {course.price > 0 && <span className="text-sm font-bold text-black dark:text-gray-100">${course.price}</span>}
               {enrolled && (
-                <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full flex items-center gap-1">✓ Enrolled</span>
+                <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full flex items-center gap-1">Enrolled</span>
               )}
             </div>
             {enrolled && course.pdf_url && (
@@ -147,7 +147,7 @@ export default function CourseDetail() {
           </div>
           <div className="flex items-center gap-3">
             {enrolled ? (
-              <Link to="/my-courses" className="px-5 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">My Courses →</Link>
+              <Link to="/my-courses" className="px-5 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">My Courses</Link>
             ) : (
               <button onClick={handleEnroll} disabled={enrolling || !userId} className="px-5 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
                 {enrolling && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{enrolling ? 'Enrolling...' : 'Enroll Now'}
@@ -157,7 +157,6 @@ export default function CourseDetail() {
           </div>
         </div>
 
-        {/* Tracking bar at top for enrolled users */}
         {enrolled && lessons.length > 0 && (
           <div className="glass-card rounded-2xl p-4 mb-8">
             <div className="flex items-center gap-4">
@@ -175,28 +174,13 @@ export default function CourseDetail() {
                   const next = lessons.find((l) => !progress[l.id]);
                   if (next) setActiveLesson(next);
                 }} className="px-4 py-1.5 bg-gradient-to-r from-teal to-teal-dark text-white text-xs font-semibold rounded-lg hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">
-                  {progressPercent === 100 ? '🎉 Completed' : 'Continue →'}
+                  {progressPercent === 100 ? 'Completed' : 'Continue \u2192'}
                 </button>
+              </div>
+            </div>
           </div>
-        </div>
-        </div>
-        ) : (
-          <div className="glass-card rounded-2xl p-8 text-center">
-            <div className="text-5xl mb-4">&#128274;</div>
-            <h3 className="text-xl font-bold text-black dark:text-gray-100 mb-2">Course Locked</h3>
-            <p className="text-black/60 dark:text-gray-400 max-w-md mx-auto mb-6">Enroll in this course to access all lessons, track your progress, and learn at your own pace.</p>
-            {userId ? (
-              <button onClick={handleEnroll} disabled={enrolling} className="px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
-                {enrolling && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{enrolling ? 'Enrolling...' : course.price > 0 ? `Enroll Now - $${course.price}` : 'Enroll Now - Free'}
-              </button>
-            ) : (
-              <Link to="/auth?mode=signin" className="inline-block px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm">Sign in to Enroll</Link>
-            )}
-          </div>
-        )}
         )}
 
-        {/* Two-column: lesson list + active lesson content */}
         {enrolled ? (
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Lesson sidebar */}
@@ -228,7 +212,7 @@ export default function CourseDetail() {
                             ? 'bg-teal text-white'
                             : 'bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300'
                         }`}>
-                          {progress[lesson.id] ? '✓' : i + 1}
+                          {progress[lesson.id] ? '\u2713' : i + 1}
                         </span>
                         <span className="truncate">{lesson.title}</span>
                       </button>
@@ -254,7 +238,7 @@ export default function CourseDetail() {
                           : 'bg-blue-50 dark:bg-gray-800 text-black/70/70 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700'
                       }`}
                     >
-                      {progress[activeLesson.id] ? '✓ Completed' : 'Mark Complete'}
+                      {progress[activeLesson.id] ? '\u2713 Completed' : 'Mark Complete'}
                     </button>
                   )}
                 </div>
@@ -267,8 +251,8 @@ export default function CourseDetail() {
 
                 {activeLesson.content_type === 'notes' && (
                   <div className="bg-sky-50 dark:bg-sky-900/10 border border-sky-200/50 dark:border-sky-900/30 rounded-xl p-4 mb-4 flex items-center gap-2">
-                    <span className="text-lg">📝</span>
-                    <span className="text-sm text-sky-700 dark:text-sky-400">Notes — reference material</span>
+                    <span className="text-lg">Notes</span>
+                    <span className="text-sm text-sky-700 dark:text-sky-400">reference material</span>
                   </div>
                 )}
 
@@ -283,6 +267,20 @@ export default function CourseDetail() {
             )}
           </div>
         </div>
+        ) : (
+          <div className="glass-card rounded-2xl p-8 text-center">
+            <div className="text-5xl mb-4">{'\uD83D\uDD12'}</div>
+            <h3 className="text-xl font-bold text-black dark:text-gray-100 mb-2">Course Locked</h3>
+            <p className="text-black/60 dark:text-gray-400 max-w-md mx-auto mb-6">Enroll in this course to access all lessons, track your progress, and learn at your own pace.</p>
+            {userId ? (
+              <button onClick={handleEnroll} disabled={enrolling} className="px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
+                {enrolling && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{enrolling ? 'Enrolling...' : course.price > 0 ? `Enroll Now - $${course.price}` : 'Enroll Now - Free'}
+              </button>
+            ) : (
+              <Link to="/auth?mode=signin" className="inline-block px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm">Sign in to Enroll</Link>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );
