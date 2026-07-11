@@ -32,10 +32,12 @@ export default function CourseDetail() {
 
   useEffect(() => {
     if (!course) return;
-    fetchLessons(course.id).then((l) => {
-      setLessons(l);
-    });
-  }, [course]);
+    if (enrolled) {
+      fetchLessons(course.id).then((l) => {
+        setLessons(l);
+      });
+    }
+  }, [course, enrolled]);
 
   useEffect(() => {
     if (!userId || !course) return;
@@ -49,7 +51,7 @@ export default function CourseDetail() {
   }, [userId, course]);
 
   useEffect(() => {
-    if (!userId || lessons.length === 0) return;
+    if (!userId || lessons.length === 0 || !enrolled) return;
     fetchLessonProgress(userId, lessons.map((l) => l.id)).then((lp) => {
       const map = {};
       lp.forEach((p) => { map[p.lesson_id] = p.completed; });
@@ -106,8 +108,8 @@ export default function CourseDetail() {
   return (
     <main className="flex-1">
       <div className="max-w-5xl mx-auto px-5 py-16">
-        {/* Course video */}
-        {course.video_url && (
+        {/* Course video (only visible after enrollment) */}
+        {enrolled && course.video_url && (
           <div className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-lg bg-black/10 dark:bg-black/30 flex items-center justify-center">
             {course.video_url.startsWith('data:') || course.video_url.startsWith('blob:') ? (
               <video src={course.video_url} controls className="w-full h-full object-contain" />
@@ -118,7 +120,7 @@ export default function CourseDetail() {
         )}
 
         {/* Header */}
-        {!course.video_url && course.image && (
+        {!course.video_url && course.image && enrolled && (
           <img src={course.image} alt={course.title} className="w-full h-56 sm:h-72 object-cover rounded-3xl mb-8" />
         )}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
@@ -175,12 +177,27 @@ export default function CourseDetail() {
                 }} className="px-4 py-1.5 bg-gradient-to-r from-teal to-teal-dark text-white text-xs font-semibold rounded-lg hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">
                   {progressPercent === 100 ? '🎉 Completed' : 'Continue →'}
                 </button>
-              </div>
-            </div>
           </div>
+        </div>
+        </div>
+        ) : (
+          <div className="glass-card rounded-2xl p-8 text-center">
+            <div className="text-5xl mb-4">&#128274;</div>
+            <h3 className="text-xl font-bold text-black dark:text-gray-100 mb-2">Course Locked</h3>
+            <p className="text-black/60 dark:text-gray-400 max-w-md mx-auto mb-6">Enroll in this course to access all lessons, track your progress, and learn at your own pace.</p>
+            {userId ? (
+              <button onClick={handleEnroll} disabled={enrolling} className="px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
+                {enrolling && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{enrolling ? 'Enrolling...' : course.price > 0 ? `Enroll Now - $${course.price}` : 'Enroll Now - Free'}
+              </button>
+            ) : (
+              <Link to="/auth?mode=signin" className="inline-block px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm">Sign in to Enroll</Link>
+            )}
+          </div>
+        )}
         )}
 
         {/* Two-column: lesson list + active lesson content */}
+        {enrolled ? (
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Lesson sidebar */}
           <div className="lg:col-span-1">
