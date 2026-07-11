@@ -33,6 +33,16 @@ export default function Home() {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [columnWidth, setColumnWidth] = useState('calc(50vw - 1.5rem)');
+
+  useEffect(() => {
+    function handleResize() {
+      setColumnWidth(window.innerWidth < 640 ? 'calc(50vw - 1.5rem)' : 'calc((100vw - 2.5rem) / 3 - 8px)');
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   function updateArrows() {
     const el = scrollRef.current;
@@ -93,19 +103,19 @@ export default function Home() {
         </form>
 
         <div className="relative">
-          <h2 className="text-xl font-semibold text-black dark:text-gray-100 mb-4 text-left">Explore Templates</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-black dark:text-gray-100 mb-3 sm:mb-4 text-left">Explore Templates</h2>
           <div className="relative">
             {canScrollLeft && (
-              <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -ml-3">
+              <button onClick={() => scroll(-1)} className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -ml-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
               </button>
             )}
             {canScrollRight && (
-              <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -mr-3">
+              <button onClick={() => scroll(1)} className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -mr-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
               </button>
             )}
-            <div ref={scrollRef} className="grid gap-3 overflow-x-auto pb-3 scrollbar-none snap-x snap-mandatory -mx-5 px-5 bg-transparent" style={{ gridTemplateRows: 'repeat(2, 1fr)', gridAutoFlow: 'column', gridAutoColumns: 'calc((100vw - 2.5rem) / 3 - 8px)' }}>
+            <div ref={scrollRef} className="grid gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-3 scrollbar-none snap-x snap-mandatory -mx-5 px-5 bg-transparent" style={{ gridTemplateRows: 'repeat(2, 1fr)', gridAutoFlow: 'column', gridAutoColumns: columnWidth }}>
               {CATEGORIES.map((cat, i) => {
                 const bg = PALETTE[i % PALETTE.length];
                 const catSlug = cat.name.toLowerCase().replace(/\s+/g, '-');
@@ -113,12 +123,12 @@ export default function Home() {
                   <Link
                     key={cat.name}
                     to={`/templates/${catSlug}`}
-                    className="group glass-card rounded-2xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 block snap-start"
+                    className="group glass-card rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 block snap-start"
                     style={{ background: `linear-gradient(135deg, ${bg}15, ${bg}08)` }}
                   >
-                    <div className="flex items-center gap-3 h-full">
-                      {cat.img ? <img src={cat.img} alt={cat.name} className="w-12 h-12 object-cover rounded-lg transition-transform duration-300 group-hover:scale-110" loading="lazy" decoding="async" /> : <span className="text-2xl">{cat.icon}</span>}
-                      <span className="text-sm font-semibold text-black dark:text-gray-100 leading-snug">{cat.name}</span>
+                    <div className="flex items-center gap-2 sm:gap-3 h-full">
+                      {cat.img ? <img src={cat.img} alt={cat.name} className="w-8 h-8 sm:w-12 sm:h-12 object-cover rounded-lg transition-transform duration-300 group-hover:scale-110" loading="lazy" decoding="async" /> : <span className="text-lg sm:text-2xl">{cat.icon}</span>}
+                      <span className="text-xs sm:text-sm font-semibold text-black dark:text-gray-100 leading-snug">{cat.name}</span>
                     </div>
                   </Link>
                 );
