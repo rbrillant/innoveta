@@ -501,13 +501,28 @@ app.post('/api/functions/domain-check-all', express.json(), (req, res) => {
   const { name } = req.body;
   if (!name) return res.json({ data: [] });
   const tlds = db.prepare('SELECT tld, price FROM domain_pricing ORDER BY tld').all();
+
+  // Additional TLDs not in pricing table (checked with default price)
+  const EXTRA_TLDS = [
+    '.africa', '.rw', '.co.za', '.co.ke', '.ng', '.gh', '.tz', '.ug', '.zm', '.zw',
+    '.info', '.biz', '.mobi', '.pro', '.name', '.club', '.life', '.live', '.blog',
+    '.design', '.art', '.studio', '.agency', '.world', '.global', '.site', '.space',
+    '.today', '.work', '.social', '.media', '.news', '.press', '.guru', '.tips',
+  ];
+  const DEFAULT_PRICE = 25;
+
+  const allTlds = [
+    ...tlds,
+    ...EXTRA_TLDS.filter(t => !tlds.some(p => p.tld === t)).map(t => ({ tld: t, price: DEFAULT_PRICE })),
+  ];
+
   const results = [];
-  let pending = tlds.length;
+  let pending = allTlds.length;
   function tryFinish() {
     if (--pending > 0) return;
     res.json({ data: results });
   }
-  tlds.forEach(({ tld, price }) => {
+  allTlds.forEach(({ tld, price }) => {
     const domain = name.toLowerCase().replace(/[^a-z0-9-]/g, '') + tld;
     const entry = { domain, tld, price, available: null };
     results.push(entry);
@@ -523,7 +538,7 @@ app.post('/api/functions/domain-check-all', express.json(), (req, res) => {
       tryFinish();
     }, 3000);
   });
-  if (tlds.length === 0) res.json({ data: [] });
+  if (allTlds.length === 0) res.json({ data: [] });
 });
 
 // ─── File Upload ──────────────────────────────────────────

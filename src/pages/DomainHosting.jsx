@@ -118,7 +118,7 @@ export default function DomainHosting() {
                 <div key={tld} className="rounded-2xl border border-blue-100 dark:border-white/10 p-4 flex items-center justify-between hover:border-teal/40 hover:shadow-sm transition-all">
                   <div>
                     <p className="text-base font-bold text-black dark:text-gray-100">{tld}</p>
-                    <p className="text-xs text-black/50 dark:text-gray-500">{TLD_NAMES[tld.replace('.', '')] || 'Generic'}</p>
+                    <p className="text-xs text-black/50 dark:text-gray-500">{TLD_NAMES[tld.replace('.', '')] || 'General'}</p>
                   </div>
                   <p className="text-sm font-semibold text-teal-dark dark:text-teal-light">${price}/<span className="text-xs font-normal text-black/50 dark:text-gray-500">yr</span></p>
                 </div>
@@ -143,7 +143,7 @@ export default function DomainHosting() {
                           {r.available === true ? 'Available' : r.available === false ? 'Taken' : 'Checking...'}
                         </span>
                         <span className="text-lg font-bold font-mono text-black dark:text-gray-100">{r.domain}</span>
-                        <span className="text-xs text-black/50 dark:text-gray-500 bg-white/50 dark:bg-black/80/50 px-2 py-0.5 rounded-full">{TLD_NAMES[r.tld.replace('.', '')] || 'Generic'}</span>
+                        <span className="text-xs text-black/50 dark:text-gray-500 bg-white/50 dark:bg-black/80/50 px-2 py-0.5 rounded-full">{TLD_NAMES[r.tld.replace('.', '')] || 'General'}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-bold text-teal-dark dark:text-teal-light">${r.price}/yr</span>
