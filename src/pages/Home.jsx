@@ -93,12 +93,12 @@ export default function Home() {
           <h2 className="text-xl font-semibold text-black dark:text-gray-100 mb-4 text-left">Explore Templates</h2>
           <div className="relative">
             {canScrollLeft && (
-              <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-800/80 shadow-md border border-blue-200 dark:border-gray-700 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-gray-800 transition-all cursor-pointer -ml-3">
+              <button onClick={() => scroll(-1)} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -ml-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
               </button>
             )}
             {canScrollRight && (
-              <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-800/80 shadow-md border border-blue-200 dark:border-gray-700 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-gray-800 transition-all cursor-pointer -mr-3">
+              <button onClick={() => scroll(1)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/80 shadow-md border border-blue-200 dark:border-white/10 text-black dark:text-gray-200 hover:bg-white dark:hover:bg-white/10 transition-all cursor-pointer -mr-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
               </button>
             )}

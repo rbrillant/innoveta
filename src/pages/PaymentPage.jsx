@@ -105,7 +105,7 @@ export default function PaymentPage() {
         <div className="lg:w-3/5 h-full overflow-y-auto px-5 py-6 lg:py-8">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center gap-3 mb-5">
-              <span className="text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 px-3 py-1 rounded-full border border-white/40 dark:border-gray-700">
+              <span className="text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-black/70 px-3 py-1 rounded-full border border-white/40 dark:border-white/10">
                 &#128179; Payment
               </span>
               {booking?.payment_amount > 0 && (
@@ -146,7 +146,7 @@ export default function PaymentPage() {
               <div className="px-4 py-3">
                 <div className="grid grid-cols-2 gap-2">
                   {banks.map((bank) => (
-                    <div key={bank.code} className="rounded-xl border border-blue-100 dark:border-gray-700 p-2.5 bg-white/50 dark:bg-gray-900/30">
+                    <div key={bank.code} className="rounded-xl border border-blue-100 dark:border-white/10 p-2.5 bg-white/50 dark:bg-black/30">
                       <div className="flex items-center gap-2 mb-1">
                         <div className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-[9px] font-bold shrink-0 shadow-sm" style={{ backgroundColor: bank.color }}>{bank.short}</div>
                         <span className="text-xs font-medium text-black dark:text-gray-100 truncate">{bank.name}</span>
@@ -163,7 +163,7 @@ export default function PaymentPage() {
         </div>
 
         {/* Right: Summary + Proof Upload */}
-        <div className="lg:w-2/5 h-full overflow-y-auto border-t lg:border-t-0 lg:border-l border-blue-100 dark:border-gray-800 px-5 py-6 lg:py-8 bg-white/40 dark:bg-gray-950/40">
+        <div className="lg:w-2/5 h-full overflow-y-auto border-t lg:border-t-0 lg:border-l border-blue-100 dark:border-white/5 px-5 py-6 lg:py-8 bg-white/40 dark:bg-black/40">
           <div className="max-w-lg mx-auto">
             {/* Summary */}
             <div className="glass-card rounded-2xl p-4 mb-4">
@@ -183,14 +183,14 @@ export default function PaymentPage() {
               <p className="text-xs text-black/50 dark:text-gray-400 mb-3">Upload receipt after paying.</p>
               <form onSubmit={handleProofSubmit} className="space-y-3">
                 <div>
-                  <select name="method" required className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
+                  <select name="method" required className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
                     <option value="">Payment method</option>
                     <option value="mtn">MTN Mobile Money</option>
                     <option value="bank">Bank Transfer</option>
                   </select>
                 </div>
                 <div>
-                  <input name="reference" required placeholder="Transaction reference" className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                  <input name="reference" required placeholder="Transaction reference" className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal/40" />
                 </div>
                 <div>
                   <input name="proof" type="file" accept="image/*,.pdf" required className="w-full text-xs text-black dark:text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal/10 file:text-teal-dark dark:file:text-teal-light hover:file:bg-teal/20 file:cursor-pointer cursor-pointer" />

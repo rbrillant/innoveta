@@ -82,7 +82,7 @@ export default function DomainHosting() {
           <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Check availability across all extensions</p>
 
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-            <div className="flex flex-1 rounded-xl border border-blue-200 dark:border-gray-700 overflow-hidden bg-white/70 dark:bg-gray-800/70">
+            <div className="flex flex-1 rounded-xl border border-blue-200 dark:border-white/10 overflow-hidden bg-white/70 dark:bg-black/70">
               <span className="flex items-center pl-4 text-sm text-black/50 dark:text-gray-500 font-medium">https://</span>
               <input
                 type="text"
@@ -115,7 +115,7 @@ export default function DomainHosting() {
             <h2 className="text-xl font-bold text-black dark:text-gray-100 mb-6">Domain Pricing</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {domainPrices.map(({ tld, price }) => (
-                <div key={tld} className="rounded-2xl border border-blue-100 dark:border-gray-700 p-4 flex items-center justify-between hover:border-teal/40 hover:shadow-sm transition-all">
+                <div key={tld} className="rounded-2xl border border-blue-100 dark:border-white/10 p-4 flex items-center justify-between hover:border-teal/40 hover:shadow-sm transition-all">
                   <div>
                     <p className="text-base font-bold text-black dark:text-gray-100">{tld}</p>
                     <p className="text-xs text-black/50 dark:text-gray-500">{TLD_NAMES[tld.replace('.', '')] || 'Generic'}</p>
@@ -136,14 +136,14 @@ export default function DomainHosting() {
               {results.map((r, i) => {
                 const c = getColor(r.available);
                 return (
-                  <div key={i} className={`rounded-2xl p-4 sm:p-5 ${c.bg} border border-blue-100 dark:border-gray-700`}>
+                  <div key={i} className={`rounded-2xl p-4 sm:p-5 ${c.bg} border border-blue-100 dark:border-white/10`}>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3 flex-wrap">
                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${c.badge}`}>
                           {r.available === true ? 'Available' : r.available === false ? 'Taken' : 'Checking...'}
                         </span>
                         <span className="text-lg font-bold font-mono text-black dark:text-gray-100">{r.domain}</span>
-                        <span className="text-xs text-black/50 dark:text-gray-500 bg-white/50 dark:bg-gray-800/50 px-2 py-0.5 rounded-full">{TLD_NAMES[r.tld.replace('.', '')] || 'Generic'}</span>
+                        <span className="text-xs text-black/50 dark:text-gray-500 bg-white/50 dark:bg-black/80/50 px-2 py-0.5 rounded-full">{TLD_NAMES[r.tld.replace('.', '')] || 'Generic'}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-bold text-teal-dark dark:text-teal-light">${r.price}/yr</span>

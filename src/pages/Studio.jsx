@@ -256,11 +256,11 @@ export default function Studio() {
             <form onSubmit={handleLogin} className="glass-card rounded-2xl p-6 sm:p-8 space-y-4">
               <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Email</label>
-              <input name="email" type="email" required placeholder="admin@innovetancy.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+              <input name="email" type="email" required placeholder="admin@innovetancy.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Password</label>
-              <input name="password" type="password" required placeholder="••••••••" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+              <input name="password" type="password" required placeholder="••••••••" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
             </div>
             {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
             <button type="submit" className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">Sign In</button>
@@ -273,21 +273,21 @@ export default function Studio() {
 
   const stats = [
     { label: 'Templates', value: templates.length, color: 'text-teal-dark dark:text-teal-light', bg: 'bg-teal/15 dark:bg-teal-dark/20' },
-    { label: 'Bookings', value: bookings.length, color: 'text-black dark:text-black/60', bg: 'bg-blue-100 dark:bg-gray-800' },
-    { label: 'Clients', value: users.length, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100 dark:bg-gray-800' },
+    { label: 'Bookings', value: bookings.length, color: 'text-black dark:text-black/60', bg: 'bg-blue-100 dark:bg-black/80' },
+    { label: 'Clients', value: users.length, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100 dark:bg-black/80' },
   ];
 
   const statusColors = {
-    pending: 'bg-sky-100 dark:bg-gray-800 text-sky-700',
-    confirmed: 'bg-blue-100 dark:bg-gray-800 text-black dark:text-black/60',
-    completed: 'bg-emerald-100 dark:bg-gray-800 text-emerald-700',
+    pending: 'bg-sky-100 dark:bg-black/80 text-sky-700',
+    confirmed: 'bg-blue-100 dark:bg-black/80 text-black dark:text-black/60',
+    completed: 'bg-emerald-100 dark:bg-black/80 text-emerald-700',
     cancelled: 'bg-rose-100 text-rose-700',
   };
 
   const paymentStatusColors = {
-    pending: 'bg-sky-100 dark:bg-gray-800 text-sky-700',
-    proof_submitted: 'bg-blue-100 dark:bg-gray-800 text-black dark:text-black/60',
-    verified: 'bg-emerald-100 dark:bg-gray-800 text-emerald-700',
+    pending: 'bg-sky-100 dark:bg-black/80 text-sky-700',
+    proof_submitted: 'bg-blue-100 dark:bg-black/80 text-black dark:text-black/60',
+    verified: 'bg-emerald-100 dark:bg-black/80 text-emerald-700',
   };
 
   const filteredTemplates = templates.filter(
@@ -306,14 +306,14 @@ export default function Studio() {
   );
 
   return (
-    <main className="flex-1 min-h-screen bg-ivory dark:bg-gray-950 dark:text-gray-300">
+    <main className="flex-1 min-h-screen bg-ivory dark:bg-black dark:text-gray-300">
       {confirmSignOut && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30">
           <div className="glass-card rounded-2xl p-6 max-w-sm w-full mx-4">
             <h3 className="text-lg font-bold text-black dark:text-gray-100 mb-2">Sign Out</h3>
             <p className="text-sm text-black/70/70 dark:text-gray-400 mb-4">Are you sure you want to sign out?</p>
             <div className="flex gap-3">
-              <button onClick={() => setConfirmSignOut(false)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors cursor-pointer">Cancel</button>
+              <button onClick={() => setConfirmSignOut(false)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-white/10 transition-colors cursor-pointer">Cancel</button>
               <button onClick={handleLogout} className="flex-1 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-teal to-teal-dark rounded-xl hover:from-teal-dark hover:to-teal transition-all cursor-pointer">Sign Out</button>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function Studio() {
             <h3 className="text-lg font-bold text-black dark:text-gray-100 mb-2">Delete Template</h3>
             <p className="text-sm text-black/70/70 dark:text-gray-400 mb-4">Are you sure you want to delete <strong>{confirmDelete.name}</strong>? This cannot be undone.</p>
             <div className="flex gap-3">
-              <button onClick={() => setConfirmDelete(null)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors cursor-pointer">Cancel</button>
+              <button onClick={() => setConfirmDelete(null)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-white/10 transition-colors cursor-pointer">Cancel</button>
               <button onClick={() => handleDelete(confirmDelete.id)} className="flex-1 px-4 py-2 text-sm font-medium text-white bg-rose rounded-xl hover:bg-rose-dark transition-all cursor-pointer">Delete</button>
             </div>
           </div>
@@ -339,7 +339,7 @@ export default function Studio() {
             <h3 className="text-lg font-bold text-black dark:text-gray-100 mb-2">Delete Booking</h3>
             <p className="text-sm text-black/70/70 dark:text-gray-400 mb-4">Are you sure you want to delete booking from <strong>{deleteBooking.name}</strong>? This cannot be undone.</p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteBooking(null)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors cursor-pointer">Cancel</button>
+              <button onClick={() => setDeleteBooking(null)} className="flex-1 px-4 py-2 text-sm font-medium glass-card rounded-xl hover:bg-white/80 dark:hover:bg-white/10 transition-colors cursor-pointer">Cancel</button>
               <button onClick={() => handleDeleteBooking(deleteBooking.id)} className="flex-1 px-4 py-2 text-sm font-medium text-white bg-rose rounded-xl hover:bg-rose-dark transition-all cursor-pointer">Delete</button>
             </div>
           </div>
@@ -353,14 +353,14 @@ export default function Studio() {
             <div className="w-48 shrink-0 flex items-center">
               <Logo showStudio />
             </div>
-            <div className="hidden md:block w-px h-8 bg-blue-200/40 dark:bg-gray-700/40 mr-6" />
+            <div className="hidden md:block w-px h-8 bg-blue-200/40 dark:bg-white/10/40 mr-6" />
             <div className="flex items-center gap-1 overflow-x-auto flex-1 scrollbar-none whitespace-nowrap">
               {TABS.map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className={`text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors cursor-pointer ${
-                    tab === t ? 'bg-teal text-white shadow-sm' : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
+                    tab === t ? 'bg-teal text-white shadow-sm' : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
                   }`}
                 >
                   {t}
@@ -370,7 +370,7 @@ export default function Studio() {
             <div className="shrink-0 flex items-center gap-1">
               <button
                 onClick={toggleTheme}
-                className="w-8 h-8 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-white/5 transition-colors cursor-pointer"
                 title={dark ? 'Light mode' : 'Dark mode'}
               >
                 {dark ? (
@@ -392,10 +392,10 @@ export default function Studio() {
         </div>
         {/* Avatar dropdown */}
         {avatarOpen && (
-          <div id="avatar-dropdown" className="absolute right-4 top-full mt-1 z-[100] bg-white dark:bg-gray-800 rounded-2xl p-3 shadow-lg border border-blue-100 dark:border-gray-700 w-52">
+          <div id="avatar-dropdown" className="absolute right-4 top-full mt-1 z-[100] bg-white dark:bg-black/80 rounded-2xl p-3 shadow-lg border border-blue-100 dark:border-white/10 w-52">
             <p className="text-sm font-semibold text-black dark:text-gray-100 truncate">{designer?.name || 'Designer'}</p>
             <p className="text-xs text-black/60 dark:text-gray-500 truncate">{designer?.email}</p>
-            <hr className="my-2 border-blue-50 dark:border-gray-700" />
+            <hr className="my-2 border-blue-50 dark:border-white/10" />
             <button onClick={() => { setAvatarOpen(false); setConfirmSignOut(true); }} className="w-full text-left px-3 py-2 text-sm text-rose/70 dark:text-purple-400 hover:bg-rose/10 dark:hover:bg-purple-900/20 rounded-xl transition-colors cursor-pointer">Sign Out</button>
           </div>
         )}
@@ -407,7 +407,7 @@ export default function Studio() {
             <button onClick={() => setError('')} className="text-rose/60 dark:text-purple-400 hover:text-rose dark:hover:text-purple-300 cursor-pointer">&times;</button>
           </div>
         )}
-        {success && <div className="mb-4 text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-gray-800 rounded-xl px-4 py-2">{success}</div>}
+        {success && <div className="mb-4 text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-black/80 rounded-xl px-4 py-2">{success}</div>}
 
         {tab === 'Dashboard' && (
             <div>
@@ -427,7 +427,7 @@ export default function Studio() {
                   {loading.bookings ? <p className="text-sm text-black/60 dark:text-gray-500">Loading...</p> : bookings.length === 0 ? <p className="text-sm text-black/60 dark:text-gray-500">No bookings yet.</p> : (
                     <div className="space-y-2 max-h-64 overflow-y-auto">
                       {bookings.slice(0, 5).map((b) => (
-                        <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-blue-50 dark:border-gray-800 last:border-0">
+                        <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-blue-50 dark:border-white/5 last:border-0">
                           <div className="flex items-center gap-2">
                             {b.templates?.image && (
                               <img src={b.templates.image} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" />
@@ -449,13 +449,13 @@ export default function Studio() {
 
           {tab === 'Templates' && (
             <div className="flex -mx-4 sm:-mx-6 lg:-mx-8">
-              <aside className="shrink-0 w-[219px] hidden md:block border-r border-blue-100 dark:border-gray-800 min-h-[calc(100vh-120px)]">
+              <aside className="shrink-0 w-[219px] hidden md:block border-r border-blue-100 dark:border-white/5 min-h-[calc(100vh-120px)]">
                 <div className="sticky top-24 px-4 py-6">
                   <div className="space-y-1">
                     <button
                       onClick={() => setCategoryFilter('')}
                       className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
-                        !categoryFilter ? 'text-black bg-blue-50 dark:bg-gray-800' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+                        !categoryFilter ? 'text-black bg-blue-50 dark:bg-black/80' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-white/5'
                       }`}
                     >
                       All Templates
@@ -465,7 +465,7 @@ export default function Studio() {
                         key={cat}
                         onClick={() => setCategoryFilter(cat)}
                         className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
-                          categoryFilter === cat ? 'text-black bg-blue-50 dark:bg-gray-800' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+                          categoryFilter === cat ? 'text-black bg-blue-50 dark:bg-black/80' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-white/5'
                         }`}
                       >
                         {cat}
@@ -486,7 +486,7 @@ export default function Studio() {
                       placeholder="Search templates..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="px-3.5 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 w-48"
+                      className="px-3.5 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 w-48"
                     />
                     <button onClick={openAdd} className="px-5 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer whitespace-nowrap">+ New Template</button>
                   </div>
@@ -514,7 +514,7 @@ export default function Studio() {
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           {t.price > 0 && <span className="text-sm font-bold text-black dark:text-gray-100 bg-blue-200/50 px-2 py-1 rounded-full">${t.price}</span>}
-                          <button onClick={() => openEdit(t)} className="px-3 py-1.5 text-xs font-medium glass-card rounded-lg hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors cursor-pointer">Edit</button>
+                          <button onClick={() => openEdit(t)} className="px-3 py-1.5 text-xs font-medium glass-card rounded-lg hover:bg-white/80 dark:hover:bg-white/10 transition-colors cursor-pointer">Edit</button>
                           <button onClick={() => setConfirmDelete(t)} className="px-3 py-1.5 text-xs font-medium text-rose dark:text-purple-300 bg-rose/10 dark:bg-purple-900/20 border border-rose/30 rounded-lg hover:bg-rose/20 transition-colors cursor-pointer">Delete</button>
                         </div>
                       </div>
@@ -542,7 +542,7 @@ export default function Studio() {
                   placeholder="Search bookings..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-3.5 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 w-48"
+                  className="px-3.5 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 w-48"
                 />
               </div>
               {loading.bookings ? (
@@ -592,7 +592,7 @@ export default function Studio() {
                               key={s}
                               onClick={() => handleBookingStatus(b.id, s)}
                               className={`text-[10px] font-medium px-2 py-1 rounded-lg transition-colors cursor-pointer ${
-                                b.status === s ? 'bg-teal text-white' : 'bg-blue-50 dark:bg-gray-800 text-black/70/70 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700'
+                                b.status === s ? 'bg-teal text-white' : 'bg-blue-50 dark:bg-black/80 text-black/70/70 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-white/10'
                               }`}
                             >
                               {s}
@@ -644,7 +644,7 @@ export default function Studio() {
                           </div>
                         </div>
                       </div>
-                      <div className="bg-white/50 dark:bg-gray-900/50 rounded-xl p-3">
+                      <div className="bg-white/50 dark:bg-black/50 rounded-xl p-3">
                         <p className="text-sm text-black/70 dark:text-gray-300"><span className="font-medium">Course:</span> {enr.course_title || 'Unknown'}{enr.course_price > 0 ? ` — $${enr.course_price}` : ' — Free'}</p>
                       </div>
                     </div>
@@ -800,7 +800,7 @@ export default function Studio() {
                 <div className="glass-card rounded-2xl overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-blue-100 dark:border-gray-800">
+                      <tr className="border-b border-blue-100 dark:border-white/5">
                         <th className="text-left px-5 py-3 font-semibold text-black dark:text-black/60">Name</th>
                         <th className="text-left px-5 py-3 font-semibold text-black dark:text-black/60">Email</th>
                         <th className="text-left px-5 py-3 font-semibold text-black dark:text-black/60">Source</th>
@@ -808,7 +808,7 @@ export default function Studio() {
                     </thead>
                     <tbody>
                       {users.map((u, i) => (
-                        <tr key={i} className="border-b border-blue-50 dark:border-gray-800 last:border-0">
+                        <tr key={i} className="border-b border-blue-50 dark:border-white/5 last:border-0">
                           <td className="px-5 py-3 text-black dark:text-gray-100">{u.name}</td>
                           <td className="px-5 py-3 text-black/70/70 dark:text-gray-400">{u.email}</td>
                           <td className="px-5 py-3 text-black/60 dark:text-gray-500 text-xs">{u.source}</td>
@@ -857,28 +857,28 @@ export default function Studio() {
                 <div className="glass-card rounded-2xl p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold text-black dark:text-gray-100">{editingCourse.id ? 'Edit' : 'New'} Course</h3>
-                    <button onClick={() => { setEditingCourse(null); setLessons([]); }} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Back</button>
+                    <button onClick={() => { setEditingCourse(null); setLessons([]); }} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Back</button>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-                    <input value={courseForm.title} onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={courseForm.title} onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-                    <textarea value={courseForm.description} onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <textarea value={courseForm.description} onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Price ($)</label>
-                      <input value={courseForm.price} onChange={(e) => setCourseForm({ ...courseForm, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                      <input value={courseForm.price} onChange={(e) => setCourseForm({ ...courseForm, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Image</label>
-                      <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-gray-900/70 h-28 relative overflow-hidden">
+                      <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-200 dark:border-white/10 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-black/70 h-28 relative overflow-hidden">
                         {courseForm.image ? (
                           <>
                             <img src={courseForm.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                            <div className="absolute bottom-2 right-2 bg-white/80 dark:bg-gray-800 text-xs text-black/70 dark:text-gray-400 px-2.5 py-1 rounded-full shadow-sm">Change</div>
+                            <div className="absolute bottom-2 right-2 bg-white/80 dark:bg-black/80 text-xs text-black/70 dark:text-gray-400 px-2.5 py-1 rounded-full shadow-sm">Change</div>
                           </>
                         ) : (
                           <div className="flex flex-col items-center gap-1 text-black/60 dark:text-gray-500">
@@ -892,8 +892,8 @@ export default function Studio() {
                     <div className="col-span-2">
                       <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Course Video</label>
                       <div className="space-y-2">
-                        <input value={courseForm.video_url && !courseForm.video_url.startsWith('data:') ? courseForm.video_url : ''} onChange={(e) => setCourseForm({ ...courseForm, video_url: e.target.value })} placeholder="YouTube embed URL (or upload a video file below)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-                        <label className="flex items-center gap-2 px-3.5 py-2.5 border-2 border-dashed border-blue-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-gray-900/70">
+                        <input value={courseForm.video_url && !courseForm.video_url.startsWith('data:') ? courseForm.video_url : ''} onChange={(e) => setCourseForm({ ...courseForm, video_url: e.target.value })} placeholder="YouTube embed URL (or upload a video file below)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                        <label className="flex items-center gap-2 px-3.5 py-2.5 border-2 border-dashed border-blue-200 dark:border-white/10 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-black/70">
                           {courseForm.video_url && courseForm.video_url.startsWith('data:') ? (
                             <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
@@ -911,7 +911,7 @@ export default function Studio() {
                     </div>
                     <div className="col-span-2">
                       <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Course PDF (full course material for offline learning)</label>
-                      <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-gray-900/70 h-24 relative overflow-hidden">
+                      <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-200 dark:border-white/10 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-black/70 h-24 relative overflow-hidden">
                         {courseForm.pdf_url ? (
                           <div className="flex flex-col items-center gap-1 text-emerald-600 dark:text-emerald-400">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -940,35 +940,35 @@ export default function Studio() {
                     }} disabled={courseSaving} className="px-6 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
                       {courseSaving && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{courseSaving ? 'Saving...' : 'Save Course'}
                     </button>
-                    <button onClick={() => { setEditingCourse(null); setLessons([]); }} className="px-6 py-2.5 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 text-sm font-semibold rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Cancel</button>
+                    <button onClick={() => { setEditingCourse(null); setLessons([]); }} className="px-6 py-2.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 text-sm font-semibold rounded-xl hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
                   </div>
                   {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
 
                   {/* Lessons section */}
                   {editingCourse?.id && (
-                    <div className="border-t border-blue-100 dark:border-gray-800 pt-6 mt-6">
+                    <div className="border-t border-blue-100 dark:border-white/5 pt-6 mt-6">
                       <div className="flex items-center justify-between mb-4">
                         <h4 className="font-bold text-black dark:text-gray-100">Lessons</h4>
                         <button onClick={() => setEditingLesson({ course_id: editingCourse.id, title: '', description: '', content_type: 'text', content: '', video_url: '', sort_order: lessons.length })} className="text-xs px-3 py-1.5 bg-teal text-white rounded-lg hover:bg-teal-dark transition cursor-pointer">+ Add Lesson</button>
                       </div>
 
                       {editingLesson ? (
-                        <div className="bg-blue-50/50 dark:bg-gray-900/50 rounded-xl p-4 space-y-3 mb-4">
+                        <div className="bg-blue-50/50 dark:bg-black/50 rounded-xl p-4 space-y-3 mb-4">
                           <div className="flex items-center justify-between">
                             <h5 className="text-sm font-medium text-black dark:text-gray-100">{editingLesson.id ? 'Edit' : 'New'} Lesson</h5>
                             <button onClick={() => setEditingLesson(null)} className="text-xs text-black/60 hover:text-black cursor-pointer">Cancel</button>
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-                            <input value={lessonForm.title} onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                            <input value={lessonForm.title} onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Description (shown in sidebar)</label>
-                            <textarea value={lessonForm.description} onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })} rows={2} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 resize-none" />
+                            <textarea value={lessonForm.description} onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })} rows={2} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 resize-none" />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Type</label>
-                            <select value={lessonForm.content_type} onChange={(e) => setLessonForm({ ...lessonForm, content_type: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
+                            <select value={lessonForm.content_type} onChange={(e) => setLessonForm({ ...lessonForm, content_type: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 cursor-pointer">
                               <option value="text">Text</option>
                               <option value="video">Video</option>
                               <option value="notes">Notes</option>
@@ -977,14 +977,14 @@ export default function Studio() {
                           {lessonForm.content_type === 'video' && (
                             <div>
                               <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Video URL (YouTube embed)</label>
-                              <input value={lessonForm.video_url} onChange={(e) => setLessonForm({ ...lessonForm, video_url: e.target.value })} placeholder="https://www.youtube.com/embed/..." className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                              <input value={lessonForm.video_url} onChange={(e) => setLessonForm({ ...lessonForm, video_url: e.target.value })} placeholder="https://www.youtube.com/embed/..." className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                             </div>
                           )}
                           {(lessonForm.content_type === 'text' || lessonForm.content_type === 'notes') && (
                             <div>
                               <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Content (HTML)</label>
-                              <textarea value={lessonForm.content} onChange={(e) => setLessonForm({ ...lessonForm, content: e.target.value })} rows={6} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 font-mono" />
-                              <label className="flex items-center gap-2 mt-2 px-3 py-2 border-2 border-dashed border-blue-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-gray-900/70">
+                              <textarea value={lessonForm.content} onChange={(e) => setLessonForm({ ...lessonForm, content: e.target.value })} rows={6} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 font-mono" />
+                              <label className="flex items-center gap-2 mt-2 px-3 py-2 border-2 border-dashed border-blue-200 dark:border-white/10 rounded-xl cursor-pointer hover:border-teal/50 transition-colors bg-white/70 dark:bg-black/70">
                                 <svg className="w-4 h-4 text-black/60 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                 <span className="text-xs text-black/60 dark:text-gray-500">Upload Word document (.docx) to extract content automatically</span>
                                 <input type="file" accept=".docx" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = (ev) => { const arr = new Uint8Array(ev.target.result); mammoth.convertToHtml({ arrayBuffer: arr }).then((r) => setLessonForm({ ...lessonForm, content: r.value })).catch(() => {}); }; r.readAsArrayBuffer(f); } }} className="hidden" />
@@ -993,7 +993,7 @@ export default function Studio() {
                           )}
                           <div>
                             <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Order</label>
-                            <input value={lessonForm.sort_order} onChange={(e) => setLessonForm({ ...lessonForm, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-24 px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                            <input value={lessonForm.sort_order} onChange={(e) => setLessonForm({ ...lessonForm, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-24 px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                           </div>
                           <button onClick={async () => {
                             setLessonSaving(true);
@@ -1014,15 +1014,15 @@ export default function Studio() {
                       ) : (
                         <div className="space-y-2">
                           {lessons.map((l) => (
-                            <div key={l.id} className="flex items-center gap-3 bg-white/50 dark:bg-gray-900/50 rounded-xl px-4 py-3">
+                            <div key={l.id} className="flex items-center gap-3 bg-white/50 dark:bg-black/50 rounded-xl px-4 py-3">
                               <span className="text-xs font-bold text-black/60 dark:text-gray-500 w-6">{l.sort_order}</span>
                               <span className={`text-[10px] px-1.5 py-0.5 rounded ${
                                 l.content_type === 'video' ? 'text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400'
                                 : l.content_type === 'notes' ? 'text-sky-600 bg-sky-100 dark:bg-sky-900/30 dark:text-sky-400'
-                                : 'text-black bg-blue-100 dark:bg-gray-700 dark:text-black/60'
+                                : 'text-black bg-blue-100 dark:bg-white/10 dark:text-black/60'
                               }`}>{l.content_type}</span>
                               <span className="flex-1 text-sm text-black dark:text-gray-100">{l.title}</span>
-                              <button onClick={() => { setEditingLesson(l); setLessonForm({ title: l.title, description: l.description || '', content_type: l.content_type, content: l.content || '', video_url: l.video_url || '', sort_order: l.sort_order }); }} className="text-xs px-2 py-1 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Edit</button>
+                              <button onClick={() => { setEditingLesson(l); setLessonForm({ title: l.title, description: l.description || '', content_type: l.content_type, content: l.content || '', video_url: l.video_url || '', sort_order: l.sort_order }); }} className="text-xs px-2 py-1 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
                               <button onClick={async () => { await removeLesson(l.id); setLessons(await fetchLessons(editingCourse.id)); }} className="text-xs px-2 py-1 bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Del</button>
                             </div>
                           ))}
@@ -1069,15 +1069,15 @@ export default function Studio() {
             <div className="max-w-md">
               <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1">Settings</h2>
               <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Change your studio password.</p>
-              {success && <p className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-gray-800 rounded-xl px-4 py-2 mb-4">{success}</p>}
+              {success && <p className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-black/80 rounded-xl px-4 py-2 mb-4">{success}</p>}
               <form onSubmit={handlePasswordChange} className="glass-card rounded-2xl p-6 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Current Password</label>
-                  <input value={passForm.current} onChange={(e) => setPassForm({ ...passForm, current: e.target.value })} type="password" required className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                  <input value={passForm.current} onChange={(e) => setPassForm({ ...passForm, current: e.target.value })} type="password" required className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">New Password</label>
-                  <input value={passForm.newPass} onChange={(e) => setPassForm({ ...passForm, newPass: e.target.value })} type="password" required className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                  <input value={passForm.newPass} onChange={(e) => setPassForm({ ...passForm, newPass: e.target.value })} type="password" required className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                 </div>
                 {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
                 <button type="submit" className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">Update Password</button>
@@ -1090,31 +1090,31 @@ export default function Studio() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Bank Name</label>
-                    <input value={paymentForm.bank_name} onChange={(e) => setPaymentForm({ ...paymentForm, bank_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.bank_name} onChange={(e) => setPaymentForm({ ...paymentForm, bank_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Account Name</label>
-                    <input value={paymentForm.account_name} onChange={(e) => setPaymentForm({ ...paymentForm, account_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.account_name} onChange={(e) => setPaymentForm({ ...paymentForm, account_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Account Number</label>
-                    <input value={paymentForm.account_number} onChange={(e) => setPaymentForm({ ...paymentForm, account_number: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.account_number} onChange={(e) => setPaymentForm({ ...paymentForm, account_number: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Currency</label>
-                    <input value={paymentForm.currency} onChange={(e) => setPaymentForm({ ...paymentForm, currency: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.currency} onChange={(e) => setPaymentForm({ ...paymentForm, currency: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Mobile Money Network</label>
-                    <input value={paymentForm.momo_network} onChange={(e) => setPaymentForm({ ...paymentForm, momo_network: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.momo_network} onChange={(e) => setPaymentForm({ ...paymentForm, momo_network: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Mobile Money Number</label>
-                    <input value={paymentForm.momo_number} onChange={(e) => setPaymentForm({ ...paymentForm, momo_number: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.momo_number} onChange={(e) => setPaymentForm({ ...paymentForm, momo_number: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/60 dark:text-gray-500 mb-1">Mobile Money Name</label>
-                    <input value={paymentForm.momo_name} onChange={(e) => setPaymentForm({ ...paymentForm, momo_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+                    <input value={paymentForm.momo_name} onChange={(e) => setPaymentForm({ ...paymentForm, momo_name: e.target.value })} className="w-full px-3 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
                   </div>
                   <div className="flex items-end">
                     <button onClick={async () => { const d = await updatePaymentSettings(paymentForm); if (d) { setPaymentSettings(d); setSuccess('Payment details updated.'); } else { setError('Failed to update.'); } }} className="w-full px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">Save Payment Details</button>
@@ -1170,33 +1170,33 @@ function StudioServicesTab({ type, title, fetchServices, upsertService, removeSe
         <div className="glass-card rounded-2xl p-6 space-y-4 mb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-black dark:text-gray-100">{editing.id ? 'Edit' : 'New'} Service</h3>
-            <button onClick={() => setEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Cancel</button>
+            <button onClick={() => setEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Icon (emoji)</label>
-              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔗" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔗" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Price ($)</label>
-              <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Sort Order</label>
-              <input value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Image</label>
               <div className="flex items-center gap-3">
-                <label className="px-4 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm cursor-pointer hover:bg-white dark:hover:bg-gray-900 transition">
+                <label className="px-4 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm cursor-pointer hover:bg-white dark:hover:bg-white/5 transition">
                   Choose File
                   <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = (ev) => setForm({ ...form, image: ev.target.result }); r.readAsDataURL(f); } }} className="hidden" />
                 </label>
@@ -1227,7 +1227,7 @@ function StudioServicesTab({ type, title, fetchServices, upsertService, removeSe
               </div>
               {s.price > 0 && <span className="text-sm font-bold text-teal-dark dark:text-teal-light shrink-0">${s.price}</span>}
               <div className="flex gap-2 shrink-0">
-                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Edit</button>
+                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
                 <button onClick={() => handleDelete(s.id)} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
               </div>
             </div>
@@ -1295,33 +1295,33 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
         <div className="glass-card rounded-2xl p-6 space-y-4 mb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-black dark:text-gray-100">{editing.id ? 'Edit' : 'New'} Service</h3>
-            <button onClick={() => setEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Cancel</button>
+            <button onClick={() => setEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Icon (emoji)</label>
-              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔍" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔍" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Price ($)</label>
-              <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Sort Order</label>
-              <input value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Image</label>
               <div className="flex items-center gap-3">
-                <label className="px-4 py-2 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm cursor-pointer hover:bg-white dark:hover:bg-gray-900 transition">
+                <label className="px-4 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm cursor-pointer hover:bg-white dark:hover:bg-white/5 transition">
                   Choose File
                   <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = (ev) => setForm({ ...form, image: ev.target.result }); r.readAsDataURL(f); } }} className="hidden" />
                 </label>
@@ -1351,7 +1351,7 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
                 <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
               </div>
               <div className="flex gap-2 shrink-0">
-                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Edit</button>
+                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
                 <button onClick={() => removeService(s.id).then(async () => setServices(await fetchServices('consulting')))} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
               </div>
             </div>
@@ -1369,20 +1369,20 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
         <div className="glass-card rounded-2xl p-6 space-y-4 mb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-black dark:text-gray-100">{stepEditing.id ? 'Edit' : 'New'} Step</h3>
-            <button onClick={() => setStepEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Cancel</button>
+            <button onClick={() => setStepEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Step Number</label>
-              <input value={stepForm.step_number} onChange={(e) => setStepForm({ ...stepForm, step_number: parseInt(e.target.value) || 0 })} type="number" min="1" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={stepForm.step_number} onChange={(e) => setStepForm({ ...stepForm, step_number: parseInt(e.target.value) || 0 })} type="number" min="1" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-              <input value={stepForm.title} onChange={(e) => setStepForm({ ...stepForm, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <input value={stepForm.title} onChange={(e) => setStepForm({ ...stepForm, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-              <textarea value={stepForm.description} onChange={(e) => setStepForm({ ...stepForm, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <textarea value={stepForm.description} onChange={(e) => setStepForm({ ...stepForm, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
           </div>
           <button onClick={handleStepSave} disabled={stepSaving} className="px-6 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center gap-2">
@@ -1403,7 +1403,7 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
                 <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
               </div>
               <div className="flex gap-2 shrink-0">
-                <button onClick={() => { setStepEditing(s); setStepForm({ step_number: s.step_number, title: s.title, description: s.description }); }} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Edit</button>
+                <button onClick={() => { setStepEditing(s); setStepForm({ step_number: s.step_number, title: s.title, description: s.description }); }} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
                 <button onClick={() => removeServiceStep(s.id).then(async () => setSteps(await fetchServiceSteps()))} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
               </div>
             </div>
@@ -1424,11 +1424,11 @@ function DomainPriceRow({ row, onSave }) {
     setEditing(false);
   };
   return (
-    <tr className="border-t border-blue-100 dark:border-gray-800">
+    <tr className="border-t border-blue-100 dark:border-white/5">
       <td className="py-2 pr-4 font-medium text-black dark:text-gray-200">.{row.tld}</td>
       <td className="py-2 pr-4">
         {editing ? (
-          <input value={val} onChange={(e) => setVal(parseFloat(e.target.value) || 0)} type="number" step="0.01" min="0" className="w-24 px-2 py-1 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+          <input value={val} onChange={(e) => setVal(parseFloat(e.target.value) || 0)} type="number" step="0.01" min="0" className="w-24 px-2 py-1 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
         ) : (
           <span className="text-black dark:text-gray-200">${row.price.toFixed(2)}</span>
         )}
@@ -1437,10 +1437,10 @@ function DomainPriceRow({ row, onSave }) {
         {editing ? (
           <div className="flex gap-1">
             <button onClick={handleSave} className="px-2 py-1 bg-teal text-white text-xs rounded-lg hover:bg-teal-dark transition cursor-pointer">Save</button>
-            <button onClick={() => { setEditing(false); setVal(row.price); }} className="px-2 py-1 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 text-xs rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Cancel</button>
+            <button onClick={() => { setEditing(false); setVal(row.price); }} className="px-2 py-1 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 text-xs rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="px-2 py-1 bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300 text-xs rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition cursor-pointer">Edit</button>
+          <button onClick={() => setEditing(true)} className="px-2 py-1 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 text-xs rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
         )}
       </td>
     </tr>

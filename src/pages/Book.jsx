@@ -86,7 +86,7 @@ export default function Book() {
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-5 py-16">
         <div className="text-center mb-10">
-          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-gray-700">
+          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-black/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-white/10">
             {domainParam ? '✦ Register Domain' : '✦ Hire Me'}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-warm-dark dark:text-gray-100">
@@ -111,7 +111,7 @@ export default function Book() {
                 <span className="text-[10px] font-medium text-teal-dark dark:text-teal-light bg-teal/15 dark:bg-teal-dark/20 px-2 py-1 rounded-full shrink-0">Available</span>
               </div>
             ) : template ? (
-              <div className="glass-card rounded-xl p-4 flex items-center gap-4 bg-white/60 dark:bg-gray-900/60">
+              <div className="glass-card rounded-xl p-4 flex items-center gap-4 bg-white/60 dark:bg-black/60">
                 {template.image && <img src={template.image} alt={template.name} className="w-16 h-16 rounded-xl object-cover shrink-0" />}
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-black dark:text-gray-100">{template.name}</p>
@@ -128,42 +128,42 @@ export default function Book() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Your Name</label>
-                <input name="name" required placeholder="e.g. Sarah Johnson" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                <input name="name" required placeholder="e.g. Sarah Johnson" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Email</label>
-                <input name="email" type="email" required placeholder="sarah@example.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                <input name="email" type="email" required placeholder="sarah@example.com" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Phone <span className="text-black/60 dark:text-gray-500 font-normal">(optional)</span></label>
-              <input name="phone" type="tel" placeholder="+1 234 567 890" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+              <input name="phone" type="tel" placeholder="+1 234 567 890" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
             </div>
 
             {domainParam && (
               <div className="space-y-4">
-                <p className="text-sm font-medium text-black dark:text-gray-300 border-b border-blue-200/50 dark:border-gray-700 pb-1">Registrant Address (ICANN required)</p>
+                <p className="text-sm font-medium text-black dark:text-gray-300 border-b border-blue-200/50 dark:border-white/10 pb-1">Registrant Address (ICANN required)</p>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Street Address</label>
-                    <input name="street" required placeholder="123 Main St" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                    <input name="street" required placeholder="123 Main St" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">City</label>
-                    <input name="city" required placeholder="New York" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                    <input name="city" required placeholder="New York" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">State / Province</label>
-                    <input name="state" required placeholder="NY" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                    <input name="state" required placeholder="NY" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Postal Code</label>
-                    <input name="zip" required placeholder="10001" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                    <input name="zip" required placeholder="10001" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">Country</label>
-                    <input name="country" required placeholder="United States" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+                    <input name="country" required placeholder="United States" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
                   </div>
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default function Book() {
 
             <div>
               <label className="block text-sm font-medium text-black dark:text-gray-300 mb-1">{domainParam ? 'Notes' : 'Message'} <span className="text-black/60 dark:text-gray-500 font-normal">(optional)</span></label>
-              <textarea name="message" rows={3} placeholder={domainParam ? 'Any special requirements?' : 'Tell me about your project...'} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
+              <textarea name="message" rows={3} placeholder={domainParam ? 'Any special requirements?' : 'Tell me about your project...'} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 focus:border-teal backdrop-blur-sm" />
             </div>
 
             {submitError && <p className="text-sm text-rose dark:text-purple-300 bg-rose/10 dark:bg-purple-900/20 rounded-xl px-4 py-2">{submitError}</p>}

@@ -35,7 +35,7 @@ export default function MyCourses() {
     <main className="flex-1">
       <div className="max-w-4xl mx-auto px-5 py-16">
         <div className="text-center mb-10">
-          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-gray-700">
+          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-black/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-white/10">
             📚 My Learning
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-warm-dark dark:text-gray-100">My Courses</h2>
@@ -68,7 +68,7 @@ export default function MyCourses() {
                       <h3 className="font-semibold text-black dark:text-gray-100">{enr.courses?.title || 'Unknown Course'}</h3>
                       <p className="text-xs text-black/60 dark:text-gray-500">Enrolled {new Date(enr.enrolled_at).toLocaleDateString()}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <div className="flex-1 h-2 bg-blue-100 dark:bg-gray-800 rounded-full overflow-hidden max-w-xs">
+                        <div className="flex-1 h-2 bg-blue-100 dark:bg-black/80 rounded-full overflow-hidden max-w-xs">
                           <div className="h-full bg-gradient-to-r from-teal to-teal-dark rounded-full transition-all" style={{ width: `${pd.percent}%` }} />
                         </div>
                         <span className="text-xs font-medium text-teal-dark dark:text-teal-light">{pd.completed}/{pd.total}</span>
@@ -77,7 +77,7 @@ export default function MyCourses() {
                     <span className="text-teal-dark dark:text-teal-light text-sm">→</span>
                   </Link>
                   {enr.courses?.pdf_url && (
-                    <div className="border-t border-blue-100 dark:border-gray-800 mt-3 pt-3">
+                    <div className="border-t border-blue-100 dark:border-white/5 mt-3 pt-3">
                       <a
                         href={enr.courses.pdf_url}
                         download={`${(enr.courses?.title || 'course').replace(/\s+/g, '_')}.pdf`}

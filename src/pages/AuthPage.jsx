@@ -150,33 +150,33 @@ export default function AuthPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Surname</label>
-                    <input name="surname" required placeholder="Doe" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                    <input name="surname" required placeholder="Doe" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Name</label>
-                    <input name="name" required placeholder="John" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                    <input name="name" required placeholder="John" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                   </div>
                 </div>
               )}
               <div>
                 <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Email</label>
-                <input name="email" type="email" required placeholder="john@email.com" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                <input name="email" type="email" required placeholder="john@email.com" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
               </div>
               {mode === 'signup' && (
                 <div>
                   <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Phone number</label>
-                  <input name="phone" required placeholder="+27 123 456 789" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                  <input name="phone" required placeholder="+27 123 456 789" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                 </div>
               )}
               {mode === 'signup' && (
                 <div>
                   <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Date of birth</label>
-                  <input name="dob" type="date" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                  <input name="dob" type="date" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                 </div>
               )}
               <div>
                 <label className="block text-xs font-medium text-black dark:text-gray-400 mb-1">Password</label>
-                <input name="password" type="password" required placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
+                <input name="password" type="password" required placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 dark:text-gray-200 dark:placeholder:text-gray-500" />
                 {mode === 'signin' && <Link to="/reset-password" className="block text-xs text-teal dark:text-teal-light hover:underline mt-1.5 text-right">Forgot password?</Link>}
               </div>
               {error && <p className="text-sm text-red-400">{error}</p>}

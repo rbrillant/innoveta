@@ -60,7 +60,7 @@ export default function Templates() {
           onClick={() => handleCategoryClick('All')}
           data-active={active === 'All' || undefined}
           className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer relative z-10 ${
-            active === 'All' ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+            active === 'All' ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-white/5'
           }`}
         >
           All Templates
@@ -71,7 +71,7 @@ export default function Templates() {
             onClick={() => handleCategoryClick(cat)}
             data-active={active === cat || undefined}
             className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer relative z-10 ${
-              active === cat ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-gray-800/60'
+              active === cat ? 'text-black' : 'text-black/70 hover:bg-white/60 dark:text-gray-400 dark:hover:bg-white/5'
             }`}
           >
             {cat}
@@ -84,7 +84,7 @@ export default function Templates() {
   return (
     <main className="flex-1">
       <div className="flex">
-        <aside className="shrink-0 w-[220.5px] hidden md:block border-r border-blue-100 dark:border-gray-800 min-h-[calc(100vh-57px)]">
+        <aside className="shrink-0 w-[220.5px] hidden md:block border-r border-blue-100 dark:border-white/5 min-h-[calc(100vh-57px)]">
           <div className="sticky top-20 px-4 py-6">
             {sidebarContent}
           </div>
@@ -106,7 +106,7 @@ export default function Templates() {
         {sidebarOpen && (
           <div className="md:hidden fixed inset-0 z-40">
             <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
-            <div className="absolute left-0 top-0 bottom-0 w-64 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-xl p-5 pt-6 overflow-y-auto">
+            <div className="absolute left-0 top-0 bottom-0 w-64 bg-white/95 dark:bg-black/95 backdrop-blur-md shadow-xl p-5 pt-6 overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
                 <span className="text-sm font-semibold text-black dark:text-gray-100">Categories</span>
                 <button onClick={() => setSidebarOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer">

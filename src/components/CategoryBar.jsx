@@ -101,7 +101,7 @@ export default function CategoryBar() {
             <div className="flex md:hidden items-center">
               <Logo className="text-base sm:text-lg" />
             </div>
-            <div className="hidden md:block w-px h-8 bg-blue-200/40 dark:bg-gray-700/40 mr-6" />
+            <div className="hidden md:block w-px h-8 bg-blue-200/40 dark:bg-white/10/40 mr-6" />
             <div ref={navRef} className="relative flex max-md:hidden items-center gap-1 overflow-x-auto scrollbar-none">
               <div
                 className="absolute top-0 bottom-0 rounded-full pointer-events-none nav-active"
@@ -119,7 +119,7 @@ export default function CategoryBar() {
                   className={`relative z-10 text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors ${
                     pathname === l.to
                       ? 'text-black dark:text-gray-100'
-                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
+                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
                   }`}
                 >
                   {l.label}
@@ -141,7 +141,7 @@ export default function CategoryBar() {
               <button
                 type="button"
                 onClick={() => { if (searchOpen && search.trim()) { handleSearch({ preventDefault: () => {} }); } else { setSearchOpen((o) => !o); } }}
-                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer mr-0.5"
+                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-white/5 transition-colors cursor-pointer mr-0.5"
                 title="Search"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -152,7 +152,7 @@ export default function CategoryBar() {
             <div className="ml-auto flex items-center gap-1" ref={btnRef}>
               <button
                 onClick={toggleTheme}
-                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-white/5 transition-colors cursor-pointer"
                 title={dark ? 'Light mode' : 'Dark mode'}
               >
                 {dark ? (
@@ -163,7 +163,7 @@ export default function CategoryBar() {
               </button>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex max-sm:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60 transition-colors cursor-pointer whitespace-nowrap"
+                className="flex max-sm:hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 {session ? (
                   <span className="w-6 h-6 rounded-full bg-gradient-to-br from-teal to-teal-dark text-white text-[10px] font-bold flex items-center justify-center shrink-0">
@@ -176,7 +176,7 @@ export default function CategoryBar() {
               </button>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex sm:hidden w-8 h-8 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                className="flex sm:hidden w-8 h-8 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-white/5 transition-colors cursor-pointer"
                 title="Profile"
               >
                 {session ? (
@@ -190,7 +190,7 @@ export default function CategoryBar() {
               <button
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex md:hidden w-9 h-9 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/60 transition-colors cursor-pointer active:scale-95"
+                className="flex md:hidden w-9 h-9 items-center justify-center rounded-full text-black/70 hover:text-black dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-white/5 transition-colors cursor-pointer active:scale-95"
                 aria-label="Menu"
               >
                 {menuOpen ? (
@@ -212,7 +212,7 @@ export default function CategoryBar() {
                   className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
                     pathname === l.to
                       ? 'nav-active text-black dark:text-gray-100'
-                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700/60'
+                      : 'text-black/70 hover:text-black hover:bg-white/60 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
                   }`}
                 >
                   {l.label}
@@ -225,7 +225,7 @@ export default function CategoryBar() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full px-3 py-1.5 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 placeholder:text-blue-300 dark:placeholder:text-gray-500 dark:text-gray-200"
+                  className="w-full px-3 py-1.5 bg-white/70 dark:bg-black/70 border border-glass-border rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal/40 placeholder:text-blue-300 dark:placeholder:text-gray-500 dark:text-gray-200"
                 />
               </form>
               )}
@@ -236,10 +236,10 @@ export default function CategoryBar() {
 
       {profileOpen && (
         <div className="fixed inset-x-0 top-[57px] z-[100] flex justify-end profile-dropdown" style={{ paddingRight: 'calc((100vw - 1216px) / 2 + 20px)' }}>
-          <div className="bg-white rounded-2xl p-2 shadow-lg border border-blue-200 w-48 dark:bg-gray-800 dark:border-gray-700">
+          <div className="bg-white rounded-2xl p-2 shadow-lg border border-blue-200 w-48 dark:bg-black/80 dark:border-white/10">
             {session ? (
               <>
-                <div className="px-3 py-2 text-sm text-black font-medium truncate border-b border-blue-100 mb-1 dark:text-gray-200 dark:border-gray-700">
+                <div className="px-3 py-2 text-sm text-black font-medium truncate border-b border-blue-100 mb-1 dark:text-gray-200 dark:border-white/10">
                   {session.user?.user_metadata?.name || session.user?.email || 'User'}
                 </div>
                 {session.user?.email && (
@@ -257,14 +257,14 @@ export default function CategoryBar() {
                 <Link
                   to="/auth?mode=signin"
                   onClick={() => setProfileOpen(false)}
-                  className="block px-3 py-2 text-sm text-black hover:bg-blue-50 rounded-xl transition-colors dark:text-gray-200 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 text-sm text-black hover:bg-blue-50 rounded-xl transition-colors dark:text-gray-200 dark:hover:bg-white/10"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/auth?mode=signup"
                   onClick={() => setProfileOpen(false)}
-                  className="block px-3 py-2 text-sm text-black font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-black/60 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 text-sm text-black font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-black/60 dark:hover:bg-white/10"
                 >
                   Create Account
                 </Link>

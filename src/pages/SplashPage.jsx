@@ -79,7 +79,7 @@ export default function SplashPage() {
           >
             <div className="px-6 sm:px-10 lg:px-14 w-full py-4">
               <div className="animate-fade-down">
-                <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-3 py-1 rounded-full mb-3 shadow-sm border border-teal/20">
+                <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/80 dark:bg-black/80 backdrop-blur-md px-3 py-1 rounded-full mb-3 shadow-sm border border-teal/20">
                   ✦ Welcome to
                 </span>
               </div>

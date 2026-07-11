@@ -80,17 +80,17 @@ export default function TemplatePage() {
           {/* Left: Image viewer */}
           <div className="flex-1 min-w-0">
             <div className="glass-card rounded-3xl overflow-hidden">
-              <div className="relative bg-blue-50 dark:bg-gray-800/50 flex items-center justify-center" style={{ minHeight: '400px', maxHeight: '70vh' }}>
+              <div className="relative bg-blue-50 dark:bg-black/80/50 flex items-center justify-center" style={{ minHeight: '400px', maxHeight: '70vh' }}>
                 {current && (
                   <img src={current.image_url} alt={current.caption || template.name} className="w-full h-full object-contain" style={{ maxHeight: '70vh' }} />
                 )}
               </div>
               {allImages.length > 1 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-blue-100 dark:border-gray-700">
+                <div className="flex items-center justify-between px-4 py-3 border-t border-blue-100 dark:border-white/10">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
                     disabled={currentPage === 0}
-                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-50 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors cursor-pointer"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-50 dark:hover:bg-white/10 disabled:opacity-30 transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
                   </button>
@@ -110,7 +110,7 @@ export default function TemplatePage() {
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(allImages.length - 1, p + 1))}
                     disabled={currentPage === allImages.length - 1}
-                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-50 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors cursor-pointer"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-50 dark:hover:bg-white/10 disabled:opacity-30 transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
                   </button>
@@ -143,16 +143,16 @@ export default function TemplatePage() {
                 {error && <p className="text-sm text-rose dark:text-purple-300 mb-3">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div>
-                    <input name="name" value={form.name} onChange={handleChange} required placeholder="Your Name" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                    <input name="name" value={form.name} onChange={handleChange} required placeholder="Your Name" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
                   </div>
                   <div>
-                    <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Your Email" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                    <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Your Email" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
                   </div>
                   <div>
-                    <input name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="Phone (optional)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                    <input name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="Phone (optional)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
                   </div>
                   <div>
-                    <textarea name="message" value={form.message} onChange={handleChange} rows={3} placeholder="Tell us about your project (optional)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-gray-900/70 border border-blue-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200 resize-none" />
+                    <textarea name="message" value={form.message} onChange={handleChange} rows={3} placeholder="Tell us about your project (optional)" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200 resize-none" />
                   </div>
                   <button
                     type="submit"

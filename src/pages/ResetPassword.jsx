@@ -67,11 +67,11 @@ export default function ResetPassword() {
             <form onSubmit={handleReset} className="space-y-4">
               <div>
                 <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">New Password</label>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={6} placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={6} placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Confirm Password</label>
-                <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" required minLength={6} placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" required minLength={6} placeholder="••••••••" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
               </div>
               {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
               <button type="submit" disabled={sending} className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2">
@@ -86,7 +86,7 @@ export default function ResetPassword() {
             <form onSubmit={handleRequestReset} className="space-y-4">
               <div>
                 <label className="block text-xs font-medium text-black/70/70 dark:text-gray-400 mb-1">Email</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="your@email.com" className="w-full px-4 py-3 bg-white/70 dark:bg-gray-800/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
+                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="your@email.com" className="w-full px-4 py-3 bg-white/70 dark:bg-black/70 border border-glass-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 dark:text-gray-200" />
               </div>
               {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
               <button type="submit" disabled={sending} className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2">

@@ -31,7 +31,7 @@ export default function SearchPage() {
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-5 py-16">
         <div className="text-center mb-10">
-          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-gray-900/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-gray-700">
+          <span className="inline-block text-xs font-medium text-teal-dark dark:text-teal-light bg-white/70 dark:bg-black/70 backdrop-blur-md px-4 py-1.5 rounded-full mb-3 shadow-sm border border-white/40 dark:border-white/10">
             🔍 Search
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-warm-dark dark:text-gray-100">

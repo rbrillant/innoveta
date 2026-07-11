@@ -165,7 +165,7 @@ export default function CourseDetail() {
                   <span className="text-xs font-medium text-black dark:text-gray-100">Your Progress</span>
                   <span className="text-xs font-bold text-teal-dark dark:text-teal-light">{completedCount}/{lessons.length} ({progressPercent}%)</span>
                 </div>
-                <div className="w-full h-2 bg-blue-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-blue-100 dark:bg-black/80 rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-teal to-teal-dark rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
                 </div>
               </div>
@@ -202,7 +202,7 @@ export default function CourseDetail() {
                             ? 'bg-teal/10 dark:bg-teal/20 text-teal-dark dark:text-teal-light font-medium'
                             : progress[lesson.id]
                             ? 'text-black/60 dark:text-gray-400'
-                            : 'text-black/70 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-800'
+                            : 'text-black/70 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-white/10'
                         }`}
                       >
                         <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
@@ -210,7 +210,7 @@ export default function CourseDetail() {
                             ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
                             : isActive
                             ? 'bg-teal text-white'
-                            : 'bg-blue-100 dark:bg-gray-700 text-black/70 dark:text-gray-300'
+                            : 'bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300'
                         }`}>
                           {progress[lesson.id] ? '\u2713' : i + 1}
                         </span>
@@ -235,7 +235,7 @@ export default function CourseDetail() {
                       className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                         progress[activeLesson.id]
                           ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                          : 'bg-blue-50 dark:bg-gray-800 text-black/70/70 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-700'
+                          : 'bg-blue-50 dark:bg-black/80 text-black/70/70 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-white/10'
                       }`}
                     >
                       {progress[activeLesson.id] ? '\u2713 Completed' : 'Mark Complete'}
