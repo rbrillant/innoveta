@@ -264,7 +264,7 @@ export default function CategoryBar() {
                 <Link
                   to="/auth?mode=signup"
                   onClick={() => setProfileOpen(false)}
-                  className="block px-3 py-2 text-sm text-black font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-black/60 dark:hover:bg-white/10"
+                  className="block px-3 py-2 text-sm text-black font-medium hover:bg-blue-50 rounded-xl transition-colors dark:text-gray-200 dark:hover:bg-white/10"
                 >
                   Create Account
                 </Link>

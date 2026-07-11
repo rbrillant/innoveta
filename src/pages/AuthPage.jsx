@@ -207,7 +207,7 @@ export default function AuthPage() {
               </button>
             </div>
 
-            <p className="text-center text-xs text-black dark:text-gray-400 mt-5">
+            <p className="text-center text-xs text-black/70 dark:text-gray-300 mt-5">
               {mode === 'signin' ? (
                 <>Don't have an account? <button onClick={() => { setMode('signup'); setError(''); }} className="text-teal-dark dark:text-teal-light font-medium hover:underline cursor-pointer">Create one</button></>
               ) : (
