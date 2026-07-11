@@ -207,9 +207,15 @@ export default function Studio() {
   async function handleBookingStatus(id, status) {
     try {
       await updateBookingStatus(id, status);
+      if (status === 'confirmed') {
+        const booking = bookings.find((b) => b.id === id);
+        if (booking && booking.type === 'Online Courses') {
+          await verifyPayment(id);
+        }
+      }
       setBookings(await fetchBookings());
       setError('');
-    } catch { setError('Failed to update status.'); }
+    } catch (e) { setError('Failed to update status: ' + e.message); }
   }
 
   async function handleDeleteBooking(id) {
