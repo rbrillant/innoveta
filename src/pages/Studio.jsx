@@ -548,13 +548,23 @@ export default function Studio() {
                           )}
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="font-semibold text-black dark:text-gray-100">{b.name}</p>
+                              <p className="font-semibold text-black dark:text-gray-100">{b.profile?.name || b.name}{b.profile?.surname ? ` ${b.profile.surname}` : ''}</p>
                               <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusColors[b.status] || statusColors.pending}`}>{b.status}</span>
                               {b.payment_status && (
                                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${paymentStatusColors[b.payment_status] || statusColors.pending}`}>{b.payment_status.replace('_', ' ')}</span>
                               )}
                             </div>
-                            <p className="text-sm text-black/60 dark:text-gray-400">{b.email}{b.phone ? ` · ${b.phone}` : ''} · {b.type}{b.templates?.name ? ` — ${b.templates.name}` : ''}</p>
+                            <p className="text-sm text-black/60 dark:text-gray-400">{b.email}{b.profile?.phone ? ` · ${b.profile.phone}` : b.phone ? ` · ${b.phone}` : ''} · {b.type}{b.templates?.name ? ` — ${b.templates.name}` : ''}</p>
+                            {(() => {
+                              const parts = (b.message || '').split('|');
+                              if (parts[0] === 'COURSE_ENROLL') {
+                                return <p className="text-xs text-teal-dark dark:text-teal-light font-medium mt-0.5">Course: {parts[2] || 'Unknown'} — ${parts[3] || '0'}</p>;
+                              }
+                              return null;
+                            })()}
+                            {b.payment_amount > 0 && (
+                              <p className="text-xs text-black/60 dark:text-gray-500 mt-0.5">Amount: ${b.payment_amount}</p>
+                            )}
                             {b.payment_method && <p className="text-xs text-black/60 dark:text-gray-500 mt-0.5">Paid via {b.payment_method} — ref: {b.payment_reference}</p>}
                             {b.payment_proof_url && (
                               <a href={b.payment_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-dark dark:text-teal-light underline hover:no-underline mt-0.5 inline-block cursor-pointer">View Proof ↗</a>
@@ -563,7 +573,7 @@ export default function Studio() {
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {b.payment_status === 'proof_submitted' && (
-                            <button onClick={async () => { await verifyPayment(b.id); refreshData(); }} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors cursor-pointer">Verify Payment</button>
+                            <button onClick={async () => { await verifyPayment(b.id); refreshData(); }} className="text-[10px] font-medium px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors cursor-pointer">Confirm Enrollment</button>
                           )}
                           {['pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
                             <button
@@ -579,7 +589,9 @@ export default function Studio() {
                           <button onClick={() => setDeleteBooking(b)} className="text-[10px] font-medium px-2 py-1 rounded-lg text-rose dark:text-purple-300 bg-rose/10 dark:bg-purple-900/20 hover:bg-rose/20 transition-colors cursor-pointer ml-1">Delete</button>
                         </div>
                       </div>
-                      <p className="text-sm text-black/70 dark:text-gray-300 bg-white/50 rounded-xl p-3">{b.message}</p>
+                      {!b.message?.startsWith('COURSE_ENROLL') && (
+                        <p className="text-sm text-black/70 dark:text-gray-300 bg-white/50 rounded-xl p-3">{b.message}</p>
+                      )}
                     </div>
                   ))}
                 </div>

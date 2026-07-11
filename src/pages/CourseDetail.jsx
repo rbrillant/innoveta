@@ -86,7 +86,7 @@ export default function CourseDetail() {
         email: userEmail,
         phone: '',
         type: 'Online Courses',
-        message: `Course enrollment: ${course.title} ($${course.price})`,
+        message: `COURSE_ENROLL|${course.id}|${course.title}|${course.price}`,
         payment_amount: course.price,
       });
       if (booking) navigate(`/payment/${booking.id}`);

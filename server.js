@@ -9,7 +9,6 @@ import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import dns from 'dns';
 import { PDFParse } from 'pdf-parse';
-import nodemailer from 'nodemailer';
 import rateLimit from 'express-rate-limit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -315,27 +314,6 @@ const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 120 });
 app.use('/api/auth', authLimiter);
 app.use('/api', apiLimiter);
 
-// Email transporter (configure with your business email)
-let transporter = null;
-function getTransporter() {
-  if (!transporter) {
-    if (process.env.SMTP_HOST) {
-      transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      });
-    }
-  }
-  return transporter;
-}
-function sendEmail({ to, subject, html }) {
-  const t = getTransporter();
-  if (!t) return console.log('[email] SMTP not configured, skipping email to', to);
-  return t.sendMail({ from: process.env.SMTP_FROM || '"Innovetancy" <noreply@innovetancy.com>', to, subject, html }).catch(e => console.log('[email] send failed:', e.message));
-}
-
 // Auth middleware
 function authenticate(req, res, next) {
   const auth = req.headers.authorization;
@@ -424,8 +402,6 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     const token = crypto.randomBytes(32).toString('hex');
     const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
     db.prepare('INSERT INTO password_reset_tokens (email, token, expires_at) VALUES (?, ?, ?)').run(email, token, expires);
-    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
-    sendEmail({ to: email, subject: 'Password Reset - Innovetancy', html: `<p>Click to reset your password:</p><a href="${resetUrl}">${resetUrl}</a><p>Link expires in 1 hour.</p>` });
     res.json({ data: { message: 'If the email exists, a reset link has been sent.' } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -511,14 +487,17 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 // Bookings with join
 app.get('/api/bookings-full', (req, res) => {
   const rows = db.prepare(`
-    SELECT b.*, t.name as template_name, t.image as template_image
+    SELECT b.*, t.name as template_name, t.image as template_image,
+           p.name as profile_name, p.surname as profile_surname, p.phone as profile_phone
     FROM bookings b
     LEFT JOIN templates t ON b.template_id = t.id
+    LEFT JOIN profiles p ON b.user_id = p.id
     ORDER BY b.created_at DESC
   `).all();
   const mapped = rows.map(r => ({
     ...r,
-    templates: r.template_name ? { name: r.template_name, image: r.template_image } : null
+    templates: r.template_name ? { name: r.template_name, image: r.template_image } : null,
+    profile: r.profile_name ? { name: r.profile_name, surname: r.profile_surname, phone: r.profile_phone } : null
   }));
   res.json({ data: mapped });
 });
@@ -538,6 +517,32 @@ app.get('/api/enrollments-full/:userId', (req, res) => {
     courses: { id: r.course_id, title: r.title, description: r.description, price: r.price, image: r.image, pdf_url: r.pdf_url, video_url: r.video_url }
   }));
   res.json({ data: mapped });
+});
+
+// Verify booking payment and auto-enroll for courses
+app.post('/api/bookings/:id/verify', authenticate, (req, res) => {
+  try {
+    const booking = db.prepare('SELECT * FROM bookings WHERE id = ?').get(req.params.id);
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+
+    db.prepare('UPDATE bookings SET payment_status = ? WHERE id = ?').run('verified', req.params.id);
+
+    if (booking.type === 'Online Courses' && booking.user_id) {
+      const parts = (booking.message || '').split('|');
+      if (parts[0] === 'COURSE_ENROLL' && parts[1]) {
+        const courseId = parts[1];
+        const existing = db.prepare('SELECT id FROM enrollments WHERE user_id = ? AND course_id = ?').get(booking.user_id, courseId);
+        if (!existing) {
+          const id = crypto.randomUUID();
+          db.prepare('INSERT INTO enrollments (id, user_id, course_id) VALUES (?, ?, ?)').run(id, booking.user_id, courseId);
+        }
+      }
+    }
+
+    res.json({ data: { message: 'Payment verified and enrollment processed' } });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // Lesson progress bulk
@@ -711,20 +716,6 @@ app.post('/api/:table', (req, res) => {
   try {
     db.prepare(`INSERT INTO "${table}" (${quotedCols}) VALUES (${placeholders})`).run(...vals);
     const inserted = db.prepare(`SELECT * FROM "${table}" WHERE "${col}" = ?`).get(data[col]);
-    // Auto-reply for bookings
-    if (table === 'bookings' && data.email) {
-      sendEmail({
-        to: data.email,
-        subject: 'Booking Confirmed - Innovetancy',
-        html: `<h2>Thank you for your booking!</h2><p>We've received your request and will get back to you shortly.</p><p><b>Details:</b><br>Name: ${data.name || ''}<br>Email: ${data.email}<br>Type: ${data.type || ''}<br>Message: ${data.message || ''}</p><p>Best regards,<br>The Innovetancy Team</p>`
-      });
-      // Notify admin
-      sendEmail({
-        to: 'admin@innovetancy.com',
-        subject: 'New Booking Received - Innovetancy',
-        html: `<h2>New Booking</h2><p><b>Name:</b> ${data.name}<br><b>Email:</b> ${data.email}<br><b>Phone:</b> ${data.phone || ''}<br><b>Type:</b> ${data.type}<br><b>Message:</b> ${data.message}<br><b>Amount:</b> $${data.payment_amount || 0}</p>`
-      });
-    }
     res.json({ data: inserted });
   } catch (e) {
     res.status(500).json({ error: e.message });

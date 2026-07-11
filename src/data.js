@@ -126,19 +126,13 @@ export async function uploadPaymentProof(bookingId, file, paymentData) {
 }
 
 export async function verifyPayment(bookingId) {
-  const { error } = await supabase.from('bookings').update({ payment_status: 'verified' }).eq('id', bookingId);
-  if (error) throw error;
-  // Auto-enroll for course bookings
-  const { data: booking } = await supabase.from('bookings').select('*').eq('id', bookingId).maybeSingle();
-  if (booking && booking.type === 'Online Courses' && booking.user_id && booking.message) {
-    const match = booking.message.match(/Course enrollment: (.+?) \(\$[\d.]+\)/);
-    if (match) {
-      const { data: courses } = await supabase.from('courses').select('id').ilike('title', match[1]).limit(1);
-      if (courses && courses.length > 0) {
-        await supabase.from('enrollments').insert({ user_id: booking.user_id, course_id: courses[0].id });
-      }
-    }
-  }
+  const token = (await supabase.auth.getSession())?.data?.session?.access_token;
+  const res = await fetch(`${window.location.origin}/api/bookings/${bookingId}/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+  });
+  if (!res.ok) throw new Error('Verify failed');
+  return res.json();
 }
 
 // ---- Designer Portal ----
