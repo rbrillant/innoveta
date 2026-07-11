@@ -1,7 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { supabase } from '../supabase';
-import { fetchEnrollments } from '../data';
 import { useTheme } from './ThemeProvider';
 import Logo from './Logo';
 
@@ -21,7 +20,6 @@ export default function CategoryBar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [session, setSession] = useState(null);
-  const [hasEnrollments, setHasEnrollments] = useState(false);
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const btnRef = useRef(null);
@@ -29,7 +27,7 @@ export default function CategoryBar() {
   const navRef = useRef(null);
   const linkRefs = useRef({});
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-  const navLinks = hasEnrollments ? [...BASE_LINKS, { to: '/my-courses', label: 'My Courses' }] : BASE_LINKS;
+  const navLinks = session ? [...BASE_LINKS, { to: '/my-courses', label: 'My Courses' }] : BASE_LINKS;
 
   useLayoutEffect(() => {
     const el = navRef.current;
@@ -43,7 +41,7 @@ export default function CategoryBar() {
         width: activeRect.width,
       });
     }
-  }, [pathname, hasEnrollments]);
+  }, [pathname, session]);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -57,17 +55,9 @@ export default function CategoryBar() {
     supabase.auth.getSession().then((result) => {
       const s = result?.data?.session;
       setSession(s);
-      if (s?.user?.id) {
-        fetchEnrollments(s.user.id).then((enrs) => setHasEnrollments(enrs.length > 0));
-      }
     });
     const sub = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
-      if (s?.user?.id) {
-        fetchEnrollments(s.user.id).then((enrs) => setHasEnrollments(enrs.length > 0));
-      } else {
-        setHasEnrollments(false);
-      }
     });
     return () => sub?.data?.subscription?.unsubscribe?.();
   }, []);
