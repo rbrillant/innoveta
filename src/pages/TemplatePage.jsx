@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { fetchTemplates, fetchTemplate, fetchTemplateImages, addBooking } from '../data';
+import { fetchTemplate, fetchTemplateImages, addBooking } from '../data';
 
 export default function TemplatePage() {
   const { id } = useParams();

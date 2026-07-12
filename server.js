@@ -363,7 +363,6 @@ function initDb() {
     CREATE INDEX IF NOT EXISTS idx_template_images_template_id ON template_images(template_id);
     CREATE INDEX IF NOT EXISTS idx_templates_category ON templates(category);
     CREATE INDEX IF NOT EXISTS idx_services_type ON services(type);
-    CREATE INDEX IF NOT EXISTS idx_service_steps_service_id ON service_steps(service_id);
     CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_email ON password_reset_tokens(email);
     CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
   `);
@@ -377,6 +376,7 @@ initDb();
 
 // ─── Middleware ────────────────────────────────────────────
 app.use(express.json({ limit: '5mb' }));
+app.set('trust proxy', 1);
 app.use(express.static(path.join(__dirname, 'dist')));
 
 const upload = multer({ dest: path.join(UPLOAD_DIR, 'temp') });
