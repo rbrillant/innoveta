@@ -351,6 +351,23 @@ function initDb() {
   // Add dob column for existing databases
   try { db.prepare("ALTER TABLE profiles ADD COLUMN dob TEXT DEFAULT ''").run(); } catch {}
 
+  // Database indexes for performance
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);
+    CREATE INDEX IF NOT EXISTS idx_bookings_template_id ON bookings(template_id);
+    CREATE INDEX IF NOT EXISTS idx_enrollments_user_id ON enrollments(user_id);
+    CREATE INDEX IF NOT EXISTS idx_enrollments_course_id ON enrollments(course_id);
+    CREATE INDEX IF NOT EXISTS idx_lesson_progress_user_id ON lesson_progress(user_id);
+    CREATE INDEX IF NOT EXISTS idx_lesson_progress_lesson_id ON lesson_progress(lesson_id);
+    CREATE INDEX IF NOT EXISTS idx_course_lessons_course_id ON course_lessons(course_id);
+    CREATE INDEX IF NOT EXISTS idx_template_images_template_id ON template_images(template_id);
+    CREATE INDEX IF NOT EXISTS idx_templates_category ON templates(category);
+    CREATE INDEX IF NOT EXISTS idx_services_type ON services(type);
+    CREATE INDEX IF NOT EXISTS idx_service_steps_service_id ON service_steps(service_id);
+    CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_email ON password_reset_tokens(email);
+    CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
+  `);
+
   // Hash default password
   const hash = bcrypt.hashSync('create123', 10);
   db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, 'admin@innovetancy.com');
@@ -359,7 +376,7 @@ function initDb() {
 initDb();
 
 // ─── Middleware ────────────────────────────────────────────
-app.use(express.json({ limit: '200mb' }));
+app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 const upload = multer({ dest: path.join(UPLOAD_DIR, 'temp') });

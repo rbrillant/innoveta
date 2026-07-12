@@ -57,6 +57,11 @@ export async function fetchTemplates() {
   return data || [];
 }
 
+export async function fetchTemplate(id) {
+  const { data } = await supabase.from('templates').select('*').eq('id', id).maybeSingle();
+  return data || null;
+}
+
 export async function createTemplate(template) {
     const { data } = await supabase.from('templates').insert(template);
     return data?.id ? data : null;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { fetchTemplates, fetchTemplateImages, addBooking } from '../data';
+import { fetchTemplates, fetchTemplate, fetchTemplateImages, addBooking } from '../data';
 
 export default function TemplatePage() {
   const { id } = useParams();
@@ -17,7 +17,7 @@ export default function TemplatePage() {
     setLoading(true);
     setError('');
     Promise.all([
-      fetchTemplates().then((list) => list.find((item) => item.id === id)),
+      fetchTemplate(id),
       fetchTemplateImages(id),
     ])
       .then(([t, imgs]) => {
