@@ -2,18 +2,45 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchPage, fetchAllServices } from '../data';
 
+const SECTIONS = [
+  {
+    id: 'network-security',
+    type: 'network-security',
+    label: 'Network & Security',
+    subtitle: 'We deliver end-to-end security solutions across all generations of technology from PSTN to All-IP Backbone and LTE',
+    icon: '🛡️',
+  },
+  {
+    id: 'it-consulting',
+    type: 'it-consulting',
+    label: 'IT Consulting',
+    subtitle: 'We offer IT consulting services regarding the following',
+    icon: '💡',
+  },
+  {
+    id: 'cctv',
+    type: 'cctv',
+    label: 'Surveillance CCTV',
+    subtitle: 'AOS Surveillance Systems enhances perceptions of safety and security through an Integrated Video Surveillance System deployed in a network of high performance IP CCTV.',
+    icon: '📹',
+  },
+];
+
 export default function ServicesPage() {
   const [page, setPage] = useState(null);
-  const [integrationServices, setIntegrationServices] = useState([]);
-  const [consultingServices, setConsultingServices] = useState([]);
+  const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       fetchPage('services').then((d) => { if (d) setPage(d); }),
       fetchAllServices().then((all) => {
-        setIntegrationServices(all.filter((s) => s.type === 'it-integration'));
-        setConsultingServices(all.filter((s) => s.type === 'consulting'));
+        const map = {};
+        all.forEach((s) => {
+          if (!map[s.type]) map[s.type] = [];
+          map[s.type].push(s);
+        });
+        setGrouped(map);
       }),
     ]).finally(() => setLoading(false));
   }, []);
@@ -35,57 +62,39 @@ export default function ServicesPage() {
           )}
           <div className="flex flex-wrap gap-3 mt-8">
             <Link to="/book" className="px-8 py-3.5 bg-white text-teal-dark font-semibold rounded-xl hover:bg-white/90 transition-all shadow-lg text-sm sm:text-base">Get Started →</Link>
-            <a href="#it-integration" className="px-8 py-3.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/20 text-sm sm:text-base">Explore Services</a>
+            <a href={`#${SECTIONS[0].id}`} className="px-8 py-3.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/20 text-sm sm:text-base">Explore Services</a>
           </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-5 py-16">
-        {integrationServices.length > 0 && (
-          <section id="it-integration" className="mb-20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-1 h-8 bg-teal-dark rounded-full" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-black dark:text-gray-100">Network & Security</h2>
-            </div>
-            <p className="text-black/60 dark:text-gray-400 text-base mb-8 ml-4">
-              We deliver end-to-end security solutions across all generations of technology
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {integrationServices.map((s) => (
-                <div key={s.id} className="group glass-card rounded-2xl p-6 hover:shadow-lg transition-all hover:-translate-y-0.5">
-                  <div className="w-12 h-12 rounded-xl bg-teal/10 dark:bg-teal-dark/20 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
-                    {s.icon || '🔧'}
+        {SECTIONS.map((sec) => {
+          const services = grouped[sec.type] || [];
+          if (services.length === 0) return null;
+          return (
+            <section key={sec.id} id={sec.id} className="mb-20">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-1 h-8 bg-teal-dark rounded-full" />
+                <h2 className="text-2xl sm:text-3xl font-bold text-black dark:text-gray-100">{sec.label}</h2>
+              </div>
+              <p className="text-black/60 dark:text-gray-400 text-base mb-8 ml-4">{sec.subtitle}</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services.map((s) => (
+                  <div key={s.id} className="group relative glass-card rounded-2xl p-7 hover:shadow-lg transition-all hover:-translate-y-1">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal/20 to-teal-dark/20 dark:from-teal/10 dark:to-teal-dark/30 flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
+                        {s.icon || sec.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-black dark:text-gray-100 leading-snug">{s.title}</h3>
+                    </div>
+                    <p className="text-sm text-black/60 dark:text-gray-400 leading-relaxed">{s.description}</p>
+                    <div className="absolute bottom-0 left-7 right-7 h-0.5 bg-gradient-to-r from-teal/0 via-teal/40 to-teal-dark/40 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
                   </div>
-                  <h3 className="text-lg font-semibold text-black dark:text-gray-100 mb-2">{s.title}</h3>
-                  <p className="text-sm text-black/60 dark:text-gray-400 leading-relaxed">{s.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {consultingServices.length > 0 && (
-          <section id="consulting" className="mb-20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-1 h-8 bg-teal-dark rounded-full" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-black dark:text-gray-100">IT Consulting</h2>
-            </div>
-            <p className="text-black/60 dark:text-gray-400 text-base mb-8 ml-4">
-              We offer IT consulting services to optimize and future-proof your business
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {consultingServices.map((s) => (
-                <div key={s.id} className="group glass-card rounded-2xl p-6 hover:shadow-lg transition-all hover:-translate-y-0.5">
-                  <div className="w-12 h-12 rounded-xl bg-teal/10 dark:bg-teal-dark/20 flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition-transform">
-                    {s.icon || '💡'}
-                  </div>
-                  <h3 className="text-lg font-semibold text-black dark:text-gray-100 mb-2">{s.title}</h3>
-                  <p className="text-sm text-black/60 dark:text-gray-400 leading-relaxed">{s.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+                ))}
+              </div>
+            </section>
+          );
+        })}
 
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-dark/90 via-teal to-blue-900/80 dark:from-black dark:via-teal-dark/60 dark:to-blue-900/80 p-10 sm:p-14 text-center">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />

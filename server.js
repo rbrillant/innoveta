@@ -332,21 +332,52 @@ function initDb() {
       ('cl-03-19', 'course-03', 'Portfolio and Career Development', 'Building a UI/UX design career', 'text', '<p>A strong portfolio is essential for landing UI/UX design roles. This lesson covers selecting and presenting projects, writing compelling case studies, and structuring portfolios that showcase your design process and impact.</p><p>We discuss interview preparation, design challenges, and how to continue growing as a designer.</p>', 19),
       ('cl-03-20', 'course-03', 'Capstone Project: Full App Design', 'Designing a complete application', 'text', '<p>The capstone project brings together all skills learned in the course. Students design a complete application from research through high-fidelity prototypes, including user flows, wireframes, visual design, and interactive prototypes.</p><p>This comprehensive project demonstrates mastery of the UI/UX design process and serves as a standout portfolio piece.</p>', 20);
 
-    -- Seed IT Integration services
+    -- Seed Network & Security services (AOS-aligned)
     INSERT OR IGNORE INTO services (id, type, icon, title, description, sort_order) VALUES
-      ('svc-it-01', 'it-integration', '🔗', 'Application Integration', 'Connect disparate applications to streamline workflows and data flow across your organization.', 1),
-      ('svc-it-02', 'it-integration', '📊', 'Data Integration', 'Unify data from multiple sources into a single, consistent view for better decision-making.', 2),
-      ('svc-it-03', 'it-integration', '☁️', 'Cloud Integration', 'Seamlessly connect on-premise systems with cloud platforms for hybrid and multi-cloud environments.', 3),
-      ('svc-it-04', 'it-integration', '⚙️', 'API Management', 'Design, secure, and scale your APIs with full lifecycle management and developer portals.', 4),
-      ('svc-it-05', 'it-integration', '🔀', 'Enterprise Service Bus (ESB)', 'Centralize communication between enterprise applications with a robust ESB architecture.', 5),
-      ('svc-it-06', 'it-integration', '🧩', 'Integration Platform as a Service (iPaaS)', 'Accelerate integrations with a cloud-based platform for connecting apps and data sources.', 6),
-      ('svc-it-07', 'it-integration', '🤝', 'B2B / EDI Integration', 'Automate trading partner transactions with EDI standards and secure B2B integration.', 7),
-      ('svc-it-08', 'it-integration', '🔄', 'Legacy System Modernization', 'Modernize legacy systems to improve performance, security, and compatibility.', 8),
-      ('svc-it-09', 'it-integration', '🏭', 'IT/OT Integration', 'Bridge the gap between IT and operational technology for smarter industrial operations.', 9),
-      ('svc-it-10', 'it-integration', '📡', 'IoT Integration Services', 'Connect and manage IoT devices with enterprise systems for real-time insights.', 10),
-      ('svc-it-11', 'it-integration', '🧱', 'Microservices Architecture', 'Design and implement microservices-based architectures for scalable, resilient applications.', 11),
-      ('svc-it-12', 'it-integration', '🛡️', 'Managed Integration Services', 'Outsource your integration needs to experts for ongoing support and maintenance.', 12);
+      ('svc-ns-01', 'network-security', '🛡️', 'Anti DDoS', 'We provide solutions that protect your server, service or network against malicious attempts to disrupt the normal traffic.', 1),
+      ('svc-ns-02', 'network-security', '🔒', 'Intrusion Prevention System', 'Intrusion Prevention system that works to detect and prevent identified threats.', 2),
+      ('svc-ns-03', 'network-security', '🔥', 'Web Application Firewall', 'We provide Web Application Firewall that helps protect your web applications by filtering and monitoring traffic between a web application and internet.', 3),
+      ('svc-ns-04', 'network-security', '🔐', 'VPN', 'Connect to your system hosted with us to your partners in a secure way.', 4);
+
+    -- Seed IT Consulting services
+    INSERT OR IGNORE INTO services (id, type, icon, title, description, sort_order) VALUES
+      ('svc-ic-01', 'it-consulting', '🔍', 'Network & Environment Analysis', 'Analyse server rooms, monitoring rooms, communication cabling, Data and Disaster Recovery centers.', 1),
+      ('svc-ic-02', 'it-consulting', '🏗️', 'Construction, Operation & Management of Datacenter Rooms', 'Set up construction strategy and plan. Design network architecture of the facility, integrated control center and civil works.', 2),
+      ('svc-ic-03', 'it-consulting', '💡', 'Solution Recommendation', 'AOS suggests optimized solutions either hardware or software considering scalability and compatibility.', 3);
+
+    -- Seed Surveillance CCTV services
+    INSERT OR IGNORE INTO services (id, type, icon, title, description, sort_order) VALUES
+      ('svc-cctv-01', 'cctv', '📹', 'Rapid Deployment CCTV', 'Quickly deployable CCTV solutions for temporary or permanent surveillance needs.', 1),
+      ('svc-cctv-02', 'cctv', '🎥', 'Interrogation Audio-Visual Recording Systems', 'Professional audio-visual recording systems for interrogation and evidence gathering.', 2),
+      ('svc-cctv-03', 'cctv', '📡', 'Wireless Surveillance CCTV', 'Wireless CCTV solutions for locations where wired infrastructure is not feasible.', 3),
+      ('svc-cctv-04', 'cctv', '🚔', 'Mobile & In-Vehicle CCTV for Law Enforcement', 'Mobile and in-vehicle CCTV systems designed for law enforcement applications.', 4),
+      ('svc-cctv-05', 'cctv', '🏠', 'Home & Personal CCTV', 'Affordable home and personal CCTV solutions for residential security.', 5);
   `);
+
+  // Remove old services (migration from old it-integration/consulting types)
+  try {
+    const oldCount = db.prepare("SELECT COUNT(*) as c FROM services WHERE type IN ('it-integration','consulting')").get();
+    if (oldCount.c > 0) {
+      db.prepare("DELETE FROM services WHERE type IN ('it-integration','consulting')").run();
+      // Re-insert with new types
+      const ins = db.prepare("INSERT OR IGNORE INTO services (id, type, icon, title, description, sort_order) VALUES (?,?,?,?,?,?)");
+      const newSvcs = [
+        ['svc-ns-01', 'network-security', '🛡️', 'Anti DDoS', 'We provide solutions that protect your server, service or network against malicious attempts to disrupt the normal traffic.', 1],
+        ['svc-ns-02', 'network-security', '🔒', 'Intrusion Prevention System', 'Intrusion Prevention system that works to detect and prevent identified threats.', 2],
+        ['svc-ns-03', 'network-security', '🔥', 'Web Application Firewall', 'We provide Web Application Firewall that helps protect your web applications by filtering and monitoring traffic between a web application and internet.', 3],
+        ['svc-ns-04', 'network-security', '🔐', 'VPN', 'Connect to your system hosted with us to your partners in a secure way.', 4],
+        ['svc-ic-01', 'it-consulting', '🔍', 'Network & Environment Analysis', 'Analyse server rooms, monitoring rooms, communication cabling, Data and Disaster Recovery centers.', 1],
+        ['svc-ic-02', 'it-consulting', '🏗️', 'Construction, Operation & Management of Datacenter Rooms', 'Set up construction strategy and plan. Design network architecture of the facility, integrated control center and civil works.', 2],
+        ['svc-ic-03', 'it-consulting', '💡', 'Solution Recommendation', 'AOS suggests optimized solutions either hardware or software considering scalability and compatibility.', 3],
+        ['svc-cctv-01', 'cctv', '📹', 'Rapid Deployment CCTV', 'Quickly deployable CCTV solutions for temporary or permanent surveillance needs.', 1],
+        ['svc-cctv-02', 'cctv', '🎥', 'Interrogation Audio-Visual Recording Systems', 'Professional audio-visual recording systems for interrogation and evidence gathering.', 2],
+        ['svc-cctv-03', 'cctv', '📡', 'Wireless Surveillance CCTV', 'Wireless CCTV solutions for locations where wired infrastructure is not feasible.', 3],
+        ['svc-cctv-04', 'cctv', '🚔', 'Mobile & In-Vehicle CCTV for Law Enforcement', 'Mobile and in-vehicle CCTV systems designed for law enforcement applications.', 4],
+        ['svc-cctv-05', 'cctv', '🏠', 'Home & Personal CCTV', 'Affordable home and personal CCTV solutions for residential security.', 5],
+      ];
+      for (const s of newSvcs) ins.run(...s);
+    }
+  } catch (e) { console.error('Migration (services):', e.message); }
 
   // Add dob column for existing databases
   try { db.prepare("ALTER TABLE profiles ADD COLUMN dob TEXT DEFAULT ''").run(); } catch {}

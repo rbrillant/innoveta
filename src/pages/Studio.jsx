@@ -1130,7 +1130,7 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
   const [services, setServices] = useState([]);
   const [steps, setSteps] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'it-integration' });
+  const [form, setForm] = useState({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'network-security' });
   const [saving, setSaving] = useState(false);
   const [stepEditing, setStepEditing] = useState(null);
   const [stepForm, setStepForm] = useState({ step_number: 0, title: '', description: '' });
@@ -1146,7 +1146,7 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
     try {
       await upsertService({ ...form, id: editing?.id });
       setEditing(null);
-      setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'it-integration' });
+      setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'network-security' });
       setServices(await fetchAllServices());
     } catch (e) { setError(e.message); }
     setSaving(false);
@@ -1172,9 +1172,6 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
     setStepSaving(false);
   }
 
-  const itServices = services.filter((s) => s.type === 'it-integration');
-  const consultingServices = services.filter((s) => s.type === 'consulting');
-
   return (
     <div className="max-w-4xl">
       <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1">Services</h2>
@@ -1182,7 +1179,7 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
 
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-black dark:text-gray-100">All Services</h3>
-        <button onClick={() => { setEditing({}); setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: services.length, type: 'it-integration' }); }} className="px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">+ Add Service</button>
+        <button onClick={() => { setEditing({}); setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: services.length, type: 'network-security' }); }} className="px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">+ Add Service</button>
       </div>
 
       {editing && (
@@ -1195,8 +1192,9 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Type</label>
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40">
-                <option value="it-integration">Network & Security</option>
-                <option value="consulting">IT Consulting</option>
+                <option value="network-security">Network & Security</option>
+                <option value="it-consulting">IT Consulting</option>
+                <option value="cctv">Surveillance CCTV</option>
               </select>
             </div>
             <div>
@@ -1241,10 +1239,10 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
           <p className="text-sm text-black/60 dark:text-gray-500">No services yet. Add your first one above.</p>
         ) : (
           <>
-            {itServices.length > 0 && (
+            {services.filter(s => s.type === 'network-security').length > 0 && (
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-black/60 dark:text-gray-400 uppercase tracking-wider mb-2">Network & Security</h4>
-                {itServices.map((s) => (
+                {services.filter(s => s.type === 'network-security').map((s) => (
                   <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 mb-2">
                     <span className="text-2xl shrink-0">{s.icon}</span>
                     <div className="flex-1 min-w-0">
@@ -1260,10 +1258,29 @@ function StudioServicesTab({ fetchAllServices, upsertService, removeService, fet
                 ))}
               </div>
             )}
-            {consultingServices.length > 0 && (
+            {services.filter(s => s.type === 'it-consulting').length > 0 && (
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-black/60 dark:text-gray-400 uppercase tracking-wider mb-2">IT Consulting</h4>
-                {consultingServices.map((s) => (
+                {services.filter(s => s.type === 'it-consulting').map((s) => (
+                  <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 mb-2">
+                    <span className="text-2xl shrink-0">{s.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-black dark:text-gray-100">{s.title}</h4>
+                      <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
+                    </div>
+                    {s.price > 0 && <span className="text-sm font-bold text-teal-dark dark:text-teal-light shrink-0">${s.price}</span>}
+                    <div className="flex gap-2 shrink-0">
+                      <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
+                      <button onClick={() => handleDelete(s.id)} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {services.filter(s => s.type === 'cctv').length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-black/60 dark:text-gray-400 uppercase tracking-wider mb-2">Surveillance CCTV</h4>
+                {services.filter(s => s.type === 'cctv').map((s) => (
                   <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 mb-2">
                     <span className="text-2xl shrink-0">{s.icon}</span>
                     <div className="flex-1 min-w-0">
