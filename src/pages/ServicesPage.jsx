@@ -80,16 +80,23 @@ export default function ServicesPage() {
               <p className="text-black/60 dark:text-gray-400 text-base mb-8 ml-4">{sec.subtitle}</p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {services.map((s) => (
-                  <div key={s.id} className="group relative glass-card rounded-2xl p-7 hover:shadow-lg transition-all hover:-translate-y-1">
+                  <Link
+                    key={s.id}
+                    to={`/book?service=${encodeURIComponent(s.title)}&type=${s.type}`}
+                    className="group relative glass-card rounded-2xl p-7 hover:shadow-lg transition-all hover:-translate-y-1 block"
+                  >
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal/20 to-teal-dark/20 dark:from-teal/10 dark:to-teal-dark/30 flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
                         {s.icon || sec.icon}
                       </div>
                       <h3 className="text-lg font-semibold text-black dark:text-gray-100 leading-snug">{s.title}</h3>
                     </div>
-                    <p className="text-sm text-black/60 dark:text-gray-400 leading-relaxed">{s.description}</p>
+                    <p className="text-sm text-black/60 dark:text-gray-400 leading-relaxed mb-4">{s.description}</p>
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-teal-dark dark:text-teal-light group-hover:gap-2 transition-all">
+                      Request Service →
+                    </span>
                     <div className="absolute bottom-0 left-7 right-7 h-0.5 bg-gradient-to-r from-teal/0 via-teal/40 to-teal-dark/40 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
