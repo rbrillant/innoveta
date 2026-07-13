@@ -9,8 +9,7 @@ const BASE_LINKS = [
   { to: '/templates', label: 'Template' },
   { to: '/domain-hosting', label: 'Domain & Hosting' },
   { to: '/online-courses', label: 'Online Courses' },
-  { to: '/it-integration', label: 'IT Integration' },
-  { to: '/consulting', label: 'Consulting' },
+  { to: '/services', label: 'Services' },
 ];
 
 export default function CategoryBar() {

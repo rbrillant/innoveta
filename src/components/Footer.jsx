@@ -13,8 +13,7 @@ export default function Footer() {
               <Link to="/templates" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Templates</Link>
               <Link to="/domain-hosting" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Domain</Link>
               <Link to="/online-courses" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Courses</Link>
-              <Link to="/it-integration" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">IT</Link>
-              <Link to="/consulting" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Consulting</Link>
+              <Link to="/services" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Services</Link>
               <Link to="/book" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">Book</Link>
               <Link to="/my-courses" className="hover:text-teal-dark dark:hover:text-teal-light transition-colors">My Courses</Link>
             </div>

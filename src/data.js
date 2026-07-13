@@ -222,6 +222,11 @@ export async function fetchServices(type) {
   return data || [];
 }
 
+export async function fetchAllServices() {
+  const { data } = await supabase.from('services').select('*').order('sort_order');
+  return data || [];
+}
+
 export async function upsertService(service) {
   if (service.id) {
     await supabase.from('services').update(service).eq('id', service.id);

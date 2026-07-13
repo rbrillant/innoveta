@@ -12,8 +12,7 @@ const TemplatePage = lazy(() => import('./pages/TemplatePage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
 const DomainHosting = lazy(() => import('./pages/DomainHosting'));
 const OnlineCourses = lazy(() => import('./pages/OnlineCourses'));
-const ITIntegration = lazy(() => import('./pages/ITIntegration'));
-const Consulting = lazy(() => import('./pages/Consulting'));
+const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const CourseDetail = lazy(() => import('./pages/CourseDetail'));
 const MyCourses = lazy(() => import('./pages/MyCourses'));
 const Book = lazy(() => import('./pages/Book'));
@@ -46,8 +45,7 @@ export default function App() {
               <Route path="template/:id" element={<TemplatePage />} />
               <Route path="domain-hosting" element={<DomainHosting />} />
               <Route path="online-courses" element={<OnlineCourses />} />
-              <Route path="it-integration" element={<ITIntegration />} />
-              <Route path="consulting" element={<Consulting />} />
+              <Route path="services" element={<ServicesPage />} />
               <Route path="course/:id" element={<CourseDetail />} />
               <Route path="my-courses" element={<AuthGuard><MyCourses /></AuthGuard>} />
               <Route path="search" element={<SearchPage />} />

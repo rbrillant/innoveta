@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import mammoth from 'mammoth';
-import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBookings, verifyDesigner, updateBookingStatus, removeBooking, updateDesignerPassword, fetchAllUsers, fetchBookingAnalytics, fetchUserAnalytics, fetchDomainPricing, updateDomainPricing, verifyPayment, fetchCourses, upsertCourse, removeCourse, fetchLessons, upsertLesson, removeLesson, fetchPaymentSettings, updatePaymentSettings, fetchServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, fetchAllEnrollments } from '../data';
+import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBookings, verifyDesigner, updateBookingStatus, removeBooking, updateDesignerPassword, fetchAllUsers, fetchBookingAnalytics, fetchUserAnalytics, fetchDomainPricing, updateDomainPricing, verifyPayment, fetchCourses, upsertCourse, removeCourse, fetchLessons, upsertLesson, removeLesson, fetchPaymentSettings, updatePaymentSettings, fetchAllServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, fetchAllEnrollments } from '../data';
 import TemplateModal from '../components/TemplateModal';
 import Logo from '../components/Logo';
 import { useTheme } from '../components/ThemeProvider';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, CartesianGrid } from 'recharts';
 
-const TABS = ['Dashboard', 'Templates', 'IT Integration', 'Consulting', 'Bookings', 'Enrollments', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
+const TABS = ['Dashboard', 'Templates', 'Services', 'Bookings', 'Enrollments', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
 
 export default function Studio() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -526,9 +526,7 @@ export default function Studio() {
             </div>
           )}
 
-          {tab === 'IT Integration' && <StudioServicesTab type="it-integration" title="IT Integration" fetchServices={fetchServices} upsertService={upsertService} removeService={removeService} setError={setError} />}
-
-          {tab === 'Consulting' && <StudioConsultingTab fetchServices={fetchServices} upsertService={upsertService} removeService={removeService} fetchServiceSteps={fetchServiceSteps} upsertServiceStep={upsertServiceStep} removeServiceStep={removeServiceStep} setError={setError} />}
+          {tab === 'Services' && <StudioServicesTab fetchAllServices={fetchAllServices} upsertService={upsertService} removeService={removeService} fetchServiceSteps={fetchServiceSteps} upsertServiceStep={upsertServiceStep} removeServiceStep={removeServiceStep} setError={setError} />}
 
           {tab === 'Bookings' && (
             <div>
@@ -1128,145 +1126,39 @@ export default function Studio() {
   );
 }
 
-function StudioServicesTab({ type, title, fetchServices, upsertService, removeService, setError }) {
-  const [services, setServices] = useState([]);
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0 });
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => { fetchServices(type).then(setServices); }, [type, fetchServices]);
-
-  async function handleSave() {
-    setSaving(true);
-    try {
-      await upsertService({ ...form, type, id: editing?.id });
-      setEditing(null);
-      setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0 });
-      setServices(await fetchServices(type));
-    } catch (e) { setError(e.message); }
-    setSaving(false);
-  }
-
-  function handleEdit(s) {
-    setEditing(s);
-    setForm({ icon: s.icon, title: s.title, description: s.description, image: s.image || '', price: s.price, sort_order: s.sort_order });
-  }
-
-  function handleDelete(id) {
-    removeService(id).then(async () => setServices(await fetchServices(type)));
-  }
-
-  return (
-    <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-black dark:text-gray-100">{title}</h2>
-          <p className="text-sm text-black/60 dark:text-gray-400">Manage service offerings.</p>
-        </div>
-        <button onClick={() => { setEditing({}); setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: services.length }); }} className="px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">+ Add Service</button>
-      </div>
-
-      {editing && (
-        <div className="glass-card rounded-2xl p-6 space-y-4 mb-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-black dark:text-gray-100">{editing.id ? 'Edit' : 'New'} Service</h3>
-            <button onClick={() => setEditing(null)} className="text-xs px-3 py-1.5 bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Cancel</button>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Icon (emoji)</label>
-              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔗" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Price ($)</label>
-              <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Sort Order</label>
-              <input value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} type="number" min="0" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Image</label>
-              <div className="flex items-center gap-3">
-                <label className="px-4 py-2 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm cursor-pointer hover:bg-white dark:hover:bg-white/5 transition">
-                  Choose File
-                  <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = (ev) => setForm({ ...form, image: ev.target.result }); r.readAsDataURL(f); } }} className="hidden" />
-                </label>
-                {form.image && <span className="text-xs text-black/60 dark:text-gray-400 truncate max-w-[200px]">Image selected</span>}
-              </div>
-            </div>
-          </div>
-          <button onClick={handleSave} disabled={saving} className="px-6 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm disabled:opacity-60 cursor-pointer">
-            {saving && <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}{saving ? 'Saving...' : 'Save Service'}
-          </button>
-        </div>
-      )}
-
-      <div className="space-y-3">
-        {services.length === 0 ? (
-          <p className="text-sm text-black/60 dark:text-gray-500">No services yet. Add your first one above.</p>
-        ) : (
-          services.map((s) => (
-            <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4">
-              {s.image ? (
-                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
-              ) : (
-                <span className="text-2xl shrink-0">{s.icon}</span>
-              )}
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-black dark:text-gray-100">{s.title}</h4>
-                <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
-              </div>
-              {s.price > 0 && <span className="text-sm font-bold text-teal-dark dark:text-teal-light shrink-0">${s.price}</span>}
-              <div className="flex gap-2 shrink-0">
-                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
-                <button onClick={() => handleDelete(s.id)} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
-function StudioConsultingTab({ fetchServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, setError }) {
+function StudioServicesTab({ fetchAllServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, setError }) {
   const [services, setServices] = useState([]);
   const [steps, setSteps] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0 });
+  const [form, setForm] = useState({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'it-integration' });
   const [saving, setSaving] = useState(false);
   const [stepEditing, setStepEditing] = useState(null);
   const [stepForm, setStepForm] = useState({ step_number: 0, title: '', description: '' });
   const [stepSaving, setStepSaving] = useState(false);
 
   useEffect(() => {
-    fetchServices('consulting').then(setServices);
+    fetchAllServices().then(setServices);
     fetchServiceSteps().then(setSteps);
-  }, [fetchServices, fetchServiceSteps]);
+  }, [fetchAllServices, fetchServiceSteps]);
 
   async function handleSave() {
     setSaving(true);
     try {
-      await upsertService({ ...form, type: 'consulting', id: editing?.id });
+      await upsertService({ ...form, id: editing?.id });
       setEditing(null);
-      setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0 });
-      setServices(await fetchServices('consulting'));
+      setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: 0, type: 'it-integration' });
+      setServices(await fetchAllServices());
     } catch (e) { setError(e.message); }
     setSaving(false);
   }
 
   function handleEdit(s) {
     setEditing(s);
-    setForm({ icon: s.icon, title: s.title, description: s.description, image: s.image || '', price: s.price, sort_order: s.sort_order });
+    setForm({ icon: s.icon, title: s.title, description: s.description, image: s.image || '', price: s.price, sort_order: s.sort_order, type: s.type });
+  }
+
+  function handleDelete(id) {
+    removeService(id).then(async () => setServices(await fetchAllServices()));
   }
 
   async function handleStepSave() {
@@ -1280,15 +1172,17 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
     setStepSaving(false);
   }
 
+  const itServices = services.filter((s) => s.type === 'it-integration');
+  const consultingServices = services.filter((s) => s.type === 'consulting');
+
   return (
     <div className="max-w-4xl">
-      <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1">Consulting</h2>
-      <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Manage consulting services and process steps.</p>
+      <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1">Services</h2>
+      <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Manage all services and process steps.</p>
 
-      {/* Services */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-black dark:text-gray-100">Services</h3>
-        <button onClick={() => { setEditing({}); setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: services.length }); }} className="px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">+ Add Service</button>
+        <h3 className="text-lg font-bold text-black dark:text-gray-100">All Services</h3>
+        <button onClick={() => { setEditing({}); setForm({ icon: '', title: '', description: '', image: '', price: 0, sort_order: services.length, type: 'it-integration' }); }} className="px-4 py-2 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">+ Add Service</button>
       </div>
 
       {editing && (
@@ -1299,20 +1193,27 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Icon (emoji)</label>
-              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔍" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Type</label>
+              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40">
+                <option value="it-integration">Network & Security</option>
+                <option value="consulting">IT Consulting</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Title</label>
               <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
-            <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+            <div>
+              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Icon (emoji)</label>
+              <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} placeholder="🔗" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Price ($)</label>
               <input value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} type="number" min="0" step="0.01" className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Description</label>
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3.5 py-2.5 bg-white/70 dark:bg-black/70 border border-blue-200 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal/40" />
             </div>
             <div>
               <label className="block text-sm font-medium text-black/70/70 dark:text-gray-400 mb-1">Sort Order</label>
@@ -1337,25 +1238,48 @@ function StudioConsultingTab({ fetchServices, upsertService, removeService, fetc
 
       <div className="space-y-3 mb-10">
         {services.length === 0 ? (
-          <p className="text-sm text-black/60 dark:text-gray-500">No services yet.</p>
+          <p className="text-sm text-black/60 dark:text-gray-500">No services yet. Add your first one above.</p>
         ) : (
-          services.map((s) => (
-            <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4">
-              {s.image ? (
-                <img src={s.image} alt={s.title} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
-              ) : (
-                <span className="text-2xl shrink-0">{s.icon}</span>
-              )}
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-black dark:text-gray-100">{s.title}</h4>
-                <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
+          <>
+            {itServices.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-black/60 dark:text-gray-400 uppercase tracking-wider mb-2">Network & Security</h4>
+                {itServices.map((s) => (
+                  <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 mb-2">
+                    <span className="text-2xl shrink-0">{s.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-black dark:text-gray-100">{s.title}</h4>
+                      <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
+                    </div>
+                    {s.price > 0 && <span className="text-sm font-bold text-teal-dark dark:text-teal-light shrink-0">${s.price}</span>}
+                    <div className="flex gap-2 shrink-0">
+                      <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
+                      <button onClick={() => handleDelete(s.id)} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex gap-2 shrink-0">
-                <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
-                <button onClick={() => removeService(s.id).then(async () => setServices(await fetchServices('consulting')))} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
+            )}
+            {consultingServices.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-black/60 dark:text-gray-400 uppercase tracking-wider mb-2">IT Consulting</h4>
+                {consultingServices.map((s) => (
+                  <div key={s.id} className="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 mb-2">
+                    <span className="text-2xl shrink-0">{s.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-black dark:text-gray-100">{s.title}</h4>
+                      <p className="text-sm text-black/60 dark:text-gray-400 truncate">{s.description}</p>
+                    </div>
+                    {s.price > 0 && <span className="text-sm font-bold text-teal-dark dark:text-teal-light shrink-0">${s.price}</span>}
+                    <div className="flex gap-2 shrink-0">
+                      <button onClick={() => handleEdit(s)} className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-white/10 text-black/70 dark:text-gray-300 rounded-lg hover:bg-blue-200 dark:hover:bg-white/20 transition cursor-pointer">Edit</button>
+                      <button onClick={() => handleDelete(s.id)} className="px-3 py-1.5 text-xs font-medium bg-rose/10 text-rose dark:text-purple-300 rounded-lg hover:bg-rose/20 transition cursor-pointer">Delete</button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))
+            )}
+          </>
         )}
       </div>
 
