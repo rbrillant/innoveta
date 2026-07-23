@@ -48,6 +48,8 @@ export default function Studio() {
   const loginCanvasRef = useRef();
   const [faceAuthStep, setFaceAuthStep] = useState(false);
   const [faceAuthToken, setFaceAuthToken] = useState('');
+  const [faceStatus, setFaceStatus] = useState(null);
+  const [faceScanning, setFaceScanning] = useState(false);
 
   useEffect(() => {
     const canvas = loginCanvasRef.current;
@@ -164,7 +166,10 @@ export default function Studio() {
   }
 
   useEffect(() => {
-    if (loggedIn) refreshData();
+    if (loggedIn) {
+      refreshData();
+      fetchFaceStatus();
+    }
   }, [loggedIn]);
 
   async function handleLogin(e) {
@@ -276,6 +281,40 @@ export default function Studio() {
     setTimeout(() => setSuccess(''), 3000);
   }
 
+  async function fetchFaceStatus() {
+    try {
+      const session = JSON.parse(localStorage.getItem('session') || '{}');
+      const token = faceAuthToken || session.access_token || '';
+      const res = await fetch('/api/face-auth/status', { headers: { Authorization: `Bearer ${token}` } });
+      const { data } = await res.json();
+      setFaceStatus(data);
+    } catch { setFaceStatus({ registered: false }); }
+  }
+
+  async function deleteFaceAuth() {
+    try {
+      const session = JSON.parse(localStorage.getItem('session') || '{}');
+      const token = faceAuthToken || session.access_token || '';
+      await fetch('/api/face-auth', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      setFaceStatus({ registered: false });
+      setSuccess('Face data removed.');
+      setError('');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch { setError('Failed to remove face data.'); }
+  }
+
+  function openFaceRegister() {
+    setFaceScanning(true);
+  }
+
+  function handleFaceRegistered() {
+    setFaceScanning(false);
+    fetchFaceStatus();
+    setSuccess('Face registered successfully!');
+    setError('');
+    setTimeout(() => setSuccess(''), 3000);
+  }
+
   if (!loggedIn) {
     return (
       <main className="relative w-full min-h-screen" style={{ height: '100vh' }}>
@@ -307,6 +346,14 @@ export default function Studio() {
             token={faceAuthToken}
             onVerified={handleFaceVerified}
             onSkip={handleFaceSkip}
+          />
+        )}
+        {faceScanning && (
+          <FaceAuth
+            email={designer?.email || ''}
+            token={faceAuthToken || JSON.parse(localStorage.getItem('session') || '{}').access_token || ''}
+            onVerified={handleFaceRegistered}
+            onSkip={() => setFaceScanning(false)}
           />
         )}
       </main>
@@ -1108,7 +1155,7 @@ export default function Studio() {
           {tab === 'Settings' && (
             <div className="max-w-md">
               <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1">Settings</h2>
-              <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Change your studio password.</p>
+              <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Manage your account and security.</p>
               {success && <p className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-black/80 rounded-xl px-4 py-2 mb-4">{success}</p>}
               <form onSubmit={handlePasswordChange} className="glass-card rounded-2xl p-6 space-y-4">
                 <div>
@@ -1122,6 +1169,39 @@ export default function Studio() {
                 {error && <p className="text-sm text-rose dark:text-purple-300">{error}</p>}
                 <button type="submit" className="w-full px-6 py-3 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer">Update Password</button>
               </form>
+
+              {/* Face Authentication */}
+              <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1 mt-10">Face Authentication</h2>
+              <p className="text-sm text-black/60 dark:text-gray-400 mb-6">Two-factor authentication using your face. Adds an extra layer of security to your admin account.</p>
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-3 h-3 rounded-full ${faceStatus?.registered ? 'bg-emerald-500' : 'bg-yellow-500'}`} />
+                  <div>
+                    <p className="text-sm font-medium text-black dark:text-gray-100">
+                      {faceStatus?.registered ? 'Face Registered' : 'No Face Registered'}
+                    </p>
+                    {faceStatus?.lastVerified && (
+                      <p className="text-xs text-black/50 dark:text-gray-500">Last verified: {new Date(faceStatus.lastVerified).toLocaleString()}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={openFaceRegister}
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-teal to-teal-dark text-white text-sm font-semibold rounded-xl hover:from-teal-dark hover:to-teal transition-all shadow-sm cursor-pointer"
+                  >
+                    {faceStatus?.registered ? 'Re-register Face' : 'Register Face'}
+                  </button>
+                  {faceStatus?.registered && (
+                    <button
+                      onClick={deleteFaceAuth}
+                      className="px-4 py-2.5 border border-rose-300 dark:border-rose-500/30 text-rose dark:text-rose-400 text-sm font-medium rounded-xl hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
 
               {/* Payment Settings */}
               <h2 className="text-2xl font-bold text-black dark:text-gray-100 mb-1 mt-10">Payment Details</h2>
