@@ -184,12 +184,12 @@ export default function Studio() {
       if (!data?.session?.access_token) { setError('Invalid email or password.'); return; }
 
       const token = data.session.access_token;
+      setFaceAuthToken(token);
       const { data: faceStatus } = await fetch('/api/face-auth/status', {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => r.json());
 
       if (faceStatus?.registered) {
-        setFaceAuthToken(token);
         setFaceAuthStep(true);
         setError('');
       } else {
@@ -283,9 +283,7 @@ export default function Studio() {
 
   async function fetchFaceStatus() {
     try {
-      const session = JSON.parse(localStorage.getItem('session') || '{}');
-      const token = faceAuthToken || session.access_token || '';
-      const res = await fetch('/api/face-auth/status', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch('/api/face-auth/status', { headers: { Authorization: `Bearer ${faceAuthToken}` } });
       const { data } = await res.json();
       setFaceStatus(data);
     } catch { setFaceStatus({ registered: false }); }
@@ -293,9 +291,7 @@ export default function Studio() {
 
   async function deleteFaceAuth() {
     try {
-      const session = JSON.parse(localStorage.getItem('session') || '{}');
-      const token = faceAuthToken || session.access_token || '';
-      await fetch('/api/face-auth', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      await fetch('/api/face-auth', { method: 'DELETE', headers: { Authorization: `Bearer ${faceAuthToken}` } });
       setFaceStatus({ registered: false });
       setSuccess('Face data removed.');
       setError('');
@@ -351,7 +347,7 @@ export default function Studio() {
         {faceScanning && (
           <FaceAuth
             email={designer?.email || ''}
-            token={faceAuthToken || JSON.parse(localStorage.getItem('session') || '{}').access_token || ''}
+            token={faceAuthToken}
             onVerified={handleFaceRegistered}
             onSkip={() => setFaceScanning(false)}
           />
