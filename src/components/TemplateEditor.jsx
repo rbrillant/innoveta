@@ -7,19 +7,34 @@ import TemplateRenderer from './TemplateRenderer';
 const CANVAS_W = 800;
 const CANVAS_H = 500;
 
+const ANIM_DEFAULT = { type: 'none', duration: 500, delay: 0, easing: 'ease' };
+const BOX_SHADOW_DEFAULT = { enabled: false, color: '#000000', blur: 10, offsetX: 0, offsetY: 4, spread: 0 };
+const GRADIENT_TEXT_DEFAULT = { enabled: false, from: '#7c3aed', to: '#ec4899', angle: 0 };
+
 const ELEMENT_DEFAULTS = {
-  text: { type: 'text', content: 'Text', x: 50, y: 50, fontSize: 24, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 40, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
-  heading: { type: 'text', content: 'Heading', x: 50, y: 50, fontSize: 40, fontFamily: 'Inter', fontWeight: 700, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 400, height: 60, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
-  subheading: { type: 'text', content: 'Subheading', x: 50, y: 50, fontSize: 28, fontFamily: 'Inter', fontWeight: 500, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 45, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
-  body: { type: 'text', content: 'Body text', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 30, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
-  button: { type: 'button', content: 'Button', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 600, fontStyle: 'normal', textDecoration: 'none', color: '#ffffff', bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 8, width: 150, height: 50, borderWidth: 0, borderColor: 'transparent', boxShadow: true, groupId: null },
-  rectangle: { type: 'shape', content: 'rectangle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 0, width: 200, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null },
-  circle: { type: 'shape', content: 'circle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null },
-  line: { type: 'shape', content: 'line', x: 50, y: 50, bgColor: '#000000', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 4, groupId: null },
-  star: { type: 'shape', content: 'star', x: 50, y: 50, bgColor: '#eab308', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 100, height: 100, groupId: null },
-  image: { type: 'image', src: '', content: 'Image', x: 50, y: 50, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 150, borderRadius: 0, groupId: null, filter: { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, hueRotate: 0 } },
-  table: { type: 'table', content: 'Table', x: 50, y: 50, rows: 3, cols: 3, cellData: [['Header 1','Header 2','Header 3'],['Cell 1','Cell 2','Cell 3'],['Cell 4','Cell 5','Cell 6']], cellColor: '#ffffff', headerColor: '#f3f4f6', borderColor: '#d1d5db', bgColor: '#ffffff', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 360, height: 180, groupId: null },
-  frame: { type: 'frame', content: 'Frame', x: 50, y: 50, shape: 'circle', frameImage: null, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, groupId: null },
+  text: { type: 'text', content: 'Text', x: 50, y: 50, fontSize: 24, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 40, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 }, animation: { ...ANIM_DEFAULT }, curve: 0, gradientText: { ...GRADIENT_TEXT_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  heading: { type: 'text', content: 'Heading', x: 50, y: 50, fontSize: 40, fontFamily: 'Inter', fontWeight: 700, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 400, height: 60, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 }, animation: { ...ANIM_DEFAULT }, curve: 0, gradientText: { ...GRADIENT_TEXT_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  subheading: { type: 'text', content: 'Subheading', x: 50, y: 50, fontSize: 28, fontFamily: 'Inter', fontWeight: 500, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 45, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 }, animation: { ...ANIM_DEFAULT }, curve: 0, gradientText: { ...GRADIENT_TEXT_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  body: { type: 'text', content: 'Body text', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 30, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 }, animation: { ...ANIM_DEFAULT }, curve: 0, gradientText: { ...GRADIENT_TEXT_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  button: { type: 'button', content: 'Button', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 600, fontStyle: 'normal', textDecoration: 'none', color: '#ffffff', bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 8, width: 150, height: 50, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  rectangle: { type: 'shape', content: 'rectangle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 0, width: 200, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  circle: { type: 'shape', content: 'circle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  line: { type: 'shape', content: 'line', x: 50, y: 50, bgColor: '#000000', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 4, groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  star: { type: 'shape', content: 'star', x: 50, y: 50, bgColor: '#eab308', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 100, height: 100, groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  diamond: { type: 'shape', content: 'diamond', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  hexagon: { type: 'shape', content: 'hexagon', x: 50, y: 50, bgColor: '#38bdf8', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  'arrow-right': { type: 'shape', content: 'arrow-right', x: 50, y: 50, bgColor: '#ec4899', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 100, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  heart: { type: 'shape', content: 'heart', x: 50, y: 50, bgColor: '#f43f5e', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 120, height: 120, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  cloud: { type: 'shape', content: 'cloud', x: 50, y: 50, bgColor: '#e5e7eb', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 180, height: 120, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  'speech-bubble': { type: 'shape', content: 'speech-bubble', x: 50, y: 50, bgColor: '#ffffff', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 180, height: 140, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  pentagon: { type: 'shape', content: 'pentagon', x: 50, y: 50, bgColor: '#34d399', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  octagon: { type: 'shape', content: 'octagon', x: 50, y: 50, bgColor: '#fbbf24', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  image: { type: 'image', src: '', content: 'Image', x: 50, y: 50, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 150, borderRadius: 0, groupId: null, filter: { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, hueRotate: 0 }, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid', crop: null },
+  table: { type: 'table', content: 'Table', x: 50, y: 50, rows: 3, cols: 3, cellData: [['Header 1','Header 2','Header 3'],['Cell 1','Cell 2','Cell 3'],['Cell 4','Cell 5','Cell 6']], cellColor: '#ffffff', headerColor: '#f3f4f6', borderColor: '#d1d5db', bgColor: '#ffffff', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 360, height: 180, groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  frame: { type: 'frame', content: 'Frame', x: 50, y: 50, shape: 'circle', frameImage: null, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, groupId: null, animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  chart: { type: 'chart', chartType: 'bar', x: 50, y: 50, width: 300, height: 200, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, groupId: null, data: { labels: ['A','B','C','D'], values: [30,60,45,80] }, colors: ['#7c3aed','#38bdf8','#ec4899','#fbbf24'], bgColor: '#ffffff', borderColor: '#d1d5db', animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  pieChart: { type: 'chart', chartType: 'pie', x: 50, y: 50, width: 250, height: 250, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, groupId: null, data: { labels: ['A','B','C','D'], values: [30,60,45,80] }, colors: ['#7c3aed','#38bdf8','#ec4899','#fbbf24'], bgColor: '#ffffff', borderColor: '#d1d5db', animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
+  lineChart: { type: 'chart', chartType: 'line', x: 50, y: 50, width: 300, height: 200, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, groupId: null, data: { labels: ['A','B','C','D'], values: [30,60,45,80] }, colors: ['#7c3aed','#38bdf8','#ec4899','#fbbf24'], bgColor: '#ffffff', borderColor: '#d1d5db', animation: { ...ANIM_DEFAULT }, boxShadow: { ...BOX_SHADOW_DEFAULT }, borderStyle: 'solid' },
 };
 
 function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -62,6 +77,42 @@ const ELEMENT_SHAPES = [
   { preset: 'circle', label: 'Circle', icon: '○' },
   { preset: 'line', label: 'Line', icon: '—' },
   { preset: 'star', label: 'Star', icon: '★' },
+];
+
+const SHAPES_EXTENDED = [
+  { preset: 'diamond', label: 'Diamond', icon: '◆' },
+  { preset: 'hexagon', label: 'Hexagon', icon: '⬡' },
+  { preset: 'arrow-right', label: 'Arrow', icon: '→' },
+  { preset: 'heart', label: 'Heart', icon: '♥' },
+  { preset: 'cloud', label: 'Cloud', icon: '☁' },
+  { preset: 'speech-bubble', label: 'Speech', icon: '💬' },
+  { preset: 'pentagon', label: 'Pentagon', icon: '⬠' },
+  { preset: 'octagon', label: 'Octagon', icon: '🛑' },
+];
+
+const ANIMATION_OPTIONS = [
+  { type: 'none', label: 'None' },
+  { type: 'fadeIn', label: 'Fade In' },
+  { type: 'slideInLeft', label: 'Slide Left' },
+  { type: 'slideInRight', label: 'Slide Right' },
+  { type: 'slideInUp', label: 'Slide Up' },
+  { type: 'slideInDown', label: 'Slide Down' },
+  { type: 'bounceIn', label: 'Bounce' },
+  { type: 'zoomIn', label: 'Zoom In' },
+  { type: 'rotateIn', label: 'Rotate In' },
+  { type: 'flipIn', label: 'Flip In' },
+  { type: 'pulse', label: 'Pulse' },
+  { type: 'wiggle', label: 'Wiggle' },
+  { type: 'pop', label: 'Pop' },
+  { type: 'rise', label: 'Rise' },
+];
+
+const EMOJI_LIST = ['😀','😂','❤️','🔥','⭐','💯','👍','🎉','✨','🚀','💰','🎨','📸','💡','🎯','🏆','💪','🌟','💎','🌈','🎶','🍕','☕','🎂','🎈','📌','🔑','⚡','🦄','🌺','🍀','☀️','🌙','❄️','🎵','📱','💻','🎮','⚽','🏀','🎾','🎪','🎭','🎬','🎤','🎧','📢','📝','📊','📈','🗓️','✉️','📎','✂️','🖊️','🔍','🔧','⚙️','🏠','✈️','🌍','🗺️','⏰','⏳','🎁','🎊','🥇','🎖️'];
+
+const CHART_PRESETS = [
+  { preset: 'chart', label: 'Bar Chart', icon: '📊' },
+  { preset: 'pieChart', label: 'Pie Chart', icon: '🥧' },
+  { preset: 'lineChart', label: 'Line Chart', icon: '📈' },
 ];
 
 const FRAME_SHAPES = [
@@ -156,6 +207,15 @@ export default function TemplateEditor() {
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [quickActionsSearch, setQuickActionsSearch] = useState('');
   const [quickActionsRef, setQuickActionsRef] = useState(null);
+  const [contextMenu, setContextMenu] = useState(null);
+  const [showAlignPanel, setShowAlignPanel] = useState(false);
+  const [copiedStyle, setCopiedStyle] = useState(null);
+  const [showGrid, setShowGrid] = useState(false);
+  const [customGuides, setCustomGuides] = useState([]);
+  const [cropImage, setCropImage] = useState(null);
+  const [extractedColors, setExtractedColors] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAnimPanel, setShowAnimPanel] = useState(false);
 
   const pagesRef = useRef(pages);
 
@@ -455,16 +515,20 @@ export default function TemplateEditor() {
       const dy = cur.y - startCoords.y;
       let lastGuides = [];
       const updates = startPositions.map((sp) => {
-        const nx = Math.max(0, Math.min(100, sp.x + dx));
-        const ny = Math.max(0, Math.min(100, sp.y + dy));
+        let nx = Math.max(0, Math.min(100, sp.x + dx));
+        let ny = Math.max(0, Math.min(100, sp.y + dy));
         if (sp.id === newIds[newIds.length - 1]) {
           const SNAP = 1.5;
           const guides = [];
-          if (Math.abs(nx - 50) < SNAP) guides.push({ type: 'v', pos: 50 });
-          if (Math.abs(ny - 50) < SNAP) guides.push({ type: 'h', pos: 50 });
+          if (Math.abs(nx - 50) < SNAP) { guides.push({ type: 'v', pos: 50 }); nx = 50; }
+          if (Math.abs(ny - 50) < SNAP) { guides.push({ type: 'h', pos: 50 }); ny = 50; }
           elementsRef.current.filter((e) => !newIds.includes(e.id)).forEach((other) => {
-            if (Math.abs(nx - other.x) < SNAP) guides.push({ type: 'v', pos: other.x });
-            if (Math.abs(ny - other.y) < SNAP) guides.push({ type: 'h', pos: other.y });
+            if (Math.abs(nx - other.x) < SNAP) { guides.push({ type: 'v', pos: other.x }); nx = other.x; }
+            if (Math.abs(ny - other.y) < SNAP) { guides.push({ type: 'h', pos: other.y }); ny = other.y; }
+          });
+          customGuides.forEach((cg) => {
+            if (Math.abs(nx - cg.pos) < SNAP) { guides.push({ type: cg.type, pos: cg.pos }); nx = cg.pos; }
+            if (Math.abs(ny - cg.pos) < SNAP) { guides.push({ type: cg.type, pos: cg.pos }); ny = cg.pos; }
           });
           lastGuides = guides;
         }
@@ -484,30 +548,50 @@ export default function TemplateEditor() {
     };
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
-  }, [editingText, selectedIds, getCanvasCoords, pushHistory]);
+  }, [editingText, selectedIds, getCanvasCoords, pushHistory, customGuides]);
 
-  const onResizeMouseDown = useCallback((e, el) => {
+  const onResizeMouseDown = useCallback((e, el, handle) => {
     e.stopPropagation();
     e.preventDefault();
     const startX = e.clientX;
     const startY = e.clientY;
     const startW = el.width || 100;
     const startH = el.height || 50;
+    const startXPos = el.x || 50;
+    const startYPos = el.y || 50;
     const maintainAspect = e.shiftKey;
     const aspect = startW / startH;
+    const h = handle || 'se';
     const onMove = (me) => {
       me.preventDefault();
       const dx = me.clientX - startX;
       const dy = me.clientY - startY;
       const updates = {};
-      if (maintainAspect) {
-        const delta = Math.max(dx, dy);
-        updates.width = Math.max(30, startW + delta);
-        updates.height = Math.max(20, startH + delta / aspect);
-      } else {
-        updates.width = Math.max(30, Math.min(800, startW + dx));
-        updates.height = Math.max(20, Math.min(600, startH + dy));
+      if (h === 'se' || h === 'e' || h === 's') {
+        if (maintainAspect && (h === 'se')) {
+          const delta = Math.max(dx, dy);
+          updates.width = Math.max(30, startW + delta);
+          updates.height = Math.max(20, startH + delta / aspect);
+        } else {
+          if (h !== 's') updates.width = Math.max(30, Math.min(800, startW + dx));
+          if (h !== 'e') updates.height = Math.max(20, Math.min(600, startH + dy));
+        }
       }
+      if (h === 'nw' || h === 'n' || h === 'ne') {
+        if (h !== 's' && h !== 'se' && h !== 'sw') {
+          updates.height = Math.max(20, startH - dy);
+        }
+      }
+      if (h === 'nw' || h === 'w' || h === 'sw') {
+        if (h !== 'e' && h !== 'ne' && h !== 'se') {
+          updates.width = Math.max(30, startW - dx);
+        }
+      }
+      if (h === 'nw') { updates.x = startXPos + dx * 0.05; updates.y = startYPos + dy * 0.05; }
+      if (h === 'n') { updates.y = startYPos + dy * 0.05; }
+      if (h === 'ne') { updates.y = startYPos + dy * 0.05; }
+      if (h === 'w') { updates.x = startXPos + dx * 0.05; }
+      if (h === 'sw') { updates.x = startXPos + dx * 0.05; }
       updateElement(el.id, updates);
     };
     const onUp = () => {
@@ -551,6 +635,8 @@ export default function TemplateEditor() {
     setShowDownloadMenu(false);
     setShowShareMenu(false);
     setShowQuickActions(false);
+    setContextMenu(null);
+    setShowEmojiPicker(false);
   }, []);
 
   const onElementDoubleClick = useCallback((e, el) => {
@@ -567,16 +653,18 @@ export default function TemplateEditor() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const newEl = { ...JSON.parse(JSON.stringify(ELEMENT_DEFAULTS.image)), id: uid(), src: ev.target.result, content: file.name };
+      const src = ev.target.result;
+      const newEl = { ...JSON.parse(JSON.stringify(ELEMENT_DEFAULTS.image)), id: uid(), src, content: file.name };
       const next = [...elementsRef.current, newEl];
       setElements(next);
       setSelectedIds([newEl.id]);
       pushHistory(next);
       setActiveSidebar(null);
+      extractColorsFromImage(src).then((colors) => setExtractedColors(colors));
     };
     reader.readAsDataURL(file);
     e.target.value = '';
-  }, [pushHistory]);
+  }, [pushHistory, extractColorsFromImage]);
 
   const handleColorChange = useCallback((elId, prop, value) => {
     updateElement(elId, { [prop]: value });
@@ -805,6 +893,9 @@ export default function TemplateEditor() {
       if (ctrl && e.shiftKey && e.key === 'h' && selectedEl) { e.preventDefault(); toggleFlipH(selectedEl.id); return; }
       if (ctrl && e.shiftKey && e.key === 'v' && selectedEl) { e.preventDefault(); toggleFlipV(selectedEl.id); return; }
       if (ctrl && e.shiftKey && e.key === 'l' && selectedEl) { e.preventDefault(); alignText(selectedEl.id, 'left'); return; }
+      if (ctrl && e.shiftKey && e.key === 'C' && selectedEl && !isInputFocused) { e.preventDefault(); copyStyle(); return; }
+      if (ctrl && e.shiftKey && e.key === 'V' && selectedEl && !isInputFocused) { e.preventDefault(); pasteStyle(); return; }
+      if (ctrl && e.key === '\'' ) { e.preventDefault(); setShowGrid((v) => !v); return; }
       if (ctrl && e.shiftKey && e.key === 'c' && selectedEl && !isInputFocused) { e.preventDefault(); alignText(selectedEl.id, 'center'); return; }
       if (ctrl && e.shiftKey && e.key === 'r' && selectedEl) { e.preventDefault(); alignText(selectedEl.id, 'right'); return; }
       if (ctrl && e.key === '=') { e.preventDefault(); setZoom((z) => Math.min(3, z + 0.1)); return; }
@@ -821,6 +912,9 @@ export default function TemplateEditor() {
         setShowDownloadMenu(false);
         setShowShareMenu(false);
         setShowQuickActions(false);
+        setContextMenu(null);
+        setShowEmojiPicker(false);
+        setShowAnimPanel(false);
         return;
       }
       if ((e.key === 'Delete' || e.key === 'Backspace') && !isInputFocused) {
@@ -882,7 +976,7 @@ export default function TemplateEditor() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
-  }, [undo, redo, selectedIds, selectedEl, editingText, editingTableCell, deleteSelected, duplicateSelected, groupSelected, ungroupSelected, updateElement, pushHistory, bringForward, sendBackward, bringToFront, sendToBack, toggleFlipH, toggleFlipV, alignText, addElement, activeSidebar, showAI, showQuickActions, showPresentMode, currentPageIdx]);
+  }, [undo, redo, selectedIds, selectedEl, editingText, editingTableCell, deleteSelected, duplicateSelected, groupSelected, ungroupSelected, updateElement, pushHistory, bringForward, sendBackward, bringToFront, sendToBack, toggleFlipH, toggleFlipV, alignText, addElement, activeSidebar, showAI, showQuickActions, showPresentMode, currentPageIdx, copyStyle, pasteStyle]);
 
   // Ctrl+scroll zoom
   useEffect(() => {
@@ -968,6 +1062,157 @@ export default function TemplateEditor() {
     commitElementUpdate(elId, { cols: el.cols - 1, cellData: el.cellData.map((r) => r.slice(0, -1)), width: Math.max(100, (el.width || 360) - 100) });
   }, [commitElementUpdate]);
 
+  const alignElements = useCallback((align) => {
+    if (selectedIds.length < 2) return;
+    const els = selectedIds.map(id => elementsRef.current.find(e => e.id === id)).filter(Boolean);
+    let updates = [];
+    switch(align) {
+      case 'left': { const minX = Math.min(...els.map(e => e.x)); updates = els.map(e => [e.id, { x: minX }]); break; }
+      case 'center-h': { const avgX = els.reduce((s,e) => s + (e.x||50), 0) / els.length; updates = els.map(e => [e.id, { x: avgX }]); break; }
+      case 'right': { const maxX = Math.max(...els.map(e => e.x)); updates = els.map(e => [e.id, { x: maxX }]); break; }
+      case 'top': { const minY = Math.min(...els.map(e => e.y)); updates = els.map(e => [e.id, { y: minY }]); break; }
+      case 'center-v': { const avgY = els.reduce((s,e) => s + (e.y||50), 0) / els.length; updates = els.map(e => [e.id, { y: avgY }]); break; }
+      case 'bottom': { const maxY = Math.max(...els.map(e => e.y)); updates = els.map(e => [e.id, { y: maxY }]); break; }
+      case 'dist-h': { const sorted = [...els].sort((a,b) => (a.x||50) - (b.x||50)); const step = 100 / (sorted.length + 1); updates = sorted.map((e,i) => [e.id, { x: step * (i+1) }]); break; }
+      case 'dist-v': { const sorted = [...els].sort((a,b) => (a.y||50) - (b.y||50)); const step = 100 / (sorted.length + 1); updates = sorted.map((e,i) => [e.id, { y: step * (i+1) }]); break; }
+      default: break;
+    }
+    if (updates.length > 0) {
+      const map = new Map(updates);
+      const next = elementsRef.current.map(e => map.has(e.id) ? { ...e, ...map.get(e.id) } : e);
+      setElements(next);
+      pushHistory(next);
+    }
+  }, [selectedIds, pushHistory]);
+
+  const copyStyle = useCallback(() => {
+    if (!selectedEl) return;
+    const { id, x, y, width, height, content, src, cellData, frameImage, ...styleProps } = selectedEl;
+    setCopiedStyle(styleProps);
+  }, [selectedEl]);
+
+  const pasteStyle = useCallback(() => {
+    if (!selectedEl || !copiedStyle) return;
+    const next = elementsRef.current.map(e => {
+      if (e.id === selectedEl.id) return { ...e, ...copiedStyle };
+      return e;
+    });
+    setElements(next);
+    pushHistory(next);
+  }, [selectedEl, copiedStyle, pushHistory]);
+
+  const extractColorsFromImage = useCallback((src) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = src;
+      img.onload = () => {
+        const cvs = document.createElement('canvas');
+        cvs.width = 50;
+        cvs.height = 50;
+        const ctx = cvs.getContext('2d');
+        ctx.drawImage(img, 0, 0, 50, 50);
+        const data = ctx.getImageData(0, 0, 50, 50).data;
+        const colors = {};
+        for (let i = 0; i < data.length; i += 16) {
+          const r = Math.round(data[i] / 32) * 32;
+          const g = Math.round(data[i+1] / 32) * 32;
+          const b = Math.round(data[i+2] / 32) * 32;
+          const key = `${r},${g},${b}`;
+          colors[key] = (colors[key] || 0) + 1;
+        }
+        const sorted = Object.entries(colors).sort((a,b) => b[1] - a[1]).slice(0, 6);
+        resolve(sorted.map(([key]) => {
+          const [rr,gg,bb] = key.split(',').map(Number);
+          return `#${rr.toString(16).padStart(2,'0')}${gg.toString(16).padStart(2,'0')}${bb.toString(16).padStart(2,'0')}`;
+        }));
+      };
+      img.onerror = () => resolve([]);
+    });
+  }, []);
+
+  const exportAsPDF = useCallback(() => {
+    saveCurrentPage();
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    let html = '<html><head><title>' + designName + '</title><style>@page{margin:0;}body{margin:0;} .page{width:800px;height:500px;position:relative;overflow:hidden;margin:10px auto;page-break-after:always;} img{max-width:100%;} </style></head><body>';
+    pagesRef.current.forEach((page) => {
+      const bg = page.background || {};
+      const bgStyle = bg.type === 'gradient' ? `background:linear-gradient(135deg,${bg.from || '#0f172a'},${bg.to || '#1e293b'})` : `background:${bg.color || '#0f172a'}`;
+      html += `<div class="page" style="${bgStyle}">`;
+      (page.elements || []).forEach((el) => {
+        const cx = (el.x / 100) * 800;
+        const cy = (el.y / 100) * 500;
+        const absStyle = `position:absolute;left:${cx - (el.width || 100)/2}px;top:${cy - (el.height || 40)/2}px;width:${el.width || 'auto'};height:${el.height || 'auto'};opacity:${(el.opacity||100)/100};transform:rotate(${el.rotation||0}deg)`;
+        if (el.type === 'text' || el.type === 'button') {
+          html += `<div style="${absStyle};font-size:${el.fontSize||16}px;font-family:${el.fontFamily||'Inter'},sans-serif;font-weight:${el.fontWeight||400};color:${el.color||'#000'};text-align:${el.textAlign||'center'};background:${el.type==='button'?(el.bgColor||'transparent'):''};border-radius:${el.borderRadius||0}px;padding:4px">${el.content||''}</div>`;
+        } else if (el.type === 'image' && el.src) {
+          html += `<img src="${el.src}" style="${absStyle};border-radius:${el.borderRadius||0}px" />`;
+        } else if (el.type === 'shape') {
+          html += `<div style="${absStyle};background:${el.bgColor||'#7c3aed'};border-radius:${el.content==='circle'?'50%':(el.borderRadius||0)}px"></div>`;
+        }
+      });
+      html += '</div>';
+    });
+    html += '</body></html>';
+    printWindow.document.write(html);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 500);
+    setShowDownloadMenu(false);
+  }, [designName, saveCurrentPage]);
+
+  const handleContextMenu = useCallback((e, el) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu({ x: e.clientX, y: e.clientY, elementId: el?.id || null });
+  }, []);
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  const contextMenuAction = useCallback((action) => {
+    const targetId = contextMenu?.elementId;
+    closeContextMenu();
+    if (!targetId && action !== 'paste') return;
+    const el = elementsRef.current.find(e => e.id === targetId);
+    switch (action) {
+      case 'cut':
+        clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.filter(x => selectedIds.includes(x.id))));
+        deleteSelected();
+        break;
+      case 'copy':
+        clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.filter(x => selectedIds.includes(x.id))));
+        break;
+      case 'paste':
+        if (clipboardRef.current) {
+          const clipItems = Array.isArray(clipboardRef.current) ? clipboardRef.current : [clipboardRef.current];
+          const newEls = clipItems.map(item => ({ ...JSON.parse(JSON.stringify(item)), id: uid(), x: Math.min((item.x||50)+3, 95), y: Math.min((item.y||50)+3, 95) }));
+          const next = [...elementsRef.current, ...newEls];
+          setElements(next);
+          setSelectedIds(newEls.map(e => e.id));
+          pushHistory(next);
+        }
+        break;
+      case 'duplicate':
+        if (targetId) { setSelectedIds([targetId]); duplicateSelected(); }
+        break;
+      case 'delete':
+        if (targetId) { setSelectedIds([targetId]); deleteSelected(); }
+        break;
+      case 'bringForward': if (el) bringForward(el.id); break;
+      case 'sendBackward': if (el) sendBackward(el.id); break;
+      case 'bringToFront': if (el) bringToFront(el.id); break;
+      case 'sendToBack': if (el) sendToBack(el.id); break;
+      case 'lock': if (el) toggleLock(el.id); break;
+      case 'group': groupSelected(); break;
+      case 'ungroup': ungroupSelected(); break;
+      case 'copyStyle': if (el) { setSelectedIds([el.id]); setTimeout(() => copyStyle(), 0); } break;
+      case 'pasteStyle': pasteStyle(); break;
+      default: break;
+    }
+  }, [contextMenu, selectedIds, closeContextMenu, deleteSelected, duplicateSelected, bringForward, sendBackward, bringToFront, sendToBack, toggleLock, groupSelected, ungroupSelected, copyStyle, pasteStyle, pushHistory]);
+
   const getFrameClipPath = (shape) => {
     switch (shape) {
       case 'circle': return 'circle(50% at 50% 50%)';
@@ -985,6 +1230,39 @@ export default function TemplateEditor() {
     const scaleX = el.flippedH ? -1 : 1;
     const scaleY = el.flippedV ? -1 : 1;
 
+    const resizeHandles = [
+      { pos: 'nw', style: { top: -5, left: -5, cursor: 'nw-resize' } },
+      { pos: 'n', style: { top: -5, left: '50%', transform: 'translateX(-50%)', cursor: 'n-resize' } },
+      { pos: 'ne', style: { top: -5, right: -5, cursor: 'ne-resize' } },
+      { pos: 'e', style: { top: '50%', right: -5, transform: 'translateY(-50%)', cursor: 'e-resize' } },
+      { pos: 'se', style: { bottom: -5, right: -5, cursor: 'se-resize' } },
+      { pos: 's', style: { bottom: -5, left: '50%', transform: 'translateX(-50%)', cursor: 's-resize' } },
+      { pos: 'sw', style: { bottom: -5, left: -5, cursor: 'sw-resize' } },
+      { pos: 'w', style: { top: '50%', left: -5, transform: 'translateY(-50%)', cursor: 'w-resize' } },
+    ];
+
+    const SelectionControls = ({ el: selEl }) => (
+      <>
+        {resizeHandles.map((h) => (
+          <div key={h.pos} onMouseDown={(e) => onResizeMouseDown(e, selEl, h.pos)}
+            style={{ position: 'absolute', width: 10, height: 10, background: '#7c3aed', borderRadius: 2, border: '1px solid #fff', zIndex: 10, ...h.style }} />
+        ))}
+        <div onMouseDown={(e) => onRotationMouseDown(e, selEl)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
+        </div>
+      </>
+    );
+
+    const LockBadge = () => (
+      <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
+      </div>
+    );
+
+    const shadowStyle = el.boxShadow?.enabled ? { boxShadow: `${el.boxShadow.offsetX || 0}px ${el.boxShadow.offsetY || 4}px ${el.boxShadow.blur || 10}px ${el.boxShadow.spread || 0}px ${el.boxShadow.color || '#000000'}` } : {};
+
+    const animStyle = (el.animation && el.animation.type && el.animation.type !== 'none') ? { animation: `${el.animation.type} ${el.animation.duration || 500}ms ${el.animation.delay || 0}ms ${el.animation.easing || 'ease'} both` } : {};
+
     const baseStyle = {
       position: 'absolute',
       left: `${el.x}%`,
@@ -998,123 +1276,166 @@ export default function TemplateEditor() {
       outline: isSelected ? '2px solid #7c3aed' : 'none',
       outlineOffset: '3px',
       transition: 'outline 0.1s',
+      ...shadowStyle,
+      ...animStyle,
     };
 
     if (el.type === 'text') {
       const textContent = el.textTransform === 'uppercase' ? (el.content || '').toUpperCase() : el.textTransform === 'lowercase' ? (el.content || '').toLowerCase() : el.content || '';
+      if (el.curve && el.curve !== 0) {
+        const curveAmount = el.curve;
+        return (
+          <div key={el.id} style={baseStyle}
+            onMouseDown={(e) => onElementMouseDown(e, el)}
+            onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg width="100%" height="100%" viewBox={`0 0 ${el.width || 200} ${el.height || 40}`}>
+              <defs>
+                <path id={`curve-${el.id}`} d={`M 0 ${(el.height || 40)/2} Q ${(el.width || 200)/2} ${(el.height || 40)/2 - curveAmount} ${el.width || 200} ${(el.height || 40)/2}`} fill="none" />
+              </defs>
+              <text fill={el.color || '#000'} fontSize={el.fontSize || 16} fontFamily={el.fontFamily || 'Inter'} fontWeight={el.fontWeight || 400} textAnchor="middle">
+                <textPath href={`#curve-${el.id}`} startOffset="50%">{textContent}</textPath>
+              </text>
+            </svg>
+            {isSelected && !isEditing && <><SelectionControls el={el} />{el.locked && <LockBadge />}</>}
+          </div>
+        );
+      }
+      const gradientTextStyle = el.gradientText?.enabled ? {
+        background: `linear-gradient(${el.gradientText.angle || 0}deg, ${el.gradientText.from || '#7c3aed'}, ${el.gradientText.to || '#ec4899'})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+      } : {};
       return (
-        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 400, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', color: el.color || '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: el.textAlign || 'center', lineHeight: el.lineHeight || 1.4, letterSpacing: el.letterSpacing || 0, whiteSpace: 'pre-wrap' }}
-          onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}>
+        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), ...gradientTextStyle, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 400, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', color: el.gradientText?.enabled ? undefined : (el.color || '#000000'), display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: el.textAlign || 'center', lineHeight: el.lineHeight || 1.4, letterSpacing: el.letterSpacing || 0, whiteSpace: 'pre-wrap' }}
+          onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}
+          onContextMenu={(e) => handleContextMenu(e, el)}>
           {isEditing ? (
             <div contentEditable suppressContentEditableWarning autoFocus style={{ outline: 'none', minWidth: 40 }}
               onBlur={(e) => { commitElementUpdate(el.id, { content: e.target.textContent }); setEditingText(null); }}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.blur(); } }}
             >{el.content}</div>
           ) : textContent}
-          {isSelected && !isEditing && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+          {isSelected && !isEditing && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
 
     if (el.type === 'button') {
       return (
-        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), display: 'flex', alignItems: 'center', justifyContent: 'center', background: el.bgColor || '#7c3aed', color: el.color || '#ffffff', borderRadius: el.borderRadius || 8, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 600, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', boxShadow: el.boxShadow !== false ? '0 4px 14px rgba(0,0,0,0.25)' : 'none', border: `${el.borderWidth || 0}px solid ${el.borderColor || 'transparent'}`, whiteSpace: 'nowrap' }}
-          onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}>
+        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), display: 'flex', alignItems: 'center', justifyContent: 'center', background: el.bgColor || '#7c3aed', color: el.color || '#ffffff', borderRadius: el.borderRadius || 8, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 600, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', border: `${el.borderWidth || 0}px ${el.borderStyle || 'solid'} ${el.borderColor || 'transparent'}`, whiteSpace: 'nowrap' }}
+          onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}
+          onContextMenu={(e) => handleContextMenu(e, el)}>
           {isEditing ? (
             <div contentEditable suppressContentEditableWarning autoFocus style={{ outline: 'none', minWidth: 40 }}
               onBlur={(e) => { commitElementUpdate(el.id, { content: e.target.textContent }); setEditingText(null); }}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
             >{el.content}</div>
           ) : el.content}
-          {isSelected && !isEditing && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+          {isSelected && !isEditing && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
 
     if (el.type === 'shape') {
       let shapeStyle = { ...baseStyle };
-      if (el.content === 'circle') shapeStyle = { ...shapeStyle, borderRadius: '50%', background: el.bgColor || '#7c3aed', border: `${el.borderWidth || 0}px solid ${el.borderColor || 'transparent'}` };
+      if (el.content === 'circle') shapeStyle = { ...shapeStyle, borderRadius: '50%', background: el.bgColor || '#7c3aed', border: `${el.borderWidth || 0}px ${el.borderStyle || 'solid'} ${el.borderColor || 'transparent'}` };
       else if (el.content === 'line') shapeStyle = { ...shapeStyle, height: 4, background: el.bgColor || '#000000', borderRadius: 2 };
       else if (el.content === 'star') {
         return (
-          <div key={el.id} style={shapeStyle} onMouseDown={(e) => onElementMouseDown(e, el)}>
+          <div key={el.id} style={shapeStyle} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
             <svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill={el.bgColor || '#eab308'} /></svg>
-            {isSelected && !el.locked && (
-              <>
-                <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-                <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-                </div>
-              </>
-            )}
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
           </div>
         );
-      } else shapeStyle = { ...shapeStyle, background: el.bgColor || '#7c3aed', borderRadius: el.borderRadius || 0, border: `${el.borderWidth || 0}px solid ${el.borderColor || 'transparent'}` };
+      } else if (el.content === 'diamond') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,2 98,50 50,98 2,50" fill={el.bgColor || '#7c3aed'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'hexagon') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" fill={el.bgColor || '#38bdf8'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'arrow-right') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 60" width="100%" height="100%"><polygon points="0,10 60,10 60,0 100,30 60,60 60,50 0,50" fill={el.bgColor || '#ec4899'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'heart') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill={el.bgColor || '#f43f5e'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'cloud') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 60" width="100%" height="100%"><path d="M20,45 Q5,45 5,35 Q5,25 18,25 Q20,15 35,15 Q45,10 55,15 Q65,10 75,18 Q90,18 90,32 Q95,45 80,45 Z" fill={el.bgColor || '#e5e7eb'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'speech-bubble') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 80" width="100%" height="100%"><path d="M10,5 Q5,5 5,10 L5,50 Q5,55 10,55 L25,55 L15,75 L40,55 L90,55 Q95,55 95,50 L95,10 Q95,5 90,5 Z" fill={el.bgColor || '#ffffff'} stroke={el.borderColor || '#d1d5db'} strokeWidth="1" /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'pentagon') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="50,2 97,38 79,98 21,98 3,38" fill={el.bgColor || '#34d399'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else if (el.content === 'octagon') {
+        return (
+          <div key={el.id} style={{ ...shapeStyle, background: 'transparent' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+            <svg viewBox="0 0 100 100" width="100%" height="100%"><polygon points="30,2 70,2 98,30 98,70 70,98 30,98 2,70 2,30" fill={el.bgColor || '#fbbf24'} /></svg>
+            {isSelected && !el.locked && <SelectionControls el={el} />}
+            {el.locked && isSelected && <LockBadge />}
+          </div>
+        );
+      } else shapeStyle = { ...shapeStyle, background: el.bgColor || '#7c3aed', borderRadius: el.borderRadius || 0, border: `${el.borderWidth || 0}px ${el.borderStyle || 'solid'} ${el.borderColor || 'transparent'}` };
 
       return (
-        <div key={el.id} style={shapeStyle} onMouseDown={(e) => onElementMouseDown(e, el)}>
-          {isSelected && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+        <div key={el.id} style={shapeStyle} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+          {isSelected && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
 
     if (el.type === 'image') {
+      const cropClip = el.crop ? `inset(${el.crop.y}% ${100 - el.crop.x - el.crop.w}% ${100 - el.crop.y - el.crop.h}% ${el.crop.x}%)` : undefined;
       return (
-        <div key={el.id} style={{ ...baseStyle, borderRadius: el.borderRadius || 0, overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)}>
+        <div key={el.id} style={{ ...baseStyle, borderRadius: el.borderRadius || 0, overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
           {el.src ? (
-            <img src={el.src} alt={el.content || 'Image'} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', ...buildImageFilterStyle(el) }} draggable={false} />
+            <img src={el.src} alt={el.content || 'Image'} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', clipPath: cropClip, WebkitClipPath: cropClip, ...buildImageFilterStyle(el) }} draggable={false} />
           ) : (
             <div style={{ width: '100%', height: '100%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #9ca3af', color: '#6b7280', fontSize: 12, borderRadius: 4 }}>No image</div>
           )}
-          {isSelected && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+          {isSelected && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
@@ -1143,19 +1464,8 @@ export default function TemplateEditor() {
               ))}
             </tbody>
           </table>
-          {isSelected && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+          {isSelected && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
@@ -1163,7 +1473,7 @@ export default function TemplateEditor() {
     if (el.type === 'frame') {
       const clipPath = getFrameClipPath(el.shape || 'circle');
       return (
-        <div key={el.id} style={{ ...baseStyle, clipPath, WebkitClipPath: clipPath, background: '#e5e7eb', overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)}>
+        <div key={el.id} style={{ ...baseStyle, clipPath, WebkitClipPath: clipPath, background: '#e5e7eb', overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
           {el.frameImage ? (
             <img src={el.frameImage} alt="Frame" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
           ) : (
@@ -1171,19 +1481,68 @@ export default function TemplateEditor() {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></svg>
             </div>
           )}
-          {isSelected && !el.locked && (
-            <>
-              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
-              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
-              </div>
-            </>
-          )}
-          {el.locked && isSelected && (
-            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
-            </div>
-          )}
+          {isSelected && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
+        </div>
+      );
+    }
+
+    if (el.type === 'chart') {
+      const cw = el.width || 300;
+      const ch = el.height || 200;
+      const data = el.data || { labels: ['A','B','C','D'], values: [30,60,45,80] };
+      const colors = el.colors || ['#7c3aed','#38bdf8','#ec4899','#fbbf24'];
+      const maxVal = Math.max(...data.values, 1);
+      return (
+        <div key={el.id} style={{ ...baseStyle, background: el.bgColor || '#ffffff', border: `1px solid ${el.borderColor || '#d1d5db'}`, borderRadius: 4, overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)} onContextMenu={(e) => handleContextMenu(e, el)}>
+          <svg viewBox={`0 0 ${cw} ${ch}`} width="100%" height="100%">
+            {el.chartType === 'bar' && data.labels.map((label, i) => {
+              const barW = (cw - 40) / data.labels.length - 4;
+              const barH = (data.values[i] / maxVal) * (ch - 50);
+              return (
+                <g key={i}>
+                  <rect x={20 + i * (barW + 4)} y={ch - 25 - barH} width={barW} height={barH} fill={colors[i % colors.length]} rx={2} />
+                  <text x={20 + i * (barW + 4) + barW / 2} y={ch - 8} textAnchor="middle" fontSize={10} fill="#6b7280">{label}</text>
+                </g>
+              );
+            })}
+            {el.chartType === 'pie' && (() => {
+              const total = data.values.reduce((s, v) => s + v, 0) || 1;
+              let cumAngle = -Math.PI / 2;
+              return data.labels.map((label, i) => {
+                const sliceAngle = (data.values[i] / total) * Math.PI * 2;
+                const x1 = cw / 2 + (cw / 3) * Math.cos(cumAngle);
+                const y1 = ch / 2 + (ch / 3) * Math.sin(cumAngle);
+                cumAngle += sliceAngle;
+                const x2 = cw / 2 + (cw / 3) * Math.cos(cumAngle);
+                const y2 = ch / 2 + (ch / 3) * Math.sin(cumAngle);
+                const largeArc = sliceAngle > Math.PI ? 1 : 0;
+                return <path key={i} d={`M${cw/2},${ch/2} L${x1},${y1} A${cw/3},${ch/3} 0 ${largeArc},1 ${x2},${y2} Z`} fill={colors[i % colors.length]} />;
+              });
+            })()}
+            {el.chartType === 'line' && (
+              <polyline
+                points={data.labels.map((_, i) => {
+                  const x = 20 + (i / (data.labels.length - 1 || 1)) * (cw - 40);
+                  const y = ch - 25 - (data.values[i] / maxVal) * (ch - 50);
+                  return `${x},${y}`;
+                }).join(' ')}
+                fill="none" stroke={colors[0] || '#7c3aed'} strokeWidth="2"
+              />
+            )}
+            {el.chartType === 'line' && data.labels.map((label, i) => {
+              const x = 20 + (i / (data.labels.length - 1 || 1)) * (cw - 40);
+              const y = ch - 25 - (data.values[i] / maxVal) * (ch - 50);
+              return (
+                <g key={i}>
+                  <circle cx={x} cy={y} r={3} fill={colors[i % colors.length]} />
+                  <text x={x} y={ch - 8} textAnchor="middle" fontSize={10} fill="#6b7280">{label}</text>
+                </g>
+              );
+            })}
+          </svg>
+          {isSelected && !el.locked && <SelectionControls el={el} />}
+          {el.locked && isSelected && <LockBadge />}
         </div>
       );
     }
@@ -1233,6 +1592,23 @@ export default function TemplateEditor() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#f0f2f5]">
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes rotateIn { from { transform: rotate(-200deg); opacity: 0; } to { transform: rotate(0); opacity: 1; } }
+        @keyframes flipIn { from { transform: perspective(400px) rotateY(90deg); opacity: 0; } to { transform: perspective(400px) rotateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes wiggle { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+        @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes rise { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        .page-transition { transition: opacity 0.5s, transform 0.5s; }
+        .page-exit { opacity: 0; transform: scale(0.95); }
+      `}</style>
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
 
       {showPresentMode && (
@@ -1245,7 +1621,11 @@ export default function TemplateEditor() {
             <button onClick={() => setPresentPageIdx((i) => Math.max(0, i - 1))} disabled={presentPageIdx === 0} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded-lg disabled:opacity-30">← Prev</button>
             <button onClick={() => setPresentPageIdx((i) => Math.min(pages.length - 1, i + 1))} disabled={presentPageIdx >= pages.length - 1} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded-lg disabled:opacity-30">Next →</button>
           </div>
-          <div style={{ width: CANVAS_W, height: CANVAS_H, position: 'relative', overflow: 'hidden', borderRadius: 8, ...(() => { const bg = pages[presentPageIdx]?.background || {}; if (bg.type === 'gradient') return { background: `linear-gradient(135deg, ${bg.from || '#0f172a'}, ${bg.to || '#1e293b'})` }; return { background: bg.color || '#0f172a' }; })() }}>
+          <div className="page-transition" key={`present-${presentPageIdx}`} style={{
+            width: CANVAS_W, height: CANVAS_H, position: 'relative', overflow: 'hidden', borderRadius: 8,
+            ...(() => { const bg = pages[presentPageIdx]?.background || {}; if (bg.type === 'gradient') return { background: `linear-gradient(135deg, ${bg.from || '#0f172a'}, ${bg.to || '#1e293b'})` }; return { background: bg.color || '#0f172a' }; })(),
+            animation: pages[presentPageIdx]?.transition === 'fade' ? 'fadeIn 0.5s ease' : pages[presentPageIdx]?.transition === 'slide' ? 'slideInRight 0.5s ease' : pages[presentPageIdx]?.transition === 'zoom' ? 'zoomIn 0.5s ease' : undefined,
+          }}>
             {(pages[presentPageIdx]?.elements || []).map(renderElement)}
           </div>
         </div>
@@ -1276,6 +1656,9 @@ export default function TemplateEditor() {
           </button>
           <button onClick={() => setShowRulers((v) => !v)} className={`p-2 rounded-lg text-xs font-medium transition-colors ${showRulers ? 'bg-purple-100 text-[#7c3aed]' : 'text-gray-500 hover:bg-gray-100'}`} title="Rulers (Ctrl+R)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" /></svg>
+          </button>
+          <button onClick={() => setShowGrid((v) => !v)} className={`p-2 rounded-lg text-xs font-medium transition-colors ${showGrid ? 'bg-purple-100 text-[#7c3aed]' : 'text-gray-500 hover:bg-gray-100'}`} title="Grid (Ctrl+')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" /></svg>
           </button>
           <button onClick={() => { setShowPresentMode(true); setPresentPageIdx(currentPageIdx); }} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" title="Present (F5)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5,3 19,12 5,21" /></svg>
@@ -1318,6 +1701,9 @@ export default function TemplateEditor() {
                 <button onClick={exportAsJSON} className="w-full text-left px-4 py-2.5 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M8 13h8M8 17h8M8 9h2" /></svg> Download JSON
                 </button>
+                <button onClick={exportAsPDF} className="w-full text-left px-4 py-2.5 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M9 15h6M9 19h6" /></svg> Download PDF
+                </button>
               </div>
             )}
           </div>
@@ -1353,6 +1739,15 @@ export default function TemplateEditor() {
                   : { position: 'absolute', top: g.pos + '%', left: 0, height: 1, width: '100%' };
                 return <div key={i} style={{ ...guideStyle, background: '#7c3aed', opacity: 0.6, zIndex: 50, pointerEvents: 'none' }} />;
               })}
+              {customGuides.map((g) => {
+                const guideStyle = g.type === 'v'
+                  ? { position: 'absolute', left: g.pos + '%', top: 0, width: 1, height: '100%' }
+                  : { position: 'absolute', top: g.pos + '%', left: 0, height: 1, width: '100%' };
+                return <div key={g.id} style={{ ...guideStyle, background: '#7c3aed', opacity: 0.4, zIndex: 45, pointerEvents: 'none', borderStyle: 'dashed', borderWidth: g.type === 'v' ? '0 1px 0 0' : '0 0 1px 0', borderColor: '#7c3aed' }} />;
+              })}
+              {showGrid && (
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 40, backgroundImage: 'linear-gradient(rgba(124,58,237,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+              )}
               {elements.length === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
@@ -1581,6 +1976,134 @@ export default function TemplateEditor() {
                 </>
               )}
 
+              {/* Alignment (2+ selected) */}
+              {selectedIds.length >= 2 && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <button onClick={() => alignElements('left')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align left">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 3v18M17 7H8M17 12H8M17 17H8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('center-h')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align center H">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3v18M8 7h8M6 12h12M8 17h8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('right')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align right">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 3v18M17 7H8M17 12H8M17 17H8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('top')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align top">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h18M7 17V8M12 17V8M17 17V8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('center-v')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align center V">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M7 8v8M17 8v8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('bottom')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Align bottom">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 20h18M7 17V8M12 17V8M17 17V8" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('dist-h')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Distribute H">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 3v18M20 3v18M8 7v10M16 7v10M12 10v4" /></svg>
+                  </button>
+                  <button onClick={() => alignElements('dist-v')} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Distribute V">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h18M3 20h18M7 8v10M16 8v10M10 12v4" /></svg>
+                  </button>
+                </>
+              )}
+
+              {/* Animation */}
+              <div className="w-px h-5 bg-gray-200 mx-0.5" />
+              <div className="relative">
+                <button onClick={() => setShowAnimPanel((v) => !v)} className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${(selectedEl.animation && selectedEl.animation.type !== 'none') ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title="Animate">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5,3 19,12 5,21" /></svg>
+                </button>
+                {showAnimPanel && (
+                  <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-200 py-1 z-50 max-h-60 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                    {ANIMATION_OPTIONS.map((opt) => (
+                      <button key={opt.type} onClick={() => { commitElementUpdate(selectedEl.id, { animation: { ...(selectedEl.animation || ANIM_DEFAULT), type: opt.type } }); setShowAnimPanel(false); }}
+                        className={`w-full text-left px-3 py-1.5 text-xs hover:bg-purple-50 transition-colors ${(selectedEl.animation?.type === opt.type) ? 'bg-purple-50 text-[#7c3aed] font-medium' : 'text-gray-700'}`}>{opt.label}</button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Text Curve */}
+              {isTextType(selectedEl.type) && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <div className="flex items-center gap-1 px-1" title="Text curve">
+                    <span className="text-[9px] text-gray-400">Curve</span>
+                    <input type="range" min="-100" max="100" value={selectedEl.curve || 0}
+                      onChange={(e) => updateElement(selectedEl.id, { curve: Number(e.target.value) })}
+                      onMouseUp={(e) => commitElementUpdate(selectedEl.id, { curve: Number(e.target.value) })}
+                      className="w-14 h-1 accent-[#7c3aed]" />
+                  </div>
+                </>
+              )}
+
+              {/* Gradient Text */}
+              {isTextType(selectedEl.type) && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <button onClick={() => commitElementUpdate(selectedEl.id, { gradientText: { ...(selectedEl.gradientText || GRADIENT_TEXT_DEFAULT), enabled: !(selectedEl.gradientText?.enabled) } })}
+                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${selectedEl.gradientText?.enabled ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title="Gradient text">
+                    <span className="text-xs font-bold" style={selectedEl.gradientText?.enabled ? { background: `linear-gradient(135deg, ${selectedEl.gradientText.from || '#7c3aed'}, ${selectedEl.gradientText.to || '#ec4899'})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}}>G</span>
+                  </button>
+                  {selectedEl.gradientText?.enabled && (
+                    <>
+                      <input type="color" value={selectedEl.gradientText?.from || '#7c3aed'} onChange={(e) => updateElement(selectedEl.id, { gradientText: { ...(selectedEl.gradientText || GRADIENT_TEXT_DEFAULT), from: e.target.value } })}
+                        onMouseUp={(e) => commitElementUpdate(selectedEl.id, { gradientText: { ...(selectedEl.gradientText || GRADIENT_TEXT_DEFAULT), from: e.target.value } })}
+                        className="w-5 h-5 rounded cursor-pointer border border-gray-200" title="Gradient from" />
+                      <input type="color" value={selectedEl.gradientText?.to || '#ec4899'} onChange={(e) => updateElement(selectedEl.id, { gradientText: { ...(selectedEl.gradientText || GRADIENT_TEXT_DEFAULT), to: e.target.value } })}
+                        onMouseUp={(e) => commitElementUpdate(selectedEl.id, { gradientText: { ...(selectedEl.gradientText || GRADIENT_TEXT_DEFAULT), to: e.target.value } })}
+                        className="w-5 h-5 rounded cursor-pointer border border-gray-200" title="Gradient to" />
+                    </>
+                  )}
+                </>
+              )}
+
+              {/* Drop Shadow */}
+              {(selectedEl.type === 'shape' || selectedEl.type === 'button' || selectedEl.type === 'image') && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <button onClick={() => commitElementUpdate(selectedEl.id, { boxShadow: { ...(selectedEl.boxShadow || BOX_SHADOW_DEFAULT), enabled: !(selectedEl.boxShadow?.enabled) } })}
+                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${selectedEl.boxShadow?.enabled ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title="Drop shadow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="14" height="14" rx="2" /><rect x="7" y="7" width="14" height="14" rx="2" opacity="0.4" /></svg>
+                  </button>
+                </>
+              )}
+
+              {/* Emoji (for text) */}
+              {isTextType(selectedEl.type) && !isEditing && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <div className="relative">
+                    <button onClick={() => setShowEmojiPicker((v) => !v)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Emoji">
+                      <span className="text-sm">😀</span>
+                    </button>
+                    {showEmojiPicker && (
+                      <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-200 p-2 z-50 max-h-48 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                        <div className="grid grid-cols-8 gap-0.5">
+                          {EMOJI_LIST.map((emoji) => (
+                            <button key={emoji} onClick={() => { commitElementUpdate(selectedEl.id, { content: (selectedEl.content || '') + emoji }); setShowEmojiPicker(false); }}
+                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-sm">{emoji}</button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Chart type selector */}
+              {selectedEl.type === 'chart' && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  {['bar','pie','line'].map((ct) => (
+                    <button key={ct} onClick={() => commitElementUpdate(selectedEl.id, { chartType: ct })}
+                      className={`w-7 h-7 flex items-center justify-center rounded-md text-xs transition-colors ${selectedEl.chartType === ct ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title={`${ct} chart`}>
+                      {ct === 'bar' ? '📊' : ct === 'pie' ? '🥧' : '📈'}
+                    </button>
+                  ))}
+                </>
+              )}
+
               {/* Duplicate & Delete */}
               <button onClick={() => duplicateSelected()} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Duplicate (Ctrl+D)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></svg>
@@ -1599,11 +2122,19 @@ export default function TemplateEditor() {
           <div key={page.id} className={`relative shrink-0 w-16 h-14 rounded-lg border-2 cursor-pointer transition-all overflow-hidden ${i === currentPageIdx ? 'border-[#7c3aed] shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
             onClick={() => switchPage(i)}>
             <div className="absolute inset-0" style={{ background: page.background?.type === 'gradient' ? `linear-gradient(135deg, ${page.background.from || '#0f172a'}, ${page.background.to || '#1e293b'})` : page.background?.color || '#ffffff' }} />
-            <div className="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[8px] text-center py-0.5">{i + 1}</div>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[8px] text-center py-0.5">{i + 1} {page.transition ? `(${page.transition})` : ''}</div>
             <div className="absolute top-0.5 right-0.5 flex gap-0.5">
               <button onClick={(e) => { e.stopPropagation(); duplicatePage(i); }} className="w-3.5 h-3.5 bg-black/40 hover:bg-black/60 rounded text-white flex items-center justify-center text-[8px]">+</button>
               {pages.length > 1 && <button onClick={(e) => { e.stopPropagation(); deletePage(i); }} className="w-3.5 h-3.5 bg-black/40 hover:bg-red-500/80 rounded text-white flex items-center justify-center text-[8px]">×</button>}
             </div>
+            <select value={page.transition || 'none'} onChange={(e) => { e.stopPropagation(); setPages((prev) => prev.map((p, idx) => idx === i ? { ...p, transition: e.target.value } : p)); }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[7px] text-center py-0 appearance-none outline-none cursor-pointer" style={{ fontSize: 6 }}>
+              <option value="none">None</option>
+              <option value="fade">Fade</option>
+              <option value="slide">Slide</option>
+              <option value="zoom">Zoom</option>
+            </select>
           </div>
         ))}
         <button onClick={addPage} className="shrink-0 w-16 h-14 rounded-lg border-2 border-dashed border-gray-300 hover:border-[#7c3aed] flex items-center justify-center text-gray-400 hover:text-[#7c3aed] transition-colors">
@@ -1666,6 +2197,23 @@ export default function TemplateEditor() {
                         <span className="text-[10px] text-gray-500">{shape.label}</span>
                       </button>
                     ))}
+                    {SHAPES_EXTENDED.map((shape) => (
+                      <button key={shape.preset} onClick={() => addElement(shape.preset)} className="flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-200 hover:border-[#7c3aed] hover:bg-purple-50 transition-all text-gray-700">
+                        <span className="text-xl font-bold">{shape.icon}</span>
+                        <span className="text-[10px] text-gray-500">{shape.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 mb-2">Charts</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CHART_PRESETS.map((chart) => (
+                      <button key={chart.preset} onClick={() => addElement(chart.preset)} className="flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-200 hover:border-[#7c3aed] hover:bg-purple-50 transition-all text-gray-700">
+                        <span className="text-xl font-bold">{chart.icon}</span>
+                        <span className="text-[10px] text-gray-500">{chart.label}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div>
@@ -1704,6 +2252,14 @@ export default function TemplateEditor() {
                         onMouseUp={(e) => handleColorChangeComplete(selectedEl.id, 'borderColor', e.target.value)}
                         className="w-7 h-7 rounded-md cursor-pointer border border-gray-200" title="Border color" />
                       <span className="text-[10px] text-gray-400">Border color</span>
+                    </div>
+                    <div className="flex gap-1 mt-2">
+                      {['solid', 'dashed', 'dotted', 'double'].map((bs) => (
+                        <button key={bs} onClick={() => commitElementUpdate(selectedEl.id, { borderStyle: bs })}
+                          className={`flex-1 py-1.5 text-[10px] rounded-lg border transition-colors ${selectedEl.borderStyle === bs ? 'bg-[#7c3aed] text-white border-[#7c3aed]' : 'border-gray-200 text-gray-600 hover:border-[#7c3aed]'}`}>
+                          {bs}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -1799,6 +2355,17 @@ export default function TemplateEditor() {
                 <p className="text-sm font-medium text-gray-900 mb-1">Upload files</p>
                 <p className="text-xs text-gray-400 text-center mb-3">Click to upload images to your canvas</p>
                 <button onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-[#7c3aed] text-white text-xs font-medium rounded-lg hover:bg-[#6d28d9] transition-colors">Choose file</button>
+                {extractedColors.length > 0 && (
+                  <div className="mt-4 w-full">
+                    <p className="text-xs font-medium text-gray-500 mb-2">Extracted Colors</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {extractedColors.map((color, i) => (
+                        <button key={i} onClick={() => { if (selectedEl) { const prop = selectedEl.type === 'shape' || selectedEl.type === 'button' ? 'bgColor' : 'color'; commitElementUpdate(selectedEl.id, { [prop]: color }); } }}
+                          className="w-9 h-9 rounded-lg border-2 border-gray-200 hover:border-[#7c3aed] transition-all hover:scale-110" style={{ background: color }} title={`Use ${color}`} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -1887,6 +2454,35 @@ export default function TemplateEditor() {
         </div>
       )}
 
+      {/* ===== CONTEXT MENU ===== */}
+      {contextMenu && (
+        <div className="fixed z-[200] bg-white rounded-xl shadow-2xl border border-gray-200 py-1 w-52" style={{ left: contextMenu.x, top: contextMenu.y }} onClick={(e) => e.stopPropagation()}>
+          {contextMenu.elementId && (<>
+            <button onClick={() => contextMenuAction('cut')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Cut <span className="text-gray-400">Ctrl+X</span></button>
+            <button onClick={() => contextMenuAction('copy')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Copy <span className="text-gray-400">Ctrl+C</span></button>
+          </>)}
+          <button onClick={() => contextMenuAction('paste')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Paste <span className="text-gray-400">Ctrl+V</span></button>
+          {contextMenu.elementId && (<>
+            <button onClick={() => contextMenuAction('duplicate')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Duplicate <span className="text-gray-400">Ctrl+D</span></button>
+            <button onClick={() => contextMenuAction('delete')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Delete</button>
+            <div className="h-px bg-gray-100 my-1" />
+            <button onClick={() => contextMenuAction('bringForward')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">Bring Forward</button>
+            <button onClick={() => contextMenuAction('sendBackward')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">Send Backward</button>
+            <button onClick={() => contextMenuAction('bringToFront')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">Bring to Front</button>
+            <button onClick={() => contextMenuAction('sendToBack')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">Send to Back</button>
+            <div className="h-px bg-gray-100 my-1" />
+            <button onClick={() => contextMenuAction('lock')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">{elementsRef.current.find(e => e.id === contextMenu.elementId)?.locked ? 'Unlock' : 'Lock'}</button>
+            <button onClick={() => contextMenuAction('group')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Group <span className="text-gray-400">Ctrl+G</span></button>
+            <button onClick={() => contextMenuAction('ungroup')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Ungroup <span className="text-gray-400">Ctrl+Shift+G</span></button>
+            <div className="h-px bg-gray-100 my-1" />
+            <button onClick={() => { contextMenuAction('copyStyle'); }} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Copy Style <span className="text-gray-400">Ctrl+Shift+C</span></button>
+            <button onClick={() => contextMenuAction('pasteStyle')} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors flex items-center justify-between">Paste Style <span className="text-gray-400">Ctrl+Shift+V</span></button>
+            <div className="h-px bg-gray-100 my-1" />
+            <button onClick={() => closeContextMenu()} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-[#7c3aed] transition-colors">Animate</button>
+          </>)}
+        </div>
+      )}
+
       {/* ===== QUICK ACTIONS (/) ===== */}
       {showQuickActions && (
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setShowQuickActions(false)}>
@@ -1913,6 +2509,36 @@ export default function TemplateEditor() {
               {filteredQuickActions.length === 0 && (
                 <p className="text-center text-xs text-gray-400 py-4">No matching actions</p>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== IMAGE CROP OVERLAY ===== */}
+      {cropImage && (
+        <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center" onClick={() => setCropImage(null)}>
+          <div className="bg-white rounded-2xl p-4 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Crop Image</h3>
+            <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4" style={{ aspectRatio: '4/3' }}>
+              <img src={cropImage.src} alt="Crop" className="w-full h-full object-contain" />
+              <div className="absolute inset-0 bg-black/40" />
+              <div id="crop-area" className="absolute bg-transparent border-2 border-white cursor-move" style={{ top: '10%', left: '10%', width: '80%', height: '80%' }} />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setCropImage(null)} className="flex-1 py-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+              <button onClick={() => {
+                const area = document.getElementById('crop-area');
+                if (area && cropImage.elId) {
+                  const parent = area.parentElement.getBoundingClientRect();
+                  const areaRect = area.getBoundingClientRect();
+                  const x = ((areaRect.left - parent.left) / parent.width) * 100;
+                  const y = ((areaRect.top - parent.top) / parent.height) * 100;
+                  const w = (areaRect.width / parent.width) * 100;
+                  const h = (areaRect.height / parent.height) * 100;
+                  commitElementUpdate(cropImage.elId, { crop: { x: Math.round(x), y: Math.round(y), w: Math.round(w), h: Math.round(h) } });
+                }
+                setCropImage(null);
+              }} className="flex-1 py-2 text-xs font-medium text-white bg-[#7c3aed] rounded-lg hover:bg-[#6d28d9]">Apply Crop</button>
             </div>
           </div>
         </div>
