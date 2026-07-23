@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
+import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import path from 'path';
