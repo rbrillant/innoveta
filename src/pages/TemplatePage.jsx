@@ -136,6 +136,13 @@ export default function TemplatePage() {
                 {allImages.length > 1 && (
                   <p className="text-xs text-black/50 dark:text-gray-500 mt-2">{currentPage + 1} / {allImages.length} pages</p>
                 )}
+                <Link
+                  to={`/editor/${template.id}`}
+                  className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white hover:from-[#0ea5e9] hover:to-[#0284c7] hover:shadow-lg hover:shadow-[#38bdf8]/25 transition-all"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  Customize with AI
+                </Link>
               </div>
 
               <div className="glass-card rounded-2xl p-5">

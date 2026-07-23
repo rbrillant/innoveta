@@ -20,6 +20,7 @@ const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const BookingDone = lazy(() => import('./pages/BookingDone'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Studio = lazy(() => import('./pages/Studio'));
+const TemplateEditor = lazy(() => import('./components/TemplateEditor'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -31,6 +32,8 @@ export default function App() {
         <Route path="/reset-password" element={<ErrorBoundary><Suspense fallback={<div className="min-h-screen bg-[#fffff0]" />}><ResetPassword /></Suspense></ErrorBoundary>} />
         <Route path="/studio" element={<ErrorBoundary><Suspense fallback={<div className="min-h-screen bg-[#fffff0]" />}><Studio /></Suspense></ErrorBoundary>} />
         <Route path="/admin" element={<ErrorBoundary><Suspense fallback={<div className="min-h-screen bg-[#fffff0]" />}><Studio /></Suspense></ErrorBoundary>} />
+        <Route path="/editor" element={<ErrorBoundary><Suspense fallback={<div className="min-h-screen bg-gray-100" />}><TemplateEditor /></Suspense></ErrorBoundary>} />
+        <Route path="/editor/:id" element={<ErrorBoundary><Suspense fallback={<div className="min-h-screen bg-gray-100" />}><TemplateEditor /></Suspense></ErrorBoundary>} />
         <Route path="/*" element={
           <>
             <CategoryBar />
