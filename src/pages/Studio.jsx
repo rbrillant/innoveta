@@ -4,10 +4,11 @@ import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBo
 import TemplateModal from '../components/TemplateModal';
 import Logo from '../components/Logo';
 import FaceAuth from '../components/FaceAuth';
+import AICustomizer from '../components/AICustomizer';
 import { useTheme } from '../components/ThemeProvider';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, CartesianGrid } from 'recharts';
 
-const TABS = ['Dashboard', 'Templates', 'Services', 'Bookings', 'Enrollments', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
+const TABS = ['Dashboard', 'AI Studio', 'Templates', 'Services', 'Bookings', 'Enrollments', 'Analytics', 'Domains', 'Courses', 'Users', 'Settings'];
 
 export default function Studio() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -530,6 +531,10 @@ export default function Studio() {
                 </div>
               </div>
             </div>
+          )}
+
+          {tab === 'AI Studio' && (
+            <AICustomizer onBack={() => setTab('Dashboard')} />
           )}
 
           {tab === 'Templates' && (

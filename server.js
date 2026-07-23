@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 import dns from 'dns';
 import { PDFParse } from 'pdf-parse';
 import rateLimit from 'express-rate-limit';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -802,6 +803,105 @@ const SAFE_COLUMNS = new Set([
   'descriptor','registered_at','last_verified',
   'order','select','limit','offset','head',
 ]);
+
+// ─── AI Template Customizer ───────────────────────────────
+app.post('/api/ai/customize-template', authenticate, async (req, res) => {
+  try {
+    const { template, prompt } = req.body;
+    if (!template || !prompt) return res.status(400).json({ error: 'Template and prompt are required' });
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'AI service not configured' });
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+    const systemPrompt = `You are a template designer AI. You receive a template as JSON and a user request.
+You must modify the template according to the user's request and return ONLY the modified JSON.
+
+Template JSON structure:
+{
+  "title": "string - main heading",
+  "subtitle": "string - sub heading",
+  "elements": [
+    { "type": "heading|paragraph|button|image|divider|icon", "text": "string", "color": "hex color", "fontSize": "number in px", "x": "percentage 0-100", "y": "percentage 0-100", "bg": "hex color (for buttons)", "width": "percentage 0-100" }
+  ],
+  "background": { "type": "solid|gradient|image", "color": "hex", "from": "hex (gradient start)", "to": "hex (gradient end)", "url": "image url" },
+  "fonts": { "heading": "font name", "body": "font name" },
+  "style": { "borderRadius": "number px", "padding": "number px", "textAlign": "left|center|right" }
+}
+
+Rules:
+- Return ONLY valid JSON, no markdown, no explanation
+- Keep the same structure, only modify what the user asks
+- Use modern, professional colors
+- Maintain visual hierarchy
+- If user asks for a theme, adjust all colors consistently
+- If user asks to add elements, add them with reasonable positions
+- If user asks to remove elements, remove them and reposition remaining ones`;
+
+    const result = await model.generateContent([
+      systemPrompt,
+      `Current template: ${JSON.stringify(template)}\n\nUser request: ${prompt}\n\nReturn ONLY the modified JSON template.`
+    ]);
+
+    const response = result.response.text();
+    const jsonMatch = response.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return res.status(500).json({ error: 'AI failed to generate template' });
+
+    const customized = JSON.parse(jsonMatch[0]);
+    res.json({ data: customized });
+  } catch (e) {
+    res.status(500).json({ error: 'AI customization failed' });
+  }
+});
+
+app.post('/api/ai/suggest-template', authenticate, async (req, res) => {
+  try {
+    const { prompt, category } = req.body;
+    if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'AI service not configured' });
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+    const systemPrompt = `You are a template designer AI. Generate a new template from scratch based on the user's description.
+Return ONLY valid JSON with this structure:
+{
+  "title": "string",
+  "subtitle": "string",
+  "elements": [
+    { "type": "heading|paragraph|button|divider|icon", "text": "string", "color": "hex color", "fontSize": "number in px", "x": "percentage 0-100", "y": "percentage 0-100", "bg": "hex color", "width": "percentage 0-100" }
+  ],
+  "background": { "type": "solid|gradient", "color": "hex", "from": "hex", "to": "hex" },
+  "fonts": { "heading": "font name", "body": "font name" },
+  "style": { "borderRadius": "number px", "padding": "number px", "textAlign": "left|center|right" }
+}
+
+Rules:
+- Return ONLY valid JSON, no markdown
+- Make it visually appealing and professional
+- Use appropriate colors for the ${category || 'general'} category
+- Include 3-8 elements maximum
+- Ensure good contrast and readability`;
+
+    const result = await model.generateContent([
+      systemPrompt,
+      `Create a template for: ${prompt}`
+    ]);
+
+    const response = result.response.text();
+    const jsonMatch = response.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return res.status(500).json({ error: 'AI failed to generate template' });
+
+    const generated = JSON.parse(jsonMatch[0]);
+    res.json({ data: generated });
+  } catch (e) {
+    res.status(500).json({ error: 'AI generation failed' });
+  }
+});
 
 // ─── Face Auth ────────────────────────────────────────────
 app.post('/api/face-auth/register', authenticate, (req, res) => {
