@@ -3,6 +3,7 @@ import mammoth from 'mammoth';
 import { fetchTemplates, createTemplate, updateTemplate, removeTemplate, fetchBookings, verifyDesigner, updateBookingStatus, removeBooking, updateDesignerPassword, fetchAllUsers, fetchBookingAnalytics, fetchUserAnalytics, fetchDomainPricing, updateDomainPricing, verifyPayment, fetchCourses, upsertCourse, removeCourse, fetchLessons, upsertLesson, removeLesson, fetchPaymentSettings, updatePaymentSettings, fetchAllServices, upsertService, removeService, fetchServiceSteps, upsertServiceStep, removeServiceStep, fetchAllEnrollments } from '../data';
 import TemplateModal from '../components/TemplateModal';
 import Logo from '../components/Logo';
+import FaceAuth from '../components/FaceAuth';
 import { useTheme } from '../components/ThemeProvider';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, CartesianGrid } from 'recharts';
 
@@ -45,6 +46,8 @@ export default function Studio() {
   const [lessonSaving, setLessonSaving] = useState(false);
   const { dark, toggle: toggleTheme } = useTheme();
   const loginCanvasRef = useRef();
+  const [faceAuthStep, setFaceAuthStep] = useState(false);
+  const [faceAuthToken, setFaceAuthToken] = useState('');
 
   useEffect(() => {
     const canvas = loginCanvasRef.current;
@@ -168,14 +171,45 @@ export default function Studio() {
     e.preventDefault();
     const email = e.target.email.value;
     const pass = e.target.password.value;
-    const d = await verifyDesigner(email, pass);
-    if (d) {
-      setDesigner(d);
-      setLoggedIn(true);
-      setError('');
-    } else {
-      setError('Invalid email or password.');
-    }
+
+    try {
+      const { data } = await import('../supabase').then((m) =>
+        m.supabase.auth.signInWithPassword({ email, password: pass })
+      );
+      if (!data?.session?.access_token) { setError('Invalid email or password.'); return; }
+
+      const token = data.session.access_token;
+      const { data: faceStatus } = await fetch('/api/face-auth/status', {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then((r) => r.json());
+
+      if (faceStatus?.registered) {
+        setFaceAuthToken(token);
+        setFaceAuthStep(true);
+        setError('');
+      } else {
+        const d = await verifyDesigner(email, pass);
+        if (d) { setDesigner(d); setLoggedIn(true); setError(''); }
+        else { setError('Invalid email or password.'); }
+      }
+    } catch { setError('Invalid email or password.'); }
+  }
+
+  function handleFaceVerified() {
+    setFaceAuthStep(false);
+    const d = { email: faceAuthToken ? JSON.parse(atob(faceAuthToken.split('.')[1]))?.email : '', name: '' };
+    setDesigner(d);
+    setLoggedIn(true);
+    setError('');
+  }
+
+  function handleFaceSkip() {
+    setFaceAuthStep(false);
+    const email = document.querySelector('input[name="email"]')?.value || '';
+    verifyDesigner(email, '').then((d) => {
+      if (d) { setDesigner(d); setLoggedIn(true); }
+    });
+    setError('');
   }
 
   function handleLogout() {
@@ -267,6 +301,14 @@ export default function Studio() {
           </form>
           </div>
           </div>
+        {faceAuthStep && (
+          <FaceAuth
+            email={designer?.email || ''}
+            token={faceAuthToken}
+            onVerified={handleFaceVerified}
+            onSkip={handleFaceSkip}
+          />
+        )}
       </main>
     );
   }

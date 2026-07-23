@@ -5,3 +5,6 @@ dist-admin/
 *.log
 supabase/.temp/
 data/
+.env
+.env.*
+*.local

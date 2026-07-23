@@ -1,4 +1,6 @@
 import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
 import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -15,7 +17,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'innovetancy-local-secret-change-in-production';
+
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set. refusing to start.');
+  process.exit(1);
+}
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const DB_DIR = path.join(__dirname, 'data');
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 
@@ -186,6 +194,13 @@ function initDb() {
       image TEXT DEFAULT '',
       updated_at TEXT DEFAULT (datetime('now')),
       created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS face_auth (
+      email TEXT PRIMARY KEY,
+      descriptor TEXT NOT NULL,
+      registered_at TEXT DEFAULT (datetime('now')),
+      last_verified TEXT
     );
 
     -- Seed default designer
@@ -406,11 +421,18 @@ function initDb() {
 initDb();
 
 // ─── Middleware ────────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+}));
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+app.use(cors({
+  origin: ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS : false,
+  credentials: true,
+}));
 app.use(express.json({ limit: '5mb' }));
 app.set('trust proxy', 1);
 app.use(express.static(path.join(__dirname, 'dist')));
-
-const upload = multer({ dest: path.join(UPLOAD_DIR, 'temp') });
 
 // Rate limiting
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, message: { error: 'Too many attempts, try again later' } });
@@ -441,7 +463,6 @@ app.post('/api/auth/signup', async (req, res) => {
     const existing = db.prepare('SELECT email FROM designers WHERE email = ?').get(email);
     if (existing) return res.status(400).json({ error: 'User already exists' });
 
-    // Server-side password strength
     if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
     if (!/[A-Z]/.test(password)) return res.status(400).json({ error: 'Password must contain an uppercase letter' });
     if (!/[a-z]/.test(password)) return res.status(400).json({ error: 'Password must contain a lowercase letter' });
@@ -454,8 +475,8 @@ app.post('/api/auth/signup', async (req, res) => {
     db.prepare('INSERT INTO profiles (id, email, name, surname, phone, dob) VALUES (?, ?, ?, ?, ?, ?)').run(id, email, name || '', surname || '', phone || '', dob || '');
     const token = jwt.sign({ email, name: name || '' }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ data: { user: { id, email, user_metadata: {} }, session: { access_token: token, user: { id, email } } } });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch {
+    res.status(500).json({ error: 'Signup failed' });
   }
 });
 
@@ -475,8 +496,8 @@ app.post('/api/auth/login', async (req, res) => {
         session: { access_token: token, user: { id: user.email, email: user.email } }
       }
     });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch {
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
@@ -498,8 +519,8 @@ app.post('/api/auth/update-password', authenticate, async (req, res) => {
     const hash = await bcrypt.hash(newPassword, 10);
     db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, req.user.email);
     res.json({ data: { success: true } });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch {
+    res.status(500).json({ error: 'Password update failed' });
   }
 });
 
@@ -509,27 +530,30 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
     const user = db.prepare('SELECT email FROM designers WHERE email = ?').get(email);
-    // Always return success to prevent email enumeration
     if (!user) return res.json({ data: { message: 'If the email exists, a reset link has been sent.' } });
     const token = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+    const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString();
     db.prepare('INSERT INTO password_reset_tokens (email, token, expires_at) VALUES (?, ?, ?)').run(email, token, expires);
     res.json({ data: { message: 'If the email exists, a reset link has been sent.' } });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch { res.status(500).json({ error: 'Request failed' }); }
 });
 
 app.post('/api/auth/reset-password', async (req, res) => {
   try {
     const { email, token, newPassword } = req.body;
     if (!email || !token || !newPassword) return res.status(400).json({ error: 'Missing fields' });
-    if (newPassword.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (newPassword.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    if (!/[A-Z]/.test(newPassword)) return res.status(400).json({ error: 'Password must contain an uppercase letter' });
+    if (!/[a-z]/.test(newPassword)) return res.status(400).json({ error: 'Password must contain a lowercase letter' });
+    if (!/[0-9]/.test(newPassword)) return res.status(400).json({ error: 'Password must contain a number' });
+    if (!/[^A-Za-z0-9]/.test(newPassword)) return res.status(400).json({ error: 'Password must contain a special character' });
     const row = db.prepare('SELECT * FROM password_reset_tokens WHERE email = ? AND token = ? AND used = 0 AND expires_at > datetime(\'now\')').get(email, token);
     if (!row) return res.status(400).json({ error: 'Invalid or expired reset token' });
     const hash = await bcrypt.hash(newPassword, 10);
     db.prepare('UPDATE designers SET password = ? WHERE email = ?').run(hash, email);
     db.prepare('UPDATE password_reset_tokens SET used = 1 WHERE id = ?').run(row.id);
     res.json({ data: { success: true } });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch { res.status(500).json({ error: 'Reset failed' }); }
 });
 
 // ─── Functions ────────────────────────────────────────────
@@ -597,22 +621,41 @@ app.post('/api/functions/domain-check-all', express.json(), (req, res) => {
 });
 
 // ─── File Upload ──────────────────────────────────────────
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No file' });
-  const ext = path.extname(req.file.originalname);
-  const customPath = req.body.path || '';
-  const filename = customPath ? customPath.replace(/\\/g, '/') : `${crypto.randomUUID()}${ext}`;
-  const destDir = path.join(UPLOAD_DIR, req.body.bucket || 'general', path.dirname(filename));
-  if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
-  const dest = path.join(UPLOAD_DIR, req.body.bucket || 'general', filename);
-  fs.renameSync(req.file.path, dest);
-  const publicPath = `/uploads/${req.body.bucket || 'general'}/${filename}`.replace(/\\/g, '/');
-  res.json({ data: { publicUrl: publicPath } });
+const ALLOWED_UPLOAD_EXTS = new Set(['.jpg','.jpeg','.png','.gif','.webp','.svg','.pdf','.doc','.docx','.ppt','.pptx','.xls','.xlsx','.txt','.mp4','.webm','.mp3','.ogg','.zip']);
+
+const upload = multer({
+  dest: path.join(UPLOAD_DIR, 'temp'),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_UPLOAD_EXTS.has(ext)) {
+      return cb(new Error('File type not allowed'));
+    }
+    cb(null, true);
+  },
+});
+
+app.post('/api/upload', authenticate, upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file' });
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const safeName = crypto.randomUUID() + ext;
+    const bucket = (req.body.bucket || 'general').replace(/[^a-z0-9_-]/gi, '');
+    const destDir = path.join(UPLOAD_DIR, bucket);
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    const dest = path.join(destDir, safeName);
+    fs.renameSync(req.file.path, dest);
+    const publicPath = `/uploads/${bucket}/${safeName}`;
+    res.json({ data: { publicUrl: publicPath } });
+  } catch (e) {
+    try { fs.unlinkSync(req.file.path); } catch {}
+    res.status(500).json({ error: 'Upload failed' });
+  }
 });
 
 // ─── Special Endpoints ────────────────────────────────────
-// Bookings with join
-app.get('/api/bookings-full', (req, res) => {
+// Bookings with join (authenticated - contains PII)
+app.get('/api/bookings-full', authenticate, (req, res) => {
   const rows = db.prepare(`
     SELECT b.*, t.name as template_name, t.image as template_image,
            p.name as profile_name, p.surname as profile_surname, p.phone as profile_phone
@@ -629,8 +672,8 @@ app.get('/api/bookings-full', (req, res) => {
   res.json({ data: mapped });
 });
 
-// Enrollments with courses
-app.get('/api/enrollments-full/:userId', (req, res) => {
+// Enrollments with courses (authenticated - user-specific data)
+app.get('/api/enrollments-full/:userId', authenticate, (req, res) => {
   const rows = db.prepare(`
     SELECT e.*, c.* FROM enrollments e
     JOIN courses c ON e.course_id = c.id
@@ -681,8 +724,8 @@ app.post('/api/bookings/:id/verify', authenticate, (req, res) => {
   }
 });
 
-// All enrollments with student and course details
-app.get('/api/enrollments-all', (req, res) => {
+// All enrollments with student and course details (authenticated - contains PII)
+app.get('/api/enrollments-all', authenticate, (req, res) => {
   const rows = db.prepare(`
     SELECT e.*, p.name as student_name, p.surname as student_surname, p.email as student_email, p.phone as student_phone, p.dob as student_dob,
            c.title as course_title, c.price as course_price, c.image as course_image
@@ -694,8 +737,8 @@ app.get('/api/enrollments-all', (req, res) => {
   res.json({ data: rows });
 });
 
-// Lesson progress bulk
-app.post('/api/lesson-progress-bulk', (req, res) => {
+// Lesson progress bulk (authenticated)
+app.post('/api/lesson-progress-bulk', authenticate, (req, res) => {
   const { user_id, lesson_ids } = req.body;
   if (!lesson_ids || !lesson_ids.length) return res.json({ data: [] });
   const placeholders = lesson_ids.map(() => '?').join(',');
@@ -704,7 +747,7 @@ app.post('/api/lesson-progress-bulk', (req, res) => {
 });
 
 // ─── PDF Parse ─────────────────────────────────────────────
-app.post('/api/parse-pdf', upload.single('pdf'), async (req, res) => {
+app.post('/api/parse-pdf', authenticate, upload.single('pdf'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No PDF file uploaded' });
     const buf = fs.readFileSync(req.file.path);
@@ -747,7 +790,85 @@ app.post('/api/parse-pdf', upload.single('pdf'), async (req, res) => {
 });
 
 // ─── Generic CRUD Routes ──────────────────────────────────
-// GET /api/:table - list with optional filters
+const SAFE_COLUMNS = new Set([
+  'id','name','surname','email','phone','dob','password','created_at','updated_at',
+  'template_id','image_url','sort_order','caption','category','description','image',
+  'video','price','title','content','content_type','video_url','pdf_url','user_id',
+  'lesson_id','completed','completed_at','type','icon','status','message','payment_amount',
+  'payment_status','payment_method','payment_reference','payment_proof_url','key','value',
+  'bank_name','account_name','account_number','currency','momo_network','momo_number',
+  'momo_name','tld','step_number','slug','used','token','expires_at','enrolled_at',
+  'descriptor','registered_at','last_verified',
+  'order','select','limit','offset','head',
+]);
+
+// ─── Face Auth ────────────────────────────────────────────
+app.post('/api/face-auth/register', authenticate, (req, res) => {
+  try {
+    const { descriptor } = req.body;
+    if (!descriptor || !Array.isArray(descriptor) || descriptor.length !== 128) {
+      return res.status(400).json({ error: 'Invalid face descriptor' });
+    }
+    const email = req.user.email;
+    db.prepare('INSERT OR REPLACE INTO face_auth (email, descriptor, registered_at) VALUES (?, ?, datetime(\'now\'))')
+      .run(email, JSON.stringify(descriptor));
+    res.json({ data: { success: true } });
+  } catch {
+    res.status(500).json({ error: 'Failed to register face' });
+  }
+});
+
+app.post('/api/face-auth/verify', authenticate, (req, res) => {
+  try {
+    const { descriptor } = req.body;
+    if (!descriptor || !Array.isArray(descriptor) || descriptor.length !== 128) {
+      return res.status(400).json({ error: 'Invalid face descriptor' });
+    }
+    const email = req.user.email;
+    const row = db.prepare('SELECT * FROM face_auth WHERE email = ?').get(email);
+    if (!row) return res.json({ data: { registered: false, verified: false } });
+
+    const stored = JSON.parse(row.descriptor);
+    let distance = 0;
+    for (let i = 0; i < 128; i++) {
+      distance += (stored[i] - descriptor[i]) ** 2;
+    }
+    distance = Math.sqrt(distance);
+
+    const THRESHOLD = 0.5;
+    const verified = distance < THRESHOLD;
+
+    if (verified) {
+      db.prepare('UPDATE face_auth SET last_verified = datetime(\'now\') WHERE email = ?').run(email);
+    }
+
+    res.json({ data: { registered: true, verified, distance } });
+  } catch {
+    res.status(500).json({ error: 'Verification failed' });
+  }
+});
+
+app.get('/api/face-auth/status', authenticate, (req, res) => {
+  try {
+    const email = req.user.email;
+    const row = db.prepare('SELECT email, registered_at, last_verified FROM face_auth WHERE email = ?').get(email);
+    res.json({ data: { registered: !!row, registeredAt: row?.registered_at || null, lastVerified: row?.last_verified || null } });
+  } catch {
+    res.json({ data: { registered: false } });
+  }
+});
+
+app.delete('/api/face-auth', authenticate, (req, res) => {
+  try {
+    const email = req.user.email;
+    db.prepare('DELETE FROM face_auth WHERE email = ?').run(email);
+    res.json({ data: { success: true } });
+  } catch {
+    res.status(500).json({ error: 'Failed to remove face data' });
+  }
+});
+
+// GET /api/:table - list with optional filters (public for read-only data)
 app.get('/api/:table', (req, res) => {
   const { table } = req.params;
   const allowed = ['templates','template_images','bookings','services','service_steps','courses','course_lessons',
@@ -757,16 +878,17 @@ app.get('/api/:table', (req, res) => {
   let sql = `SELECT * FROM "${table}" WHERE 1=1`;
   const params = [];
 
-  // Handle query params as filters
   for (const [key, val] of Object.entries(req.query)) {
-    if (key === 'order' || key === 'select' || key === 'limit' || key === 'offset') continue;
-    if (key === 'head') continue;
+    if (key === 'order' || key === 'select' || key === 'limit' || key === 'offset' || key === 'head') continue;
+    if (!SAFE_COLUMNS.has(key)) continue;
     if (key.endsWith('=eq')) {
       const col = key.slice(0, -3);
+      if (!SAFE_COLUMNS.has(col)) continue;
       sql += ` AND "${col}" = ?`;
       params.push(val);
     } else if (key.endsWith('=in')) {
       const col = key.slice(0, -3);
+      if (!SAFE_COLUMNS.has(col)) continue;
       const vals = val.split(',');
       const placeholders = vals.map(() => '?').join(',');
       sql += ` AND "${col}" IN (${placeholders})`;
@@ -777,7 +899,6 @@ app.get('/api/:table', (req, res) => {
     }
   }
 
-  // Handle type filter specially (services?type=it-integration)
   if (req.query.type) {
     sql += ` AND type = ?`;
     params.push(req.query.type);
@@ -803,35 +924,34 @@ app.get('/api/:table', (req, res) => {
     params.push(req.query.template_id);
   }
 
-  // ilike support for title
   if (req.query.title) {
     sql += ` AND title LIKE ?`;
     params.push(`%${req.query.title}%`);
   }
 
-  // Order
   if (req.query.order) {
-    const dir = req.query.order.startsWith('-') ? 'DESC' : 'ASC';
     const col = req.query.order.replace(/^-/, '');
-    sql += ` ORDER BY "${col}" ${dir}`;
+    if (SAFE_COLUMNS.has(col)) {
+      const dir = req.query.order.startsWith('-') ? 'DESC' : 'ASC';
+      sql += ` ORDER BY "${col}" ${dir}`;
+    }
   } else if (table === 'template_images') {
     sql += ' ORDER BY sort_order ASC';
   } else if (table !== 'settings' && table !== 'domain_pricing' && table !== 'payment_settings') {
     sql += ' ORDER BY created_at DESC';
   }
 
-  // Limit
   if (req.query.limit) {
     sql += ` LIMIT ?`;
-    params.push(parseInt(req.query.limit));
+    params.push(Math.min(parseInt(req.query.limit) || 100, 500));
   }
 
   try {
     const stmt = db.prepare(sql);
     const rows = stmt.all(...params);
     res.json({ data: rows, error: null });
-  } catch (e) {
-    res.json({ data: null, error: e.message });
+  } catch {
+    res.json({ data: null, error: 'Query failed' });
   }
 });
 
@@ -849,16 +969,16 @@ app.get('/api/:table/:id', (req, res) => {
   res.json({ data: row || null });
 });
 
-// POST /api/:table - insert
-app.post('/api/:table', (req, res) => {
+// POST /api/:table - insert (authenticated)
+app.post('/api/:table', authenticate, (req, res) => {
   const { table } = req.params;
   const data = { ...req.body };
   const col = pkCol(table);
   if (!data[col] && col === 'id') data.id = crypto.randomUUID();
   if (!data.created_at && table !== 'settings') data.created_at = new Date().toISOString();
 
-  const cols = Object.keys(data);
-  const vals = Object.values(data);
+  const cols = Object.keys(data).filter(c => SAFE_COLUMNS.has(c));
+  const vals = cols.map(c => data[c]);
   const placeholders = cols.map(() => '?').join(',');
   const quotedCols = cols.map(c => `"${c}"`).join(',');
 
@@ -866,29 +986,31 @@ app.post('/api/:table', (req, res) => {
     db.prepare(`INSERT INTO "${table}" (${quotedCols}) VALUES (${placeholders})`).run(...vals);
     const inserted = db.prepare(`SELECT * FROM "${table}" WHERE "${col}" = ?`).get(data[col]);
     res.json({ data: inserted });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch {
+    res.status(500).json({ error: 'Insert failed' });
   }
 });
 
-// PATCH /api/:table/:id - update
-app.patch('/api/:table/:id', (req, res) => {
+// PATCH /api/:table/:id - update (authenticated)
+app.patch('/api/:table/:id', authenticate, (req, res) => {
   const { table, id } = req.params;
   const data = req.body;
   const col = pkCol(table);
-  const sets = Object.keys(data).map(k => `"${k}" = ?`).join(',');
-  const vals = Object.values(data);
+  const safeKeys = Object.keys(data).filter(k => SAFE_COLUMNS.has(k) && k !== col);
+  if (safeKeys.length === 0) return res.status(400).json({ error: 'No valid fields' });
+  const sets = safeKeys.map(k => `"${k}" = ?`).join(',');
+  const vals = safeKeys.map(k => data[k]);
   try {
     db.prepare(`UPDATE "${table}" SET ${sets} WHERE "${col}" = ?`).run(...vals, id);
     const updated = db.prepare(`SELECT * FROM "${table}" WHERE "${col}" = ?`).get(id);
     res.json({ data: updated });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch {
+    res.status(500).json({ error: 'Update failed' });
   }
 });
 
-// DELETE /api/:table/:id
-app.delete('/api/:table/:id', (req, res) => {
+// DELETE /api/:table/:id (authenticated)
+app.delete('/api/:table/:id', authenticate, (req, res) => {
   const { table, id } = req.params;
   const col = pkCol(table);
   db.prepare(`DELETE FROM "${table}" WHERE "${col}" = ?`).run(id);
@@ -912,7 +1034,7 @@ const ALLOWED_TABLES = ['templates','template_images','bookings','services','ser
   'enrollments','lesson_progress','settings','payment_settings','domain_pricing','designers','pages','profiles',
   'password_reset_tokens'];
 
-app.get('/admin/db', (req, res) => {
+app.get('/admin/db', authenticate, (req, res) => {
   const tables = ALLOWED_TABLES.filter(t => {
     try { return !!db.prepare(`SELECT count(*) as c FROM "${t}"`).get(); } catch { return false; }
   });
@@ -957,6 +1079,5 @@ app.get('/{*path}', (req, res) => {
 
 // ─── Start ────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Admin login: admin@innovetancy.com / create123`);
+  console.log(`Server running on port ${PORT}`);
 });
