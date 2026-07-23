@@ -8,16 +8,18 @@ const CANVAS_W = 800;
 const CANVAS_H = 500;
 
 const ELEMENT_DEFAULTS = {
-  text: { type: 'text', content: 'Text', x: 50, y: 50, fontSize: 24, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 40, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none' },
-  heading: { type: 'text', content: 'Heading', x: 50, y: 50, fontSize: 40, fontFamily: 'Inter', fontWeight: 700, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 400, height: 60, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none' },
-  subheading: { type: 'text', content: 'Subheading', x: 50, y: 50, fontSize: 28, fontFamily: 'Inter', fontWeight: 500, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 45, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none' },
-  body: { type: 'text', content: 'Body text', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 30, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none' },
-  button: { type: 'button', content: 'Button', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 600, fontStyle: 'normal', textDecoration: 'none', color: '#ffffff', bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 8, width: 150, height: 50, borderWidth: 0, borderColor: 'transparent', boxShadow: true },
-  rectangle: { type: 'shape', content: 'rectangle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 0, width: 200, height: 150, borderWidth: 0, borderColor: 'transparent' },
-  circle: { type: 'shape', content: 'circle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent' },
-  line: { type: 'shape', content: 'line', x: 50, y: 50, bgColor: '#000000', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 4 },
-  star: { type: 'shape', content: 'star', x: 50, y: 50, bgColor: '#eab308', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 100, height: 100 },
-  image: { type: 'image', src: '', content: 'Image', x: 50, y: 50, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 150, borderRadius: 0 },
+  text: { type: 'text', content: 'Text', x: 50, y: 50, fontSize: 24, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 40, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
+  heading: { type: 'text', content: 'Heading', x: 50, y: 50, fontSize: 40, fontFamily: 'Inter', fontWeight: 700, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 400, height: 60, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
+  subheading: { type: 'text', content: 'Subheading', x: 50, y: 50, fontSize: 28, fontFamily: 'Inter', fontWeight: 500, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 45, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
+  body: { type: 'text', content: 'Body text', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 400, fontStyle: 'normal', textDecoration: 'none', color: '#000000', textAlign: 'center', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 300, height: 30, letterSpacing: 0, lineHeight: 1.4, textTransform: 'none', groupId: null, textShadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 }, textStroke: { enabled: false, color: '#000000', width: 1 } },
+  button: { type: 'button', content: 'Button', x: 50, y: 50, fontSize: 16, fontFamily: 'Inter', fontWeight: 600, fontStyle: 'normal', textDecoration: 'none', color: '#ffffff', bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 8, width: 150, height: 50, borderWidth: 0, borderColor: 'transparent', boxShadow: true, groupId: null },
+  rectangle: { type: 'shape', content: 'rectangle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, borderRadius: 0, width: 200, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null },
+  circle: { type: 'shape', content: 'circle', x: 50, y: 50, bgColor: '#7c3aed', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, borderWidth: 0, borderColor: 'transparent', groupId: null },
+  line: { type: 'shape', content: 'line', x: 50, y: 50, bgColor: '#000000', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 4, groupId: null },
+  star: { type: 'shape', content: 'star', x: 50, y: 50, bgColor: '#eab308', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 100, height: 100, groupId: null },
+  image: { type: 'image', src: '', content: 'Image', x: 50, y: 50, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 200, height: 150, borderRadius: 0, groupId: null, filter: { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, hueRotate: 0 } },
+  table: { type: 'table', content: 'Table', x: 50, y: 50, rows: 3, cols: 3, cellData: [['Header 1','Header 2','Header 3'],['Cell 1','Cell 2','Cell 3'],['Cell 4','Cell 5','Cell 6']], cellColor: '#ffffff', headerColor: '#f3f4f6', borderColor: '#d1d5db', bgColor: '#ffffff', rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 360, height: 180, groupId: null },
+  frame: { type: 'frame', content: 'Frame', x: 50, y: 50, shape: 'circle', frameImage: null, rotation: 0, opacity: 100, locked: false, flippedH: false, flippedV: false, width: 150, height: 150, groupId: null },
 };
 
 function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -62,6 +64,13 @@ const ELEMENT_SHAPES = [
   { preset: 'star', label: 'Star', icon: '★' },
 ];
 
+const FRAME_SHAPES = [
+  { shape: 'circle', label: 'Circle', icon: '⊙' },
+  { shape: 'rectangle', label: 'Rectangle', icon: '☐' },
+  { shape: 'triangle', label: 'Triangle', icon: '△' },
+  { shape: 'heart', label: 'Heart', icon: '♥' },
+];
+
 const COLOR_PRESETS = ['#ffffff', '#000000', '#7c3aed', '#38bdf8', '#ec4899', '#f43f5e', '#fb923c', '#fbbf24', '#34d399', '#065f46', '#1e293b', '#0f172a'];
 
 const BG_PRESETS = [
@@ -84,16 +93,26 @@ const QUICK_ACTIONS = [
   { label: 'Add line', action: 'line', icon: '—' },
   { label: 'Add heading', action: 'heading', icon: 'H' },
   { label: 'Add star', action: 'star', icon: '★' },
+  { label: 'Add table', action: 'table', icon: '▦' },
+  { label: 'Add frame', action: 'frame', icon: '◎' },
   { label: 'Upload image', action: 'upload', icon: '↑' },
 ];
 
 const INITIAL_TEMPLATE = {
   title: 'Untitled Design',
-  canvas: { width: CANVAS_W, height: CANVAS_H, background: { type: 'gradient', from: '#0f172a', to: '#1e293b' } },
-  elements: [],
+  pages: [{
+    id: 'page-1',
+    background: { type: 'gradient', from: '#0f172a', to: '#1e293b' },
+    elements: [],
+  }],
+  currentPageIdx: 0,
   fonts: { heading: 'Inter', body: 'Inter' },
   aiPrompt: '',
 };
+
+const DEFAULT_IMAGE_FILTER = { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, hueRotate: 0 };
+const DEFAULT_TEXT_SHADOW = { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 };
+const DEFAULT_TEXT_STROKE = { enabled: false, color: '#000000', width: 1 };
 
 export default function TemplateEditor() {
   const { id } = useParams();
@@ -108,9 +127,15 @@ export default function TemplateEditor() {
   const panningRef = useRef(false);
   const panStartRef = useRef({ x: 0, y: 0 });
 
-  const [template, setTemplate] = useState(INITIAL_TEMPLATE);
+  const [pages, setPages] = useState([{ id: 'page-1', background: { type: 'gradient', from: '#0f172a', to: '#1e293b' }, elements: [] }]);
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
   const [elements, setElements] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [activeGuides, setActiveGuides] = useState([]);
+  const [showRulers, setShowRulers] = useState(false);
+  const [showPresentMode, setShowPresentMode] = useState(false);
+  const [presentPageIdx, setPresentPageIdx] = useState(0);
+  const [editingTableCell, setEditingTableCell] = useState(null);
   const [history, setHistory] = useState([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
   const [zoom, setZoom] = useState(1);
@@ -132,11 +157,16 @@ export default function TemplateEditor() {
   const [quickActionsSearch, setQuickActionsSearch] = useState('');
   const [quickActionsRef, setQuickActionsRef] = useState(null);
 
+  const pagesRef = useRef(pages);
+
   elementsRef.current = elements;
-  const selectedEl = elements.find((e) => e.id === selectedId) || null;
+  pagesRef.current = pages;
+  const selectedEls = elements.filter((e) => selectedIds.includes(e.id));
+  const selectedEl = selectedEls[0] || null;
 
   const bgStyle = (() => {
-    const bg = template.canvas?.background || {};
+    const page = pages[currentPageIdx];
+    const bg = page?.background || {};
     switch (bg.type) {
       case 'gradient': return { background: `linear-gradient(135deg, ${bg.from || '#0f172a'}, ${bg.to || '#1e293b'})` };
       case 'solid': return { background: bg.color || '#0f172a' };
@@ -157,7 +187,7 @@ export default function TemplateEditor() {
     if (historyIdx > 0) {
       setHistoryIdx((i) => i - 1);
       setElements(JSON.parse(JSON.stringify(history[historyIdx - 1])));
-      setSelectedId(null);
+      setSelectedIds([]);
       setEditingText(null);
     }
   }, [historyIdx, history]);
@@ -166,10 +196,63 @@ export default function TemplateEditor() {
     if (historyIdx < history.length - 1) {
       setHistoryIdx((i) => i + 1);
       setElements(JSON.parse(JSON.stringify(history[historyIdx + 1])));
-      setSelectedId(null);
+      setSelectedIds([]);
       setEditingText(null);
     }
   }, [historyIdx, history]);
+
+  const saveCurrentPage = useCallback(() => {
+    setPages((prev) => prev.map((p, i) => i === currentPageIdx ? { ...p, elements: JSON.parse(JSON.stringify(elementsRef.current)) } : p));
+  }, [currentPageIdx]);
+
+  const switchPage = useCallback((idx) => {
+    if (idx === currentPageIdx || idx < 0 || idx >= pagesRef.current.length) return;
+    const updatedPages = pagesRef.current.map((p, i) => i === currentPageIdx ? { ...p, elements: JSON.parse(JSON.stringify(elementsRef.current)) } : p);
+    setPages(updatedPages);
+    const targetPage = updatedPages[idx];
+    const newElements = targetPage?.elements ? JSON.parse(JSON.stringify(targetPage.elements)) : [];
+    setElements(newElements);
+    setCurrentPageIdx(idx);
+    setSelectedIds([]);
+    setEditingText(null);
+    setHistory([JSON.parse(JSON.stringify(newElements))]);
+    setHistoryIdx(0);
+  }, [currentPageIdx]);
+
+  const addPage = useCallback(() => {
+    const newPage = { id: uid(), background: { type: 'solid', color: '#ffffff' }, elements: [] };
+    const updatedPages = pagesRef.current.map((p, i) => i === currentPageIdx ? { ...p, elements: JSON.parse(JSON.stringify(elementsRef.current)) } : p);
+    setPages([...updatedPages, newPage]);
+    const newIdx = updatedPages.length;
+    setElements([]);
+    setCurrentPageIdx(newIdx);
+    setSelectedIds([]);
+  }, [currentPageIdx]);
+
+  const duplicatePage = useCallback((idx) => {
+    const src = pagesRef.current[idx];
+    if (!src) return;
+    if (idx === currentPageIdx) saveCurrentPage();
+    const copy = { ...JSON.parse(JSON.stringify(src)), id: uid() };
+    setPages((prev) => { const n = [...prev]; n.splice(idx + 1, 0, copy); return n; });
+  }, [currentPageIdx, saveCurrentPage]);
+
+  const deletePage = useCallback((idx) => {
+    if (pagesRef.current.length <= 1) return;
+    if (idx === currentPageIdx) {
+      const newIdx = Math.max(0, idx - 1);
+      const saved = pagesRef.current.map((p, i) => i === currentPageIdx ? { ...p, elements: JSON.parse(JSON.stringify(elementsRef.current)) } : p);
+      const filtered = saved.filter((_, i) => i !== idx);
+      setPages(filtered);
+      const target = filtered[newIdx];
+      setElements(target?.elements ? JSON.parse(JSON.stringify(target.elements)) : []);
+      setCurrentPageIdx(newIdx);
+      setSelectedIds([]);
+    } else {
+      setPages((prev) => prev.filter((_, i) => i !== idx));
+      if (idx < currentPageIdx) setCurrentPageIdx((i) => i - 1);
+    }
+  }, [currentPageIdx]);
 
   useEffect(() => {
     if (!id) return;
@@ -182,13 +265,10 @@ export default function TemplateEditor() {
             ...el,
             id: el.id || uid(),
           }));
-          setTemplate({
-            ...INITIAL_TEMPLATE,
-            title: t.name || 'Template',
-            canvas: { ...INITIAL_TEMPLATE.canvas, background: t.background || INITIAL_TEMPLATE.canvas.background },
-            elements: loadedElements,
-          });
+          const page = { id: uid(), background: t.background || pages[0]?.background || { type: 'gradient', from: '#0f172a', to: '#1e293b' }, elements: loadedElements };
+          setPages([page]);
           setElements(loadedElements);
+          setCurrentPageIdx(0);
           setDesignName(t.name || 'Untitled Design');
           pushHistory(loadedElements);
         }
@@ -213,29 +293,33 @@ export default function TemplateEditor() {
     const newEl = { ...JSON.parse(JSON.stringify(def)), id: uid() };
     const next = [...elementsRef.current, newEl];
     setElements(next);
-    setSelectedId(newEl.id);
+    setSelectedIds([newEl.id]);
     pushHistory(next);
     setActiveSidebar(null);
     setShowQuickActions(false);
   }, [pushHistory]);
 
-  const deleteElement = useCallback((elId) => {
-    const next = elementsRef.current.filter((el) => el.id !== elId);
+  const deleteSelected = useCallback(() => {
+    if (selectedIds.length === 0) return;
+    const next = elementsRef.current.filter((el) => !selectedIds.includes(el.id));
     setElements(next);
-    setSelectedId(null);
+    setSelectedIds([]);
     setEditingText(null);
     pushHistory(next);
-  }, [pushHistory]);
+  }, [selectedIds, pushHistory]);
 
-  const duplicateElement = useCallback((elId) => {
-    const el = elementsRef.current.find((e) => e.id === elId);
-    if (!el) return;
-    const newEl = { ...JSON.parse(JSON.stringify(el)), id: uid(), x: Math.min((el.x || 50) + 3, 95), y: Math.min((el.y || 50) + 3, 95) };
-    const next = [...elementsRef.current, newEl];
+  const duplicateSelected = useCallback(() => {
+    if (selectedIds.length === 0) return;
+    const newEls = selectedIds.map((sid) => {
+      const el = elementsRef.current.find((e) => e.id === sid);
+      if (!el) return null;
+      return { ...JSON.parse(JSON.stringify(el)), id: uid(), x: Math.min((el.x || 50) + 3, 95), y: Math.min((el.y || 50) + 3, 95) };
+    }).filter(Boolean);
+    const next = [...elementsRef.current, ...newEls];
     setElements(next);
-    setSelectedId(newEl.id);
+    setSelectedIds(newEls.map((e) => e.id));
     pushHistory(next);
-  }, [pushHistory]);
+  }, [selectedIds, pushHistory]);
 
   const bringForward = useCallback((elId) => {
     const elems = elementsRef.current;
@@ -303,11 +387,28 @@ export default function TemplateEditor() {
     commitElementUpdate(elId, { textAlign: align });
   }, [commitElementUpdate]);
 
+  const groupSelected = useCallback(() => {
+    if (selectedIds.length < 2) return;
+    const gid = uid();
+    const next = elementsRef.current.map((el) => selectedIds.includes(el.id) ? { ...el, groupId: gid } : el);
+    setElements(next);
+    pushHistory(next);
+  }, [selectedIds, pushHistory]);
+
+  const ungroupSelected = useCallback(() => {
+    if (selectedIds.length === 0) return;
+    const next = elementsRef.current.map((el) => selectedIds.includes(el.id) ? { ...el, groupId: null } : el);
+    setElements(next);
+    pushHistory(next);
+  }, [selectedIds, pushHistory]);
+
   const applyTemplatePreset = useCallback((preset) => {
-    setTemplate((t) => ({ ...t, canvas: { ...t.canvas, background: preset.background } }));
     const newElements = preset.elements.map((el) => ({ ...JSON.parse(JSON.stringify(el)), id: uid() }));
+    const page = { id: uid(), background: preset.background, elements: newElements };
+    setPages([page]);
     setElements(newElements);
-    setSelectedId(null);
+    setCurrentPageIdx(0);
+    setSelectedIds([]);
     setEditingText(null);
     pushHistory(newElements);
     setActiveSidebar(null);
@@ -325,29 +426,65 @@ export default function TemplateEditor() {
     if (editingText === el.id || el.locked) return;
     e.stopPropagation();
     e.preventDefault();
-    setSelectedId(el.id);
+    let newIds;
+    if (e.shiftKey) {
+      newIds = selectedIds.includes(el.id) ? selectedIds.filter((id) => id !== el.id) : [...selectedIds, el.id];
+    } else {
+      const clickedGroup = el.groupId;
+      if (clickedGroup) {
+        newIds = elementsRef.current.filter((x) => x.groupId === clickedGroup).map((x) => x.id);
+      } else {
+        newIds = [el.id];
+      }
+    }
+    setSelectedIds(newIds);
     setEditingText(null);
     setActiveSidebar(null);
     setShowDownloadMenu(false);
     setShowShareMenu(false);
     setShowQuickActions(false);
     const startCoords = getCanvasCoords(e);
-    const startPos = { x: el.x, y: el.y };
+    const startPositions = newIds.map((sid) => {
+      const sel = elementsRef.current.find((x) => x.id === sid);
+      return { id: sid, x: sel?.x || 50, y: sel?.y || 50 };
+    });
     const onMove = (me) => {
       me.preventDefault();
       const cur = getCanvasCoords(me);
       const dx = cur.x - startCoords.x;
       const dy = cur.y - startCoords.y;
-      updateElement(el.id, { x: Math.max(0, Math.min(100, startPos.x + dx)), y: Math.max(0, Math.min(100, startPos.y + dy)) });
+      let lastGuides = [];
+      const updates = startPositions.map((sp) => {
+        const nx = Math.max(0, Math.min(100, sp.x + dx));
+        const ny = Math.max(0, Math.min(100, sp.y + dy));
+        if (sp.id === newIds[newIds.length - 1]) {
+          const SNAP = 1.5;
+          const guides = [];
+          if (Math.abs(nx - 50) < SNAP) guides.push({ type: 'v', pos: 50 });
+          if (Math.abs(ny - 50) < SNAP) guides.push({ type: 'h', pos: 50 });
+          elementsRef.current.filter((e) => !newIds.includes(e.id)).forEach((other) => {
+            if (Math.abs(nx - other.x) < SNAP) guides.push({ type: 'v', pos: other.x });
+            if (Math.abs(ny - other.y) < SNAP) guides.push({ type: 'h', pos: other.y });
+          });
+          lastGuides = guides;
+        }
+        return [sp.id, { x: nx, y: ny }];
+      });
+      setActiveGuides(lastGuides);
+      setElements((prev) => {
+        const map = new Map(updates);
+        return prev.map((e) => map.has(e.id) ? { ...e, ...map.get(e.id) } : e);
+      });
     };
     const onUp = () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
-      commitElementUpdate(el.id, {});
+      setActiveGuides([]);
+      pushHistory(elementsRef.current);
     };
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
-  }, [editingText, getCanvasCoords, updateElement, commitElementUpdate]);
+  }, [editingText, selectedIds, getCanvasCoords, pushHistory]);
 
   const onResizeMouseDown = useCallback((e, el) => {
     e.stopPropagation();
@@ -407,7 +544,7 @@ export default function TemplateEditor() {
 
   const onCanvasClick = useCallback((e) => {
     if (e.target === canvasRef.current || e.target.closest('.canvas-inner') === canvasRef.current) {
-      setSelectedId(null);
+      setSelectedIds([]);
       setEditingText(null);
       setActiveSidebar(null);
     }
@@ -421,7 +558,7 @@ export default function TemplateEditor() {
     if (el.type === 'text' || el.type === 'button') {
       if (el.locked) return;
       setEditingText(el.id);
-      setSelectedId(el.id);
+      setSelectedIds([el.id]);
     }
   }, []);
 
@@ -433,7 +570,7 @@ export default function TemplateEditor() {
       const newEl = { ...JSON.parse(JSON.stringify(ELEMENT_DEFAULTS.image)), id: uid(), src: ev.target.result, content: file.name };
       const next = [...elementsRef.current, newEl];
       setElements(next);
-      setSelectedId(newEl.id);
+      setSelectedIds([newEl.id]);
       pushHistory(next);
       setActiveSidebar(null);
     };
@@ -468,7 +605,8 @@ export default function TemplateEditor() {
   }, [activeSidebar, projectTemplates.length, loadProjects]);
 
   const exportAsJSON = useCallback(() => {
-    const data = { title: designName, canvas: template.canvas, elements: elements.map(({ id: _id, ...rest }) => rest), fonts: template.fonts };
+    saveCurrentPage();
+    const data = { title: designName, pages: pagesRef.current, fonts: { heading: 'Inter', body: 'Inter' } };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -477,7 +615,7 @@ export default function TemplateEditor() {
     a.click();
     URL.revokeObjectURL(url);
     setShowDownloadMenu(false);
-  }, [designName, template, elements]);
+  }, [designName, saveCurrentPage]);
 
   const exportAsImage = useCallback(async () => {
     try {
@@ -488,7 +626,7 @@ export default function TemplateEditor() {
       canvas.height = CANVAS_H * 2;
       const ctx = canvas.getContext('2d');
       ctx.scale(2, 2);
-      const bg = template.canvas?.background || {};
+      const bg = pages[currentPageIdx]?.background || {};
       if (bg.type === 'gradient') {
         const grad = ctx.createLinearGradient(0, 0, CANVAS_W, CANVAS_H);
         grad.addColorStop(0, bg.from || '#0f172a');
@@ -576,7 +714,7 @@ export default function TemplateEditor() {
       console.error(err);
       alert('Export failed. Try downloading as JSON instead.');
     }
-  }, [designName, template, elements]);
+  }, [pages, currentPageIdx, elements]);
 
   const handleShareCopy = useCallback(() => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -593,37 +731,49 @@ export default function TemplateEditor() {
         || document.activeElement?.contentEditable === 'true';
       const ctrl = e.ctrlKey || e.metaKey;
 
+      if (showPresentMode) {
+        if (e.key === 'Escape') { setShowPresentMode(false); return; }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); setPresentPageIdx((i) => Math.min(pagesRef.current.length - 1, i + 1)); return; }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); setPresentPageIdx((i) => Math.max(0, i - 1)); return; }
+        return;
+      }
+
       if (showQuickActions && e.key === 'Escape') { setShowQuickActions(false); return; }
 
       if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
       if (ctrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); redo(); return; }
-      if (ctrl && e.key === 'd') { e.preventDefault(); if (selectedId) duplicateElement(selectedId); return; }
+      if (ctrl && e.key === 'd') { e.preventDefault(); duplicateSelected(); return; }
+      if (ctrl && e.key === 'g' && !e.shiftKey) { e.preventDefault(); groupSelected(); return; }
+      if (ctrl && e.shiftKey && e.key === 'G') { e.preventDefault(); ungroupSelected(); return; }
+      if (ctrl && e.key === 'r' && !isInputFocused) { e.preventDefault(); setShowRulers((v) => !v); return; }
+      if (e.key === 'F5') { e.preventDefault(); setShowPresentMode(true); setPresentPageIdx(currentPageIdx); return; }
       if (ctrl && e.key === 'c' && !isInputFocused) {
-        if (selectedId) {
+        if (selectedIds.length > 0) {
           e.preventDefault();
-          clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.find((x) => x.id === selectedId)));
+          clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.filter((x) => selectedIds.includes(x.id))));
         }
         return;
       }
       if (ctrl && e.key === 'v' && !isInputFocused && clipboardRef.current) {
         e.preventDefault();
-        const newEl = { ...JSON.parse(JSON.stringify(clipboardRef.current)), id: uid(), x: Math.min((clipboardRef.current.x || 50) + 3, 95), y: Math.min((clipboardRef.current.y || 50) + 3, 95) };
-        const next = [...elementsRef.current, newEl];
+        const clipItems = Array.isArray(clipboardRef.current) ? clipboardRef.current : [clipboardRef.current];
+        const newEls = clipItems.map((item) => ({ ...JSON.parse(JSON.stringify(item)), id: uid(), x: Math.min((item.x || 50) + 3, 95), y: Math.min((item.y || 50) + 3, 95) }));
+        const next = [...elementsRef.current, ...newEls];
         setElements(next);
-        setSelectedId(newEl.id);
+        setSelectedIds(newEls.map((e) => e.id));
         pushHistory(next);
         return;
       }
-      if (ctrl && e.key === 'x' && !isInputFocused && selectedId) {
+      if (ctrl && e.key === 'x' && !isInputFocused && selectedIds.length > 0) {
         e.preventDefault();
-        clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.find((x) => x.id === selectedId)));
-        deleteElement(selectedId);
+        clipboardRef.current = JSON.parse(JSON.stringify(elementsRef.current.filter((x) => selectedIds.includes(x.id))));
+        deleteSelected();
         return;
       }
       if (ctrl && e.key === 'a' && !isInputFocused) {
         e.preventDefault();
-        const elems = elementsRef.current;
-        if (elems.length > 0) setSelectedId(elems[elems.length - 1].id);
+        const allIds = elementsRef.current.map((x) => x.id);
+        setSelectedIds(allIds);
         return;
       }
       if (ctrl && e.key === 'b' && !isInputFocused && selectedEl) {
@@ -648,14 +798,14 @@ export default function TemplateEditor() {
         if (url) commitElementUpdate(selectedEl.id, { link: url });
         return;
       }
-      if (ctrl && e.key === ']') { e.preventDefault(); if (selectedId) bringForward(selectedId); return; }
-      if (ctrl && e.key === '[') { e.preventDefault(); if (selectedId) sendBackward(selectedId); return; }
-      if (ctrl && e.altKey && e.key === ']') { e.preventDefault(); if (selectedId) bringToFront(selectedId); return; }
-      if (ctrl && e.altKey && e.key === '[') { e.preventDefault(); if (selectedId) sendToBack(selectedId); return; }
+      if (ctrl && e.key === ']') { e.preventDefault(); if (selectedIds.length > 0) bringForward(selectedIds[selectedIds.length - 1]); return; }
+      if (ctrl && e.key === '[') { e.preventDefault(); if (selectedIds.length > 0) sendBackward(selectedIds[selectedIds.length - 1]); return; }
+      if (ctrl && e.altKey && e.key === ']') { e.preventDefault(); if (selectedIds.length > 0) bringToFront(selectedIds[selectedIds.length - 1]); return; }
+      if (ctrl && e.altKey && e.key === '[') { e.preventDefault(); if (selectedIds.length > 0) sendToBack(selectedIds[selectedIds.length - 1]); return; }
       if (ctrl && e.shiftKey && e.key === 'h' && selectedEl) { e.preventDefault(); toggleFlipH(selectedEl.id); return; }
       if (ctrl && e.shiftKey && e.key === 'v' && selectedEl) { e.preventDefault(); toggleFlipV(selectedEl.id); return; }
       if (ctrl && e.shiftKey && e.key === 'l' && selectedEl) { e.preventDefault(); alignText(selectedEl.id, 'left'); return; }
-      if (ctrl && e.shiftKey && e.key === 'c' && selectedEl) { e.preventDefault(); alignText(selectedEl.id, 'center'); return; }
+      if (ctrl && e.shiftKey && e.key === 'c' && selectedEl && !isInputFocused) { e.preventDefault(); alignText(selectedEl.id, 'center'); return; }
       if (ctrl && e.shiftKey && e.key === 'r' && selectedEl) { e.preventDefault(); alignText(selectedEl.id, 'right'); return; }
       if (ctrl && e.key === '=') { e.preventDefault(); setZoom((z) => Math.min(3, z + 0.1)); return; }
       if (ctrl && e.key === '-') { e.preventDefault(); setZoom((z) => Math.max(0.25, z - 0.1)); return; }
@@ -665,15 +815,16 @@ export default function TemplateEditor() {
       if (e.key === 'Escape') {
         setActiveSidebar(null);
         setShowAI(false);
-        setSelectedId(null);
+        setSelectedIds([]);
         setEditingText(null);
+        setEditingTableCell(null);
         setShowDownloadMenu(false);
         setShowShareMenu(false);
         setShowQuickActions(false);
         return;
       }
       if ((e.key === 'Delete' || e.key === 'Backspace') && !isInputFocused) {
-        if (selectedId && editingText === null) { e.preventDefault(); deleteElement(selectedId); }
+        if (selectedIds.length > 0 && editingText === null && !editingTableCell) { e.preventDefault(); deleteSelected(); }
         return;
       }
       if (e.key === ' ' && !isInputFocused) {
@@ -686,11 +837,11 @@ export default function TemplateEditor() {
         e.preventDefault();
         const elems = elementsRef.current;
         if (elems.length === 0) return;
-        const currentIdx = elems.findIndex((x) => x.id === selectedId);
+        const currentIdx = selectedIds.length > 0 ? elems.findIndex((x) => x.id === selectedIds[selectedIds.length - 1]) : -1;
         const nextIdx = e.shiftKey
           ? (currentIdx <= 0 ? elems.length - 1 : currentIdx - 1)
           : (currentIdx >= elems.length - 1 ? 0 : currentIdx + 1);
-        setSelectedId(elems[nextIdx].id);
+        setSelectedIds([elems[nextIdx].id]);
         return;
       }
       if (e.key === '/' && !isInputFocused) {
@@ -709,17 +860,19 @@ export default function TemplateEditor() {
       }
 
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && !isInputFocused) {
-        if (selectedId) {
+        if (selectedIds.length > 0) {
           e.preventDefault();
           const step = e.shiftKey ? 1 : 0.3;
-          const el = elementsRef.current.find((x) => x.id === selectedId);
-          if (!el || el.locked) return;
           const updates = {};
-          if (e.key === 'ArrowUp') updates.y = Math.max(0, (el.y || 50) - step);
-          if (e.key === 'ArrowDown') updates.y = Math.min(100, (el.y || 50) + step);
-          if (e.key === 'ArrowLeft') updates.x = Math.max(0, (el.x || 50) - step);
-          if (e.key === 'ArrowRight') updates.x = Math.min(100, (el.x || 50) + step);
-          updateElement(selectedId, updates);
+          selectedIds.forEach((sid) => {
+            const el = elementsRef.current.find((x) => x.id === sid);
+            if (!el || el.locked) return;
+            if (e.key === 'ArrowUp') updates[sid] = { y: Math.max(0, (el.y || 50) - step) };
+            if (e.key === 'ArrowDown') updates[sid] = { y: Math.min(100, (el.y || 50) + step) };
+            if (e.key === 'ArrowLeft') updates[sid] = { x: Math.max(0, (el.x || 50) - step) };
+            if (e.key === 'ArrowRight') updates[sid] = { x: Math.min(100, (el.x || 50) + step) };
+          });
+          setElements((prev) => prev.map((el) => updates[el.id] ? { ...el, ...updates[el.id] } : el));
         }
       }
     };
@@ -729,7 +882,7 @@ export default function TemplateEditor() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
-  }, [undo, redo, selectedId, selectedEl, editingText, deleteElement, duplicateElement, updateElement, pushHistory, bringForward, sendBackward, bringToFront, sendToBack, toggleFlipH, toggleFlipV, alignText, addElement, activeSidebar, showAI, showQuickActions]);
+  }, [undo, redo, selectedIds, selectedEl, editingText, editingTableCell, deleteSelected, duplicateSelected, groupSelected, ungroupSelected, updateElement, pushHistory, bringForward, sendBackward, bringToFront, sendToBack, toggleFlipH, toggleFlipV, alignText, addElement, activeSidebar, showAI, showQuickActions, showPresentMode, currentPageIdx]);
 
   // Ctrl+scroll zoom
   useEffect(() => {
@@ -760,8 +913,72 @@ export default function TemplateEditor() {
   const floatingToolbarPos = getFloatingToolbarPosition();
   const isTextType = (type) => type === 'text' || type === 'button';
 
+  const buildTextStyle = (el) => {
+    const s = {};
+    if (el.textShadow?.enabled) {
+      s.textShadow = `${el.textShadow.offsetX || 0}px ${el.textShadow.offsetY || 0}px ${el.textShadow.blur || 0}px ${el.textShadow.color || '#000000'}`;
+    }
+    if (el.textStroke?.enabled) {
+      s.WebkitTextStroke = `${el.textStroke.width || 1}px ${el.textStroke.color || '#000000'}`;
+    }
+    return s;
+  };
+
+  const buildImageFilterStyle = (el) => {
+    if (!el.filter) return {};
+    const f = el.filter;
+    return { filter: `brightness(${f.brightness}%) contrast(${f.contrast}%) saturate(${f.saturate}%) blur(${f.blur}px) grayscale(${f.grayscale}%) sepia(${f.sepia}%) hue-rotate(${f.hueRotate}deg)` };
+  };
+
+  const updateTableData = useCallback((elId, row, col, value) => {
+    setElements((prev) => prev.map((el) => {
+      if (el.id !== elId) return el;
+      const newCellData = el.cellData.map((r) => [...r]);
+      if (newCellData[row]) newCellData[row][col] = value;
+      return { ...el, cellData: newCellData };
+    }));
+  }, []);
+
+  const commitTableUpdate = useCallback((elId) => {
+    pushHistory(elementsRef.current);
+  }, [pushHistory]);
+
+  const addTableRow = useCallback((elId) => {
+    const el = elementsRef.current.find((e) => e.id === elId);
+    if (!el || el.rows >= 20) return;
+    const newRow = new Array(el.cols).fill('');
+    commitElementUpdate(elId, { rows: el.rows + 1, cellData: [...el.cellData, newRow], height: (el.height || 180) + 40 });
+  }, [commitElementUpdate]);
+
+  const addTableCol = useCallback((elId) => {
+    const el = elementsRef.current.find((e) => e.id === elId);
+    if (!el || el.cols >= 10) return;
+    commitElementUpdate(elId, { cols: el.cols + 1, cellData: el.cellData.map((r) => [...r, '']), width: (el.width || 360) + 100 });
+  }, [commitElementUpdate]);
+
+  const removeTableRow = useCallback((elId) => {
+    const el = elementsRef.current.find((e) => e.id === elId);
+    if (!el || el.rows <= 1) return;
+    commitElementUpdate(elId, { rows: el.rows - 1, cellData: el.cellData.slice(0, -1), height: Math.max(60, (el.height || 180) - 40) });
+  }, [commitElementUpdate]);
+
+  const removeTableCol = useCallback((elId) => {
+    const el = elementsRef.current.find((e) => e.id === elId);
+    if (!el || el.cols <= 1) return;
+    commitElementUpdate(elId, { cols: el.cols - 1, cellData: el.cellData.map((r) => r.slice(0, -1)), width: Math.max(100, (el.width || 360) - 100) });
+  }, [commitElementUpdate]);
+
+  const getFrameClipPath = (shape) => {
+    switch (shape) {
+      case 'circle': return 'circle(50% at 50% 50%)';
+      case 'triangle': return 'polygon(50% 0%, 0% 100%, 100% 100%)';
+      case 'heart': return 'path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z")';
+      default: return 'none';
+    }
+  };
+
   const renderElement = (el) => {
-    const isSelected = el.id === selectedId;
+    const isSelected = selectedIds.includes(el.id);
     const isEditing = el.id === editingText;
     const opacity = (el.opacity != null ? el.opacity : 100) / 100;
     const rotation = el.rotation || 0;
@@ -786,7 +1003,7 @@ export default function TemplateEditor() {
     if (el.type === 'text') {
       const textContent = el.textTransform === 'uppercase' ? (el.content || '').toUpperCase() : el.textTransform === 'lowercase' ? (el.content || '').toLowerCase() : el.content || '';
       return (
-        <div key={el.id} style={{ ...baseStyle, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 400, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', color: el.color || '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: el.textAlign || 'center', lineHeight: el.lineHeight || 1.4, letterSpacing: el.letterSpacing || 0, whiteSpace: 'pre-wrap' }}
+        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 400, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', color: el.color || '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: el.textAlign || 'center', lineHeight: el.lineHeight || 1.4, letterSpacing: el.letterSpacing || 0, whiteSpace: 'pre-wrap' }}
           onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}>
           {isEditing ? (
             <div contentEditable suppressContentEditableWarning autoFocus style={{ outline: 'none', minWidth: 40 }}
@@ -813,7 +1030,7 @@ export default function TemplateEditor() {
 
     if (el.type === 'button') {
       return (
-        <div key={el.id} style={{ ...baseStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', background: el.bgColor || '#7c3aed', color: el.color || '#ffffff', borderRadius: el.borderRadius || 8, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 600, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', boxShadow: el.boxShadow !== false ? '0 4px 14px rgba(0,0,0,0.25)' : 'none', border: `${el.borderWidth || 0}px solid ${el.borderColor || 'transparent'}`, whiteSpace: 'nowrap' }}
+        <div key={el.id} style={{ ...baseStyle, ...buildTextStyle(el), display: 'flex', alignItems: 'center', justifyContent: 'center', background: el.bgColor || '#7c3aed', color: el.color || '#ffffff', borderRadius: el.borderRadius || 8, fontSize: el.fontSize || 16, fontFamily: el.fontFamily || 'Inter', fontWeight: el.fontWeight || 600, fontStyle: el.fontStyle || 'normal', textDecoration: el.textDecoration || 'none', boxShadow: el.boxShadow !== false ? '0 4px 14px rgba(0,0,0,0.25)' : 'none', border: `${el.borderWidth || 0}px solid ${el.borderColor || 'transparent'}`, whiteSpace: 'nowrap' }}
           onMouseDown={(e) => onElementMouseDown(e, el)} onDoubleClick={(e) => onElementDoubleClick(e, el)}>
           {isEditing ? (
             <div contentEditable suppressContentEditableWarning autoFocus style={{ outline: 'none', minWidth: 40 }}
@@ -881,9 +1098,78 @@ export default function TemplateEditor() {
       return (
         <div key={el.id} style={{ ...baseStyle, borderRadius: el.borderRadius || 0, overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)}>
           {el.src ? (
-            <img src={el.src} alt={el.content || 'Image'} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
+            <img src={el.src} alt={el.content || 'Image'} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', ...buildImageFilterStyle(el) }} draggable={false} />
           ) : (
             <div style={{ width: '100%', height: '100%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #9ca3af', color: '#6b7280', fontSize: 12, borderRadius: 4 }}>No image</div>
+          )}
+          {isSelected && !el.locked && (
+            <>
+              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
+              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
+              </div>
+            </>
+          )}
+          {el.locked && isSelected && (
+            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (el.type === 'table') {
+      const cellW = (el.width || 360) / (el.cols || 3);
+      const cellH = (el.height || 180) / (el.rows || 3);
+      return (
+        <div key={el.id} style={{ ...baseStyle, overflow: 'visible' }} onMouseDown={(e) => onElementMouseDown(e, el)}>
+          <table style={{ width: el.width || 360, borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+            <tbody>
+              {(el.cellData || []).map((row, ri) => (
+                <tr key={ri}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} style={{ width: cellW, height: cellH, border: `1px solid ${el.borderColor || '#d1d5db'}`, background: ri === 0 ? (el.headerColor || '#f3f4f6') : (el.cellColor || '#ffffff'), padding: '4px 6px', fontSize: 12, fontFamily: 'Inter', color: '#374151', textAlign: 'left', position: 'relative' }}
+                      onClick={(e) => { e.stopPropagation(); if (!el.locked) setEditingTableCell({ elId: el.id, row: ri, col: ci }); }}>
+                      {editingTableCell?.elId === el.id && editingTableCell.row === ri && editingTableCell.col === ci ? (
+                        <input autoFocus defaultValue={cell} style={{ width: '100%', height: '100%', border: 'none', outline: '2px solid #7c3aed', background: 'transparent', fontSize: 12, fontFamily: 'Inter', padding: 0 }}
+                          onBlur={(e) => { updateTableData(el.id, ri, ci, e.target.value); commitTableUpdate(el.id); setEditingTableCell(null); }}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.target.blur(); } if (e.key === 'Escape') { setEditingTableCell(null); } }}
+                          onClick={(e) => e.stopPropagation()} />
+                      ) : cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {isSelected && !el.locked && (
+            <>
+              <div onMouseDown={(e) => onResizeMouseDown(e, el)} style={{ position: 'absolute', right: -5, bottom: -5, width: 10, height: 10, background: '#7c3aed', borderRadius: 2, cursor: 'se-resize', border: '1px solid #fff' }} />
+              <div onMouseDown={(e) => onRotationMouseDown(e, el)} style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /></svg>
+              </div>
+            </>
+          )}
+          {el.locked && isSelected && (
+            <div style={{ position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)', color: '#7c3aed' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" /></svg>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (el.type === 'frame') {
+      const clipPath = getFrameClipPath(el.shape || 'circle');
+      return (
+        <div key={el.id} style={{ ...baseStyle, clipPath, WebkitClipPath: clipPath, background: '#e5e7eb', overflow: 'hidden' }} onMouseDown={(e) => onElementMouseDown(e, el)}>
+          {el.frameImage ? (
+            <img src={el.frameImage} alt="Frame" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} draggable={false} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #9ca3af', color: '#6b7280', fontSize: 11 }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></svg>
+            </div>
           )}
           {isSelected && !el.locked && (
             <>
@@ -912,7 +1198,8 @@ export default function TemplateEditor() {
     setAiLoading(true);
     try {
       const token = localStorage.getItem('authToken');
-      const currentTmpl = { ...template, elements: elementsRef.current.map(({ id: _id, ...rest }) => rest) };
+      saveCurrentPage();
+      const currentTmpl = { pages: pagesRef.current.map((p) => ({ ...p, elements: (p.elements || []).map(({ id: _id, ...rest }) => rest) })), title: designName };
       const res = await fetch('/api/ai/customize-template', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -925,11 +1212,13 @@ export default function TemplateEditor() {
           setElements(newElements);
           pushHistory(newElements);
         }
-        if (data.data.background) setTemplate((t) => ({ ...t, canvas: { ...t.canvas, background: data.data.background } }));
+        if (data.data.background) {
+          setPages((prev) => prev.map((p, i) => i === currentPageIdx ? { ...p, background: data.data.background } : p));
+        }
         setAiMessages((m) => [...m, { role: 'assistant', text: 'Template updated! Check the preview.' }]);
       } else { setAiMessages((m) => [...m, { role: 'assistant', text: data.error || 'Failed to process.' }]); }
     } catch { setAiMessages((m) => [...m, { role: 'assistant', text: 'Network error. Please try again.' }]); } finally { setAiLoading(false); }
-  }, [aiInput, aiLoading, template, pushHistory]);
+  }, [aiInput, aiLoading, designName, currentPageIdx, pushHistory, saveCurrentPage]);
 
   if (loading) {
     return (
@@ -945,6 +1234,22 @@ export default function TemplateEditor() {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#f0f2f5]">
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
+
+      {showPresentMode && (
+        <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+          <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+            <span className="text-white/60 text-xs">{presentPageIdx + 1} / {pages.length}</span>
+            <button onClick={() => setShowPresentMode(false)} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded-lg">Exit (Esc)</button>
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+            <button onClick={() => setPresentPageIdx((i) => Math.max(0, i - 1))} disabled={presentPageIdx === 0} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded-lg disabled:opacity-30">← Prev</button>
+            <button onClick={() => setPresentPageIdx((i) => Math.min(pages.length - 1, i + 1))} disabled={presentPageIdx >= pages.length - 1} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs rounded-lg disabled:opacity-30">Next →</button>
+          </div>
+          <div style={{ width: CANVAS_W, height: CANVAS_H, position: 'relative', overflow: 'hidden', borderRadius: 8, ...(() => { const bg = pages[presentPageIdx]?.background || {}; if (bg.type === 'gradient') return { background: `linear-gradient(135deg, ${bg.from || '#0f172a'}, ${bg.to || '#1e293b'})` }; return { background: bg.color || '#0f172a' }; })() }}>
+            {(pages[presentPageIdx]?.elements || []).map(renderElement)}
+          </div>
+        </div>
+      )}
 
       {/* ===== TOP BAR ===== */}
       <div className="h-14 flex items-center justify-between px-4 bg-white border-b border-gray-200 shrink-0 z-30">
@@ -968,6 +1273,12 @@ export default function TemplateEditor() {
           </button>
           <button onClick={redo} disabled={historyIdx >= history.length - 1} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-30 transition-colors" title="Redo (Ctrl+Shift+Z)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10H11a5 5 0 00-5 5v2" /><path d="M21 10l-5-5M21 10l-5 5" /></svg>
+          </button>
+          <button onClick={() => setShowRulers((v) => !v)} className={`p-2 rounded-lg text-xs font-medium transition-colors ${showRulers ? 'bg-purple-100 text-[#7c3aed]' : 'text-gray-500 hover:bg-gray-100'}`} title="Rulers (Ctrl+R)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" /></svg>
+          </button>
+          <button onClick={() => { setShowPresentMode(true); setPresentPageIdx(currentPageIdx); }} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" title="Present (F5)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5,3 19,12 5,21" /></svg>
           </button>
         </div>
 
@@ -1020,7 +1331,7 @@ export default function TemplateEditor() {
           {SIDEBAR_ITEMS.map((item) => {
             const isActive = activeSidebar === item.id;
             return (
-              <button key={item.id} onClick={() => { setActiveSidebar(isActive ? null : item.id); setSelectedId(null); setEditingText(null); setShowAI(false); setShowDownloadMenu(false); setShowShareMenu(false); }}
+              <button key={item.id} onClick={() => { setActiveSidebar(isActive ? null : item.id); setSelectedIds([]); setEditingText(null); setShowAI(false); setShowDownloadMenu(false); setShowShareMenu(false); }}
                 className={`w-[52px] flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-medium transition-all ${isActive ? 'bg-[#7c3aed] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'}`} title={item.label}>
                 <span className="flex items-center justify-center w-6 h-6">{item.icon(isActive)}</span>
                 <span className="leading-none">{item.label}</span>
@@ -1036,6 +1347,12 @@ export default function TemplateEditor() {
               style={{ width: CANVAS_W, height: CANVAS_H, position: 'relative', overflow: 'hidden', borderRadius: 12, boxShadow: '0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)', ...bgStyle }}
               onClick={(e) => { if (e.target === canvasRef.current) onCanvasClick(e); }}>
               {elements.map(renderElement)}
+              {activeGuides.map((g, i) => {
+                const guideStyle = g.type === 'v'
+                  ? { position: 'absolute', left: g.pos + '%', top: 0, width: 1, height: '100%' }
+                  : { position: 'absolute', top: g.pos + '%', left: 0, height: 1, width: '100%' };
+                return <div key={i} style={{ ...guideStyle, background: '#7c3aed', opacity: 0.6, zIndex: 50, pointerEvents: 'none' }} />;
+              })}
               {elements.length === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
@@ -1060,8 +1377,9 @@ export default function TemplateEditor() {
           </div>
 
           {/* Position & Size bar */}
-          {selectedEl && editingText === null && (
+          {selectedIds.length > 0 && selectedEl && editingText === null && (
             <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white rounded-xl shadow-lg border border-gray-200 px-3 py-1.5 z-20 text-[10px]" onClick={(e) => e.stopPropagation()}>
+              {selectedIds.length > 1 && <span className="text-[9px] text-[#7c3aed] font-medium ml-1">{selectedIds.length} selected</span>}
               <span className="text-gray-400">X</span>
               <input type="number" value={Math.round(selectedEl.x || 0)} onChange={(e) => updateElement(selectedEl.id, { x: Number(e.target.value) })} onBlur={(e) => commitElementUpdate(selectedEl.id, { x: Number(e.target.value) })}
                 className="w-10 px-1 py-0.5 text-center border border-gray-200 rounded outline-none focus:border-[#7c3aed] text-gray-900" />
@@ -1196,11 +1514,78 @@ export default function TemplateEditor() {
 
               <div className="w-px h-5 bg-gray-200 mx-0.5" />
 
+              {/* Text Shadow */}
+              {selectedEl.type === 'text' && (
+                <button onClick={() => commitElementUpdate(selectedEl.id, { textShadow: { ...(selectedEl.textShadow || DEFAULT_TEXT_SHADOW), enabled: !(selectedEl.textShadow?.enabled) } })}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${selectedEl.textShadow?.enabled ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title="Text Shadow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16v16H4z" opacity="0.3" /><path d="M8 8h12v12H8z" /></svg>
+                </button>
+              )}
+
+              {/* Text Stroke */}
+              {selectedEl.type === 'text' && (
+                <button onClick={() => commitElementUpdate(selectedEl.id, { textStroke: { ...(selectedEl.textStroke || DEFAULT_TEXT_STROKE), enabled: !(selectedEl.textStroke?.enabled) } })}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${selectedEl.textStroke?.enabled ? 'bg-[#7c3aed] text-white' : 'hover:bg-gray-100 text-gray-500'}`} title="Text Stroke">
+                  <span className="text-xs font-bold" style={{ WebkitTextStroke: selectedEl.textStroke?.enabled ? '1.5px currentColor' : 'none' }}>S</span>
+                </button>
+              )}
+
+              {/* Image Filters */}
+              {selectedEl.type === 'image' && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <div className="flex flex-col gap-0.5 px-1">
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9px] text-gray-400 w-6">Br</span>
+                      <input type="range" min="0" max="200" value={selectedEl.filter?.brightness ?? 100} onChange={(e) => updateElement(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), brightness: Number(e.target.value) } })}
+                        onMouseUp={(e) => commitElementUpdate(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), brightness: Number(e.target.value) } })}
+                        className="w-14 h-1 accent-[#7c3aed]" />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9px] text-gray-400 w-6">Co</span>
+                      <input type="range" min="0" max="200" value={selectedEl.filter?.contrast ?? 100} onChange={(e) => updateElement(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), contrast: Number(e.target.value) } })}
+                        onMouseUp={(e) => commitElementUpdate(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), contrast: Number(e.target.value) } })}
+                        className="w-14 h-1 accent-[#7c3aed]" />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9px] text-gray-400 w-6">Sa</span>
+                      <input type="range" min="0" max="200" value={selectedEl.filter?.saturate ?? 100} onChange={(e) => updateElement(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), saturate: Number(e.target.value) } })}
+                        onMouseUp={(e) => commitElementUpdate(selectedEl.id, { filter: { ...(selectedEl.filter || DEFAULT_IMAGE_FILTER), saturate: Number(e.target.value) } })}
+                        className="w-14 h-1 accent-[#7c3aed]" />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Table Controls */}
+              {selectedEl.type === 'table' && (
+                <>
+                  <div className="w-px h-5 bg-gray-200 mx-0.5" />
+                  <button onClick={() => addTableRow(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Add row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
+                  </button>
+                  <button onClick={() => removeTableRow(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Remove row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /></svg>
+                  </button>
+                  <button onClick={() => addTableCol(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Add column">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M12 3v18M3 12h18" /></svg>
+                  </button>
+                  <button onClick={() => removeTableCol(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Remove column">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18" /></svg>
+                  </button>
+                  <div className="relative">
+                    <input type="color" value={selectedEl.headerColor || '#f3f4f6'} onChange={(e) => handleColorChange(selectedEl.id, 'headerColor', e.target.value)}
+                      onMouseUp={(e) => handleColorChangeComplete(selectedEl.id, 'headerColor', e.target.value)}
+                      className="w-7 h-7 rounded-md cursor-pointer border-2 border-gray-200 hover:border-[#7c3aed]" title="Header color" />
+                  </div>
+                </>
+              )}
+
               {/* Duplicate & Delete */}
-              <button onClick={() => duplicateElement(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Duplicate (Ctrl+D)">
+              <button onClick={() => duplicateSelected()} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 transition-colors" title="Duplicate (Ctrl+D)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></svg>
               </button>
-              <button onClick={() => deleteElement(selectedEl.id)} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-gray-500 hover:text-red-500 transition-colors" title="Delete (Del)">
+              <button onClick={() => deleteSelected()} className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-gray-500 hover:text-red-500 transition-colors" title="Delete (Del)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" /></svg>
               </button>
             </div>
@@ -1208,9 +1593,27 @@ export default function TemplateEditor() {
         </div>
       </div>
 
+      {/* ===== PAGES THUMBNAILS ===== */}
+      <div className="h-20 bg-gray-50 border-t border-gray-200 flex items-center gap-2 px-4 overflow-x-auto shrink-0 z-20">
+        {pages.map((page, i) => (
+          <div key={page.id} className={`relative shrink-0 w-16 h-14 rounded-lg border-2 cursor-pointer transition-all overflow-hidden ${i === currentPageIdx ? 'border-[#7c3aed] shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
+            onClick={() => switchPage(i)}>
+            <div className="absolute inset-0" style={{ background: page.background?.type === 'gradient' ? `linear-gradient(135deg, ${page.background.from || '#0f172a'}, ${page.background.to || '#1e293b'})` : page.background?.color || '#ffffff' }} />
+            <div className="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[8px] text-center py-0.5">{i + 1}</div>
+            <div className="absolute top-0.5 right-0.5 flex gap-0.5">
+              <button onClick={(e) => { e.stopPropagation(); duplicatePage(i); }} className="w-3.5 h-3.5 bg-black/40 hover:bg-black/60 rounded text-white flex items-center justify-center text-[8px]">+</button>
+              {pages.length > 1 && <button onClick={(e) => { e.stopPropagation(); deletePage(i); }} className="w-3.5 h-3.5 bg-black/40 hover:bg-red-500/80 rounded text-white flex items-center justify-center text-[8px]">×</button>}
+            </div>
+          </div>
+        ))}
+        <button onClick={addPage} className="shrink-0 w-16 h-14 rounded-lg border-2 border-dashed border-gray-300 hover:border-[#7c3aed] flex items-center justify-center text-gray-400 hover:text-[#7c3aed] transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
+        </button>
+      </div>
+
       {/* ===== SIDEBAR PANELS ===== */}
       {activeSidebar && !showAI && (
-        <div className="absolute left-[60px] top-14 bottom-0 w-[280px] bg-white border-r border-gray-200 shadow-xl z-20 flex flex-col overflow-hidden">
+        <div className="absolute left-[60px] top-14 bottom-24 w-[280px] bg-white border-r border-gray-200 shadow-xl z-20 flex flex-col overflow-hidden">
           {activeSidebar === 'design' && (
             <>
               <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
@@ -1231,14 +1634,14 @@ export default function TemplateEditor() {
                   <p className="text-xs font-medium text-gray-500 mb-2">Background</p>
                   <div className="grid grid-cols-4 gap-1.5">
                     {BG_PRESETS.map((bg, i) => (
-                      <button key={i} onClick={() => setTemplate((t) => ({ ...t, canvas: { ...t.canvas, background: { type: 'gradient', from: bg.from, to: bg.to } } }))}
+                      <button key={i} onClick={() => setPages((prev) => prev.map((p, idx) => idx === currentPageIdx ? { ...p, background: { type: 'gradient', from: bg.from, to: bg.to } } : p))}
                         className="h-10 rounded-lg border border-gray-200 hover:border-[#7c3aed] transition-all hover:shadow-sm" style={{ background: `linear-gradient(135deg, ${bg.from}, ${bg.to})` }} title={bg.label} />
                     ))}
                   </div>
                   <div className="mt-2 flex items-center gap-2">
-                    <input type="color" value={template.canvas?.background?.from || '#0f172a'} onChange={(e) => setTemplate((t) => ({ ...t, canvas: { ...t.canvas, background: { type: 'gradient', from: e.target.value, to: t.canvas?.background?.to || '#1e293b' } } }))}
+                    <input type="color" value={pages[currentPageIdx]?.background?.from || '#0f172a'} onChange={(e) => setPages((prev) => prev.map((p, idx) => idx === currentPageIdx ? { ...p, background: { type: 'gradient', from: e.target.value, to: p.background?.to || '#1e293b' } } : p))}
                       className="w-8 h-8 rounded-md cursor-pointer border border-gray-200" title="Gradient start" />
-                    <input type="color" value={template.canvas?.background?.to || '#1e293b'} onChange={(e) => setTemplate((t) => ({ ...t, canvas: { ...t.canvas, background: { type: 'gradient', from: t.canvas?.background?.from || '#0f172a', to: e.target.value } } }))}
+                    <input type="color" value={pages[currentPageIdx]?.background?.to || '#1e293b'} onChange={(e) => setPages((prev) => prev.map((p, idx) => idx === currentPageIdx ? { ...p, background: { type: 'gradient', from: p.background?.from || '#0f172a', to: e.target.value } } : p))}
                       className="w-8 h-8 rounded-md cursor-pointer border border-gray-200" title="Gradient end" />
                     <span className="text-[10px] text-gray-400">Custom</span>
                   </div>
@@ -1271,6 +1674,18 @@ export default function TemplateEditor() {
                     {COLOR_PRESETS.map((color, i) => (
                       <button key={i} onClick={() => { if (selectedEl) { const prop = selectedEl.type === 'shape' || selectedEl.type === 'button' ? 'bgColor' : 'color'; commitElementUpdate(selectedEl.id, { [prop]: color }); } }}
                         className="w-9 h-9 rounded-lg border-2 border-gray-200 hover:border-[#7c3aed] transition-all hover:scale-110" style={{ background: color }} title={selectedEl ? `Apply to selected` : color} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 mb-2">Frames</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {FRAME_SHAPES.map((frame) => (
+                      <button key={frame.shape} onClick={() => { addElement('frame'); setTimeout(() => { const el = elementsRef.current[elementsRef.current.length - 1]; if (el) commitElementUpdate(el.id, { shape: frame.shape }); }, 0); }}
+                        className="flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-200 hover:border-[#7c3aed] hover:bg-purple-50 transition-all text-gray-700">
+                        <span className="text-xl font-bold">{frame.icon}</span>
+                        <span className="text-[10px] text-gray-500">{frame.label}</span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -1417,7 +1832,7 @@ export default function TemplateEditor() {
 
       {/* ===== AI PANEL ===== */}
       {showAI && (
-        <div className="absolute right-0 top-14 bottom-0 w-[320px] bg-white border-l border-gray-200 shadow-xl z-20 flex flex-col overflow-hidden">
+        <div className="absolute right-0 top-14 bottom-24 w-[320px] bg-white border-l border-gray-200 shadow-xl z-20 flex flex-col overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-[#7c3aed] rounded-lg flex items-center justify-center">
